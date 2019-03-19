@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lembrete_item"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:background="@drawable/shape_cinza">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_titulo_lembrete_item"
+        android:text="Esse é o titulo"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:padding="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_mensagem_lembrete_item"
+        android:text="Mensagem de lembrete asdfsafasdfsdafsadfsdfasdfasdfd"
+        android:maxLines="1"
+        android:paddingLeft="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_data_lembrete_item"
+        android:text="01/01/01"
+        android:layout_gravity="end"
+        android:padding="8dp"/>
+
+
+
+</LinearLayout>

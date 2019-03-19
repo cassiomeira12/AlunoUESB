@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/disciplina_item"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginBottom="2dp"
+    android:gravity="center"
+    android:padding="8dp"
+    android:background="@drawable/shape_cinza">
+
+    <TextView
+        android:id="@+id/text_disciplina_nome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:gravity="left"
+        android:paddingRight="8dp"
+        android:text="Abreviatura"/>
+
+    <TextView
+        android:id="@+id/text_uni1_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:text="0.00"/>
+    <TextView
+        android:id="@+id/text_uni2_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:text="0.00"/>
+    <TextView
+        android:id="@+id/text_uni3_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:text="0.00"/>
+    <TextView
+        android:id="@+id/text_media_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:text="0.00"/>
+
+</LinearLayout>

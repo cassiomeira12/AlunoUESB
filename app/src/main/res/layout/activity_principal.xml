@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/view_usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="8dp"
+        android:onClick="chamarTelaUsuario"
+        android:elevation="8dp"
+        android:background="@drawable/shape_branco">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/usuario_nome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nome do Usuário"
+                android:textSize="15dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+            <TextView
+                android:id="@+id/usuario_curso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Curso do Usuário"
+                android:textSize="15dp"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/text_semestre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Semestre do Usuário"
+                android:textSize="15dp"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/image_curso"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:src="@drawable/uesb"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_settings_black_48dp"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="32dp">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/horario"
+                    android:onClick="chamarTelaHorarios"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/lembrete"
+                    android:onClick="chamarTelaLembretes"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/lbl_horarios" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/lbl_lembretes" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="32dp">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/disciplina"
+                    android:onClick="chamarTelaDisciplinas"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/media"
+                    android:onClick="chamarTelaCalcularMedia"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/lbl_disciplinas" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/lbl_calcular_media" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+
+</LinearLayout>

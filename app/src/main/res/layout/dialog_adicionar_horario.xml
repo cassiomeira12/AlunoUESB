@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecione o dia e um horário"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dia da Semana"/>
+        <Spinner
+            android:id="@+id/spinner_dia"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Horário"/>
+        <Spinner
+            android:id="@+id/spinner_horario"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="end">
+
+
+        <Button
+            android:id="@+id/button_cancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:buttonBarButtonStyle"
+            android:layout_marginRight="16dp"
+            android:text="Cancelar"/>
+
+        <Button
+            android:id="@+id/button_salvar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:buttonBarButtonStyle"
+            android:text="Salvar"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

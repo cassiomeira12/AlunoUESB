@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+
+
+
+    <EditText
+        android:id="@+id/text_usuario_nome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nome"
+        android:inputType="textPersonName" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            android:id="@+id/spinner_usuario_curso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Escolha um Curso" />
+
+        <EditText
+            android:id="@+id/text_matricula"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:hint="Matricula"
+            android:inputType="number"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Semestre Atual"/>
+
+            <Spinner
+                android:id="@+id/spinner_semestre"
+                android:layout_width="100dp"
+                android:layout_height="40dp">
+            </Spinner>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/text_novo_semestre"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="2dp"
+                android:layout_gravity="end"
+                android:hint="Adicionar Semestre"
+                android:inputType="numberDecimal"/>
+
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_gravity="end|center"
+                android:background="@android:color/holo_green_light"
+                android:onClick="adicionarSemestre"
+                android:src="@drawable/ic_add_white_24dp"/>
+
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

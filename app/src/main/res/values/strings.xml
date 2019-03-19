@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Aluno UESB</string>
+    <string name="lbl_horarios">Horários</string>
+    <string name="lbl_lembretes">Lembretes</string>
+    <string name="lbl_disciplinas">Disciplinas</string>
+    <string name="lbl_calcular_media">Calcular Média</string>
+    <string name="lbl_semestre">Meu Semestre</string>
+    <string name="menu_salvar">Salvar</string>
+    <string name="menu_cancelar">Cancelar</string>
+    <string name="menu_editar">Editar</string>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+
+    <TextView
+        android:id="@+id/text_informacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:hint="Mensagem que vai aparecer "/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="end">
+
+        <Button
+            android:id="@+id/button_nao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:buttonBarButtonStyle"
+            android:layout_marginRight="16dp"
+            android:text="Não"/>
+
+        <Button
+            android:id="@+id/button_sim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:buttonBarButtonStyle"
+            android:text="Sim"/>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
