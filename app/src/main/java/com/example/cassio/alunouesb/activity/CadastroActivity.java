@@ -18,7 +18,6 @@ import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 public class CadastroActivity extends AppCompatActivity {
     private TextView usuarioNome;
@@ -27,7 +26,6 @@ public class CadastroActivity extends AppCompatActivity {
     private Button mCadastrar;
     private Button mCancelar;
     private TextView usuarioSemestre;
-//    private MaterialBetterSpinner usuarioCurso;
     private BetterSpinner usuarioCurso;
 
 
@@ -36,7 +34,7 @@ public class CadastroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        usuarioNome = findViewById(R.id.text_titulo);
+        usuarioNome = findViewById(R.id.text_nome);
         usuarioEmail = findViewById(R.id.text_email);
         usuarioSenha = findViewById(R.id.text_senha);
         mCadastrar = findViewById(R.id.button_cadastrar);
@@ -130,11 +128,11 @@ public class CadastroActivity extends AppCompatActivity {
 
             UsuarioDAO.getInstance(this).alterarRegistro(usuario);
 
-            Intent intent = new Intent();
-            intent.putExtra("usuario", usuario);
-            setResult(1, intent);
+            Intent telaPrincipal = new Intent(this, PrincipalActivity.class);
+            telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK  | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(telaPrincipal);
 
-            finish();
+
 
         } else {
             Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);

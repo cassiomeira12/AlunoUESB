@@ -61,8 +61,8 @@ public class PrincipalActivity extends AppCompatActivity {
 
         } else {
 
-            this.intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, REQUEST_NOVO_USUARIO);
+            Intent telaLogin = new Intent(this, LoginActivity.class);
+            startActivity(telaLogin);
 
         }
 
