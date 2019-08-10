@@ -61,7 +61,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
         } else {
 
-            this.intent = new Intent(this, AdicionarUsuarioActivity.class);
+            this.intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, REQUEST_NOVO_USUARIO);
 
         }
