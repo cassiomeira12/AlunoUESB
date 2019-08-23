@@ -16,7 +16,7 @@ public class Lembrete implements Serializable{
 
 
     //Construtor da Classe
-    public Lembrete(Long id, String titulo, String mensagem, Long data, Long idSemestre) {
+    public Lembrete(Long id, String titulo, String mensagem, Long data) {
         this.id = id;
         this.titulo = titulo;
         this.mensagem = mensagem;

@@ -57,27 +57,27 @@ public class AdicionarLembreteActivity extends AppCompatActivity {
         String titulo = this.titulo.getText().toString();
         String mensagem = this.mensagem.getText().toString();
 
-        if (!titulo.isEmpty()) {
+//        if (!titulo.isEmpty()) {
 
-            long idSemestre = PrincipalActivity.SEMESTRE.getId();
-            Lembrete lembrete = new Lembrete(null, titulo, mensagem, System.currentTimeMillis(), idSemestre);
+//            long idSemestre = PrincipalActivity.SEMESTRE.getId();
+//            Lembrete lembrete = new Lembrete(null, titulo, mensagem, System.currentTimeMillis(), idSemestre);
 
-            long id = LembreteDAO.getInstance(this).inserirDados(lembrete);
-
-            if (id < 0) {
-                Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
-            } else {
-                lembrete.setId(id);
-                Intent intent = new Intent();
-                intent.putExtra("lembrete", lembrete);
-                setResult(1, intent);
-                finish();
-            }
-
-        } else {
-            Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);
-            toast.show();
-        }
+//            long id = LembreteDAO.getInstance(this).inserirDados(lembrete);
+//
+//            if (id < 0) {
+//                Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
+//            } else {
+//                lembrete.setId(id);
+//                Intent intent = new Intent();
+//                intent.putExtra("lembrete", lembrete);
+//                setResult(1, intent);
+//                finish();
+//            }
+//
+//        } else {
+//            Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);
+//            toast.show();
+//        }
 
 
 

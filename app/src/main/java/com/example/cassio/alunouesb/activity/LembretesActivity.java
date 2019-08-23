@@ -47,7 +47,7 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
             listaExclusao = (List<Lembrete>) savedInstanceState.getSerializable("lista");
         }
 
-        adapter = new AdapterLembretes(LembreteDAO.getInstance(this).buscarTodos(PrincipalActivity.USUARIO.getIdSemestre()), this, this, this);
+        adapter = new AdapterLembretes(LembreteDAO.getInstance(this).buscarTodos(PrincipalActivity.usuario.getIdSemestre()), this, this, this);
 
         recyclerView.setAdapter(adapter);
 

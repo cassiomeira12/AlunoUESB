@@ -1,12 +1,15 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,8 +20,12 @@ import com.example.cassio.alunouesb.database.dao.SemestreDAO;
 import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioActivity extends AppCompatActivity {
@@ -31,9 +38,10 @@ public class UsuarioActivity extends AppCompatActivity {
 
     public static List<Semestre> semestreList;
     private ArrayAdapter<Semestre> arrayAdapter;
-    private Usuario usuario = PrincipalActivity.USUARIO;
+    private Usuario usuario = PrincipalActivity.usuario;
 
     private boolean permitirEdicao = true;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +49,10 @@ public class UsuarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_usuario);
         setTitle("Meus Dados");
 
-        usuarioNome = (EditText) findViewById(R.id.text_usuario_nome);
-        spinnerCurso = (MaterialBetterSpinner) findViewById(R.id.spinner_usuario_curso);
-        matricula = (EditText) findViewById(R.id.text_matricula);
-        novoSemestre = (EditText) findViewById(R.id.text_novo_semestre);
+        usuarioNome = findViewById(R.id.text_usuario_nome);
+        spinnerCurso = findViewById(R.id.spinner_usuario_curso);
+        matricula = findViewById(R.id.text_matricula);
+        novoSemestre = findViewById(R.id.text_novo_semestre);
 
 
         String[] cursos = {"Administração", "Agronomia", "Biologia", "Cinema", "Ciências Socias", "Ciência da Computação",
@@ -55,31 +63,41 @@ public class UsuarioActivity extends AppCompatActivity {
         spinnerCurso.setAdapter(adapterCurso);
 
 
-        spinnerSemestre = (Spinner) findViewById(R.id.spinner_semestre);
-        semestreList = SemestreDAO.getInstance(this).buscarTodos();
+
+        spinnerSemestre = findViewById(R.id.spinner_semestre);
+        spinnerSemestre.setEnabled(false);
+
+        semestreList = usuario.getSemestreList();
         arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, semestreList);
         spinnerSemestre.setAdapter(arrayAdapter);
-
+//
         usuarioNome.setText(usuario.getNome());
         spinnerCurso.setText(usuario.getCurso());
-        matricula.setText(String.valueOf(usuario.getMatricula()));
-        spinnerSemestre.setSelection(arrayAdapter.getPosition(PrincipalActivity.SEMESTRE));
 
-        /*
-        spinnerSemestre.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if(usuario.getMatricula() == 0){
+            matricula.setHint("Matricula");
+        }else{
+            matricula.setText(String.valueOf(usuario.getMatricula()));
+        }
+
+
+        spinnerSemestre.setSelection(arrayAdapter.getPosition(PrincipalActivity.semestre));
+        spinnerSemestre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { // ao clicar sobre um novo semestre, deverá carregar os dados do tal semestre selecionado
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Semestre semestre = semestreList.get(i);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                usuario.setIdSemestre(i);
 
-                Semestre semestre = (Semestre) adapterView.getItemAtPosition(i);
+                //salvar mudança no banco de dados
+                FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
+            }
 
-                PrincipalActivity.SEMESTRE = semestre;
-                PrincipalActivity.USUARIO.setIdSemestre(semestre.getId());
-                //UsuarioActivity.crud.alterarRegistro(PrincipalActivity.USUARIO);
-                //Toast.makeText(getApplicationContext(), String.valueOf(PrincipalActivity.USUARIO.getIdSemestre()), Toast.LENGTH_LONG).show();
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
-        */
+
+
         habilitarEdicao();
     }
 
@@ -87,6 +105,7 @@ public class UsuarioActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_lembrete, menu);
+        this.menu = menu;
         menu.findItem(R.id.action_salvar).setVisible(permitirEdicao);
         menu.findItem(R.id.action_editar).setVisible(!permitirEdicao);
         return super.onCreateOptionsMenu(menu);
@@ -99,6 +118,8 @@ public class UsuarioActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_salvar:
                 salvarModificacoes();
+                menu.findItem(R.id.action_salvar).setVisible(permitirEdicao);
+                menu.findItem(R.id.action_editar).setVisible(!permitirEdicao);
                 break;
 
             case R.id.action_editar:
@@ -120,42 +141,78 @@ public class UsuarioActivity extends AppCompatActivity {
 
         String semestre = novoSemestre.getText().toString();
 
-        Semestre semestreTemp = new Semestre(null, semestre, PrincipalActivity.USUARIO.getId());
+        if(!semestre.isEmpty()){
+            Semestre semestreTemp = new Semestre(semestre);
 
-        long id = SemestreDAO.getInstance(this).inserirDados(semestreTemp);
+            ArrayList<Semestre> semestres = usuario.getSemestreList();
+            for (Semestre doc : semestres) {
+                if(doc.getSemestre().equals(semestreTemp.getSemestre())){
+                    Toast.makeText(this, "Semestre existente", Toast.LENGTH_SHORT).show();
+                    novoSemestre.setText("");
+                    return;
+                }
+            }
 
-        if (id < 0) {
-            Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
-        } else {
-            semestreTemp.setId(id);
-            arrayAdapter.add(semestreTemp);
+            usuario.addSemestre(semestreTemp);
         }
+
+        //salvar no banco de dados
+        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(UsuarioActivity.this, "Falha ao salvar", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         novoSemestre.setText("");
     }
-
     public void salvarModificacoes() {
 
         String nome = usuarioNome.getText().toString();
         String curso = spinnerCurso.getText().toString();
-        int matricula = Integer.parseInt(this.matricula.getText().toString());
-        Semestre semestre = ((Semestre) spinnerSemestre.getSelectedItem());
+
+        int matricula = 0;
+        if(!this.matricula.getText().toString().isEmpty()){ // campo não for vazio
+            matricula = Integer.parseInt(this.matricula.getText().toString());
+        }
+
+        //salva o ID do semestre selecionado
+        Semestre semestre = ((Semestre) spinnerSemestre.getSelectedItem()); // novo semestre selecionado
+        ArrayList<Semestre> semestres = usuario.getSemestreList(); // lista de semestres do usuario
+
+        for(int i = 0; i < semestres.size(); i++){
+            if(semestres.get(i).getSemestre() == semestre.getSemestre()){// verifica qual o ID do novo semestre selecionado na lista dos semestres do usuario
+                usuario.setIdSemestre(i); // seta o ID so semestre selecionado
+                break;
+            }
+        }
 
         usuario.setNome(nome);
         usuario.setCurso(curso);
-        usuario.setMatricula(matricula);
-        usuario.setIdSemestre(semestre.getId());
 
-        PrincipalActivity.SEMESTRE = semestre;
-        PrincipalActivity.USUARIO = usuario;
+        if(matricula != 0) {
+            usuario.setMatricula(matricula);
+        }
 
-        UsuarioDAO.getInstance(this).alterarRegistro(usuario);
+        //salvar no banco de dados
+        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(UsuarioActivity.this, "Falha ao salvar", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Intent intent = new Intent();
+                        intent.putExtra("usuario", usuario);
+                        setResult(1, intent);
+                    }
+                });
 
-
-        Intent intent = new Intent();
-        intent.putExtra("usuario", usuario);
-        setResult(1, intent);
-        finish();
+        habilitarEdicao();
 
     }
 
@@ -167,6 +224,7 @@ public class UsuarioActivity extends AppCompatActivity {
         usuarioNome.setEnabled(permitirEdicao);
         matricula.setEnabled(permitirEdicao);
         spinnerCurso.setEnabled(permitirEdicao);
+        spinnerSemestre.setEnabled(permitirEdicao);
 
     }
 }

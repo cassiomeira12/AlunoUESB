@@ -40,6 +40,8 @@ public class UsuarioDAO {
 
         valores.put(UsuarioContract.NOME, usuario.getNome());
         valores.put(UsuarioContract.CURSO, usuario.getCurso());
+        valores.put(UsuarioContract.EMAIL, usuario.getEmail());
+        valores.put(UsuarioContract.SENHA, usuario.getSenha());
         valores.put(UsuarioContract.ID_SEMESTRE, "0");
 
         resultadoID = db.insertOrThrow(UsuarioContract.TABELA, null, valores);
@@ -52,15 +54,16 @@ public class UsuarioDAO {
         String where;
 
         db = banco.getReadableDatabase();
-
-        where = UsuarioContract.ID + "=" + usuario.getId();
+        //add os novos valores para Email, senha e Uid
 
         valores.put(UsuarioContract.NOME, usuario.getNome());
         valores.put(UsuarioContract.CURSO, usuario.getCurso());
-        valores.put(UsuarioContract.MATICULA, usuario.getMatricula());
-        valores.put(UsuarioContract.ID_SEMESTRE, usuario.getIdSemestre());
+        valores.put(UsuarioContract.EMAIL, usuario.getEmail());
+        valores.put(UsuarioContract.SENHA, usuario.getSenha());
+        valores.put(UsuarioContract.UID, usuario.getUid()); //novo
+        valores.put(UsuarioContract.MATRICULA, usuario.getMatricula()); //novo
+        valores.put(UsuarioContract.ID_SEMESTRE, usuario.getIdSemestre()); //novo
 
-        db.update(UsuarioContract.TABELA, valores, where, null);
         db.close();
     }
 
@@ -79,8 +82,11 @@ public class UsuarioDAO {
 
         sql.append(" SELECT " + UsuarioContract.ID + ", " +
                 UsuarioContract.NOME + ", " +
+                UsuarioContract.EMAIL + ", " +
+                UsuarioContract.SENHA + ", " +
+                UsuarioContract.UID + ", " +
                 UsuarioContract.CURSO + ", " +
-                UsuarioContract.MATICULA + ", " +
+                UsuarioContract.MATRICULA + ", " +
                 UsuarioContract.ID_SEMESTRE + " ");
         sql.append(" FROM " + UsuarioContract.TABELA + " ");
 
@@ -91,13 +97,20 @@ public class UsuarioDAO {
 
             do {
                 long id = resultado.getInt(resultado.getColumnIndexOrThrow(UsuarioContract.ID));
+                String email = resultado.getString(resultado.getColumnIndexOrThrow(UsuarioContract.EMAIL));
+                String senha = resultado.getString(resultado.getColumnIndexOrThrow(UsuarioContract.SENHA));
+                String uid = resultado.getString(resultado.getColumnIndexOrThrow(UsuarioContract.UID));
                 String nome = resultado.getString(resultado.getColumnIndexOrThrow(UsuarioContract.NOME));
                 String curso = resultado.getString(resultado.getColumnIndexOrThrow(UsuarioContract.CURSO));
-                int matricula = resultado.getInt(resultado.getColumnIndexOrThrow(UsuarioContract.MATICULA));
+                int matricula = resultado.getInt(resultado.getColumnIndexOrThrow(UsuarioContract.MATRICULA));
                 long idSemestre = resultado.getInt(resultado.getColumnIndexOrThrow(UsuarioContract.ID_SEMESTRE));
 
-                Usuario usuario = new Usuario(id, nome, curso);
-                usuario.setIdSemestre(idSemestre);
+                Usuario usuario = new Usuario();
+                usuario.setUid(uid);
+                usuario.setEmail(email);
+                usuario.setSenha(senha);
+                usuario.setNome(nome);
+                usuario.setCurso(curso);
                 usuario.setMatricula(matricula);
 
                 usuarioList.add(usuario);

@@ -8,24 +8,17 @@ import java.io.Serializable;
 
 public class Professor implements Serializable {
 
-    private Long id;
     private String nome;
     private String email;
 
 
     //Construtor da Classe
-    public Professor (Long id, String nome) {
-        this.id = id;
+    public Professor (String nome, String email) {
         this.nome = nome;
+        this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Professor(){}
 
     public String getNome() {
         return nome;
@@ -48,8 +41,4 @@ public class Professor implements Serializable {
         return this.nome;
     }
 
-    @Override
-    public boolean equals(Object professor) {
-        return this.id.equals(((Professor) professor).getId());
-    }
 }

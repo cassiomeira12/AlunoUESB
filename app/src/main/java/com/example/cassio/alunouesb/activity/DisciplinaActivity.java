@@ -3,6 +3,7 @@ package com.example.cassio.alunouesb.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,13 +24,18 @@ import com.example.cassio.alunouesb.dialog.DialogAdicionarHorario;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Horario;
 import com.example.cassio.alunouesb.model.Professor;
+import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DisciplinaActivity extends AppCompatActivity implements DialogAdicionarHorario.OnClickDialog {
 
+    private Usuario usuario = PrincipalActivity.usuario;
+
     private Disciplina disciplina;
-    private List<Horario> horarioList;
+    private ArrayList<Horario> horarioList;
     private Professor professor;
     private ArrayAdapter<Horario> adapter;
 
@@ -57,23 +63,23 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         setContentView(R.layout.activity_disciplina);
         setTitle("Disciplina");
 
-        nome = (EditText) findViewById(R.id.text_disciplina_nome);
-        abreviatura = (EditText) findViewById(R.id.text_disciplina_abreviatura);
-        nomeProfessor = (EditText) findViewById(R.id.text_disciplina_professor);
-        emailProfessor = (EditText) findViewById(R.id.text_email_professor);
-        unidade1 = (EditText) findViewById(R.id.text_unidade_1);
-        unidade2 = (EditText) findViewById(R.id.text_unidade_2);
-        unidade3 = (EditText) findViewById(R.id.text_unidade_3);
-        notaMedia = (EditText) findViewById(R.id.text_media);
-        notaFinal = (EditText) findViewById(R.id.text_final);
-        idSemestre = (TextView) findViewById(R.id.text_disciplina_semestre);
-        listHorarios = (ListView) findViewById(R.id.list_horarios);
+        nome = findViewById(R.id.text_disciplina_nome);
+        abreviatura = findViewById(R.id.text_disciplina_abreviatura);
+        nomeProfessor = findViewById(R.id.text_disciplina_professor);
+        emailProfessor =  findViewById(R.id.text_email_professor);
+        unidade1 =  findViewById(R.id.text_unidade_1);
+        unidade2 =  findViewById(R.id.text_unidade_2);
+        unidade3 =  findViewById(R.id.text_unidade_3);
+        notaMedia =  findViewById(R.id.text_media);
+        notaFinal = findViewById(R.id.text_final);
+        listHorarios = findViewById(R.id.list_horarios);
+
+
 
         disciplina = (Disciplina) getIntent().getSerializableExtra("disciplina");
+        professor = disciplina.getProfessor();
 
-        horarioList = HorarioDAO.getInstance(this).buscarTodos(disciplina.getId());
-        professor = ProfessorDAO.getInstance(this).carregaDadoById(disciplina.getIdProfessor());
-
+        horarioList = disciplina.getHorarioList();
         adapter = new ArrayAdapter<Horario>(this, android.R.layout.simple_list_item_1,horarioList);
         listHorarios.setAdapter(adapter);
 
@@ -98,8 +104,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         if (disciplina.getNotaFinal() != 0) {
             notaFinal.setText(String.valueOf(disciplina.getNotaFinal()));
         }
-
-        idSemestre.setText("Semestre "+SemestreDAO.getInstance(this).carregaDadoById(disciplina.getIdSemestre()).getSemestre());
 
         habilitarEdicao();
     }
@@ -151,9 +155,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
     private void salvar() {
         alterarDados();
-
-        DisciplinaDAO.getInstance(this).alterarRegistros(disciplina);
-        ProfessorDAO.getInstance(this).alterarRegistro(professor);
 
         Intent intent = new Intent();
         intent.putExtra("disciplina", disciplina);
@@ -214,25 +215,72 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     @Override
     public void onClickDialog(DialogAdicionarHorario.ViewHolder view) {
 
-        int dia = view.spinnerDia.getSelectedItemPosition();
-        int horario = view.spinnerHorario.getSelectedItemPosition();
+        String dia = (String) view.spinnerDia.getSelectedItem();
+        String horario = (String) view.spinnerHorario.getSelectedItem();
 
-        //int dia = dias.indexOf((String) spinnerDia.getSelectedItem());
-        //int horario = horarios.indexOf((String) spinnerHorario.getSelectedItem());
+        int intDia = convertDia(dia);
+        int intHorario = convertHorario(horario);
 
-        Horario horarioTemp = new Horario(null, dia, horario, disciplina.getId());
+        disciplina.adicionarHorario(intDia, intHorario);
 
-        long id = HorarioDAO.getInstance(this).inserirDados(horarioTemp);
 
-        if (id < 0) {
-            Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
-        } else {
-            horarioTemp.setId(id);
-            //Intent intent = new Intent();
-            //intent.putExtra("horario", horarioTemp);
-            //setResult(1, intent);
-            //finish();
+//        if (id < 0) {
+//            Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
+//        } else {
+////            horarioTemp.setId(id);
+//            //Intent intent = new Intent();
+//            //intent.putExtra("horario", horarioTemp);
+//            //setResult(1, intent);
+//            //finish();
+//        }
+
+    }
+
+    private int convertDia(String dia) {
+        int resultado = 0;
+
+        switch (dia) {
+            case "Segunda":
+                resultado = 0;
+                break;
+
+            case "Terça":
+                resultado = 1;
+                break;
+
+            case "Quarta":
+                resultado = 2;
+                break;
+
+            case "Quinta":
+                resultado = 3;
+                break;
+
+            case "Sexta":
+                resultado = 4;
+                break;
+
+            case "Sábado":
+                resultado = 5;
+                break;
         }
+        return resultado;
+    }
 
+    public int convertHorario(String horario){
+        int resultado = 0;
+
+        switch (horario){
+            case "1º Horário":
+                resultado = 0;
+                break;
+            case "2º Horário":
+                resultado = 1;
+                break;
+            case "3º Horário":
+                resultado = 2;
+                break;
+        }
+        return resultado;
     }
 }

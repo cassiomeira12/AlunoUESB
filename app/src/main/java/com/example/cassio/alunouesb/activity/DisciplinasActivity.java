@@ -9,23 +9,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.adapter.AdapterDisciplina;
 import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
 import com.example.cassio.alunouesb.model.Disciplina;
+import com.example.cassio.alunouesb.model.Semestre;
+import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisciplinasActivity extends AppCompatActivity implements AdapterDisciplina.OnClick, AdapterDisciplina.OnLongClick, DialogExcluir.OnExcluir {
+public class DisciplinasActivity extends AppCompatActivity implements AdapterDisciplina.OnClick, AdapterDisciplina.OnLongClick, DialogExcluir.OnExcluir{
 
     private Intent intent;
+    private Usuario usuario = PrincipalActivity.usuario;
     private RecyclerView recyclerView;
     private AdapterDisciplina adapter;
 
+    private ArrayList listaDisciplinas;
     public List<Disciplina> listaExclusao = new ArrayList<>();
     private List<View> listaViewSelecionadas = new ArrayList<>();
 
@@ -38,13 +44,11 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
         setContentView(R.layout.activity_disciplinas);
         setTitle("Minhas Disciplinas");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_disciplinas);
+        recyclerView = findViewById(R.id.recycler_view_disciplinas);
 
-        if (savedInstanceState != null) {
-            listaExclusao = (List<Disciplina>) savedInstanceState.getSerializable("lista");
-        }
+        listaDisciplinas = (ArrayList) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
 
-        adapter = new AdapterDisciplina(DisciplinaDAO.getInstance(this).buscarTodos(PrincipalActivity.USUARIO.getIdSemestre()), this, this, this);
+        adapter = new AdapterDisciplina(listaDisciplinas, this, this, this);
 
         recyclerView.setAdapter(adapter);
 
@@ -135,8 +139,8 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
         invalidateOptionsMenu();
         adapter.notifyDataSetChanged();
 
-        intent = new Intent(this, AdicionarDisciplinaActivity.class);
-        startActivityForResult(intent, REQUEST_NOVA_DISCIPLINA);
+        Intent telaAdicionarDisciplina = new Intent(this, AdicionarDisciplinaActivity.class);
+        startActivity(telaAdicionarDisciplina);
     }
 
     private void adicionarParaExclusao(View view) {
@@ -159,10 +163,11 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
     public void onExcluir() {
         for (Disciplina disciplina : listaExclusao) {
             adapter.removeItem(disciplina);
-            DisciplinaDAO.getInstance(this).deletarRegistros(disciplina.getId());
+            usuario.getSemestreList().remove(disciplina);
         }
 
         listaExclusao.clear();
+        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario); // apagar disciplinas selecionadas do banco de dados
         invalidateOptionsMenu();
     }
 }

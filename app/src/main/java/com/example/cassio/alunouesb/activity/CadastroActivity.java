@@ -3,6 +3,7 @@ package com.example.cassio.alunouesb.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,10 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.database.DadosOpenHelper;
+import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
+import com.example.cassio.alunouesb.database.dao.HorarioDAO;
+import com.example.cassio.alunouesb.database.dao.LembreteDAO;
+import com.example.cassio.alunouesb.database.dao.ProfessorDAO;
 import com.example.cassio.alunouesb.database.dao.SemestreDAO;
 import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -27,6 +39,8 @@ public class CadastroActivity extends AppCompatActivity {
     private Button mCancelar;
     private TextView usuarioSemestre;
     private BetterSpinner usuarioCurso;
+    private Usuario usuario;
+    public boolean cadastroRealizado = false; // variavel de controle
 
 
     @Override
@@ -56,7 +70,7 @@ public class CadastroActivity extends AppCompatActivity {
                 // verificar se os campos estão correntamente preenchidos
                 if(verificar()){
                     // fazer cadastro
-
+                    salvarUsuario();
                 }else{
                     // enviar uma mensagem de erro
                 }
@@ -75,8 +89,11 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     private boolean verificar() {
+        // veriricar se o nome de Usuario está ok
+        // verificar se o email está ok
+        // verificar se a senha está ok
+        // verificar se o semestre digitado está ok
 
-        // se o nome de usuario, sobrenome, email e senha for diferente de nulo
         if(!usuarioNome.getText().toString().isEmpty() &&
                 !usuarioEmail.toString().isEmpty() && !usuarioSenha.getText().toString().isEmpty()){
 
@@ -100,7 +117,7 @@ public class CadastroActivity extends AppCompatActivity {
         switch (id) {
 
             case R.id.action_salvar:
-                this.salvarUsuario();
+                if(verificar()) this.salvarUsuario(); // se vericar retornar true...
                 break;
         }
 
@@ -109,34 +126,61 @@ public class CadastroActivity extends AppCompatActivity {
 
 
     public void salvarUsuario() {
+        // dar um DROP no banco de dados local para nao haver choque de usuarios
+
 
         String nome = usuarioNome.getText().toString();
         String curso = usuarioCurso.getText().toString();
         String semestre = usuarioSemestre.getText().toString();
+        String email = usuarioEmail.getText().toString();
+        String senha = usuarioSenha.getText().toString();
 
-        if (!nome.isEmpty() && !curso.isEmpty() && !semestre.isEmpty()) {
+        usuario = new Usuario(nome, email, senha, curso);
 
-            Usuario usuario = new Usuario(null, nome, curso);
-            long idUsuario = UsuarioDAO.getInstance(this).inserirDados(usuario);
-            usuario.setId(idUsuario);
+        // instancia o semestre
+        Semestre semestreTemp = new Semestre(semestre);
 
-            Semestre semestreTemp = new Semestre(null, semestre, idUsuario);
-            long idSemestre = SemestreDAO.getInstance(this).inserirDados(semestreTemp);
-            semestreTemp.setId(idSemestre);
+        usuario.addSemestre(semestreTemp);
 
-            usuario.setIdSemestre(idSemestre);
+        // faz cadastro do usuario no firebase
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
 
-            UsuarioDAO.getInstance(this).alterarRegistro(usuario);
-
-            Intent telaPrincipal = new Intent(this, PrincipalActivity.class);
-            telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK  | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(telaPrincipal);
+                        String uid = FirebaseAuth.getInstance().getUid();// id do usuario no firebase
+                        usuario.setUid(uid);
 
 
+                        FirebaseFirestore.getInstance().collection("/users").document(uid).set(usuario); // adiciona usuario ao banco de dados do firebase
+                        Toast.makeText(CadastroActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_SHORT).show();
 
-        } else {
-            Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);
-            toast.show();
-        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(CadastroActivity.this, e.getCause().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        //login
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // pode-se colocar alguma tela indicamento o LOADING
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        Intent telaPrincipal = new Intent(CadastroActivity.this, PrincipalActivity.class);
+                        telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
+                        startActivity(telaPrincipal);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(CadastroActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
+
 }

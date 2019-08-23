@@ -227,7 +227,6 @@ public class CalcularMediaActivity extends AppCompatActivity {
     }
 
     private void configurarSpinner() {
-        disciplinasList = DisciplinaDAO.getInstance(this).buscarTodos(PrincipalActivity.USUARIO.getIdSemestre());
 
         ArrayAdapter<Disciplina> adapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, disciplinasList);
 
@@ -249,7 +248,6 @@ public class CalcularMediaActivity extends AppCompatActivity {
         disciplina.setUnidade3(unidade3);
         disciplina.setMedia(mediaGeral);
 
-        DisciplinaDAO.getInstance(this).alterarRegistros(disciplina);
 
     }
 

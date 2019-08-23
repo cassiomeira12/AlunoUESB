@@ -126,7 +126,7 @@ public class LembreteDAO {
                 String mensagem = resultado.getString(resultado.getColumnIndexOrThrow(LembreteContract.MENSAGEM));
                 long data = resultado.getLong(resultado.getColumnIndexOrThrow(LembreteContract.DATA));
 
-                Lembrete lembrete = new Lembrete(id, titulo, mensagem, data, idSemestre);
+                Lembrete lembrete = new Lembrete(id, titulo, mensagem, data);
                 //lembreteList.add(lembrete);
                 lembreteList.add(0, lembrete);
 
@@ -163,7 +163,7 @@ public class LembreteDAO {
                 long data = resultado.getLong(resultado.getColumnIndexOrThrow(LembreteContract.DATA));
                 long idSemestre = resultado.getLong(resultado.getColumnIndexOrThrow(LembreteContract.ID_SEMESTRE));
 
-                Lembrete lembrete = new Lembrete(id, titulo, mensagem, data, idSemestre);
+                Lembrete lembrete = new Lembrete(id, titulo, mensagem, data);
                 lembretes.add(lembrete);
 
             } while (resultado.moveToNext());

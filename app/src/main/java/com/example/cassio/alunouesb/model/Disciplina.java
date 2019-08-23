@@ -10,12 +10,10 @@ import java.util.List;
 
 public class Disciplina implements Serializable {
 
-    private Long id;
     private String nome;
     private String abreviacao;
-    private Long idProfessor;
-    private Long idSemestre;
-    private List<Horario> horarioList;
+    private Professor professor;
+    private ArrayList<Horario> horarioList;
     private float unidade1 = 0;
     private float unidade2 = 0;
     private float unidade3 = 0;
@@ -24,27 +22,25 @@ public class Disciplina implements Serializable {
 
 
     //Construtor da Classe
-    public Disciplina(Long id, String nome, String abreviacao, Long idProfessor, Long idSemestre) {
-        this.id = id;
+    public Disciplina(String nome, String abreviacao, Professor professor) {
         this.nome = nome;
         this.abreviacao = abreviacao;
-        this.idProfessor = idProfessor;
-        this.idSemestre = idSemestre;
+        this.professor = professor;
         this.horarioList = new ArrayList<>();
     }
+    public Disciplina(){}
 
-    public void adicionarHorario(Long idHorario, int dia, int horario) {
-        Horario horarioTemp = new Horario(idHorario, dia, horario, this.id);
+    public void adicionarHorario(int dia, int horario) {
+        Horario horarioTemp = new Horario(dia, horario);
         horarioList.add(horarioTemp);
     }
 
-
-    public Long getId() {
-        return id;
+    public Professor getProfessor() {
+        return professor;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
     }
 
     public String getNome() {
@@ -63,27 +59,11 @@ public class Disciplina implements Serializable {
         this.abreviacao = abreviacao;
     }
 
-    public Long getIdProfessor() {
-        return idProfessor;
-    }
-
-    public void setIdProfessor(Long idProfessor) {
-        this.idProfessor = idProfessor;
-    }
-
-    public Long getIdSemestre() {
-        return idSemestre;
-    }
-
-    public void setIdSemestre(Long idSemestre) {
-        this.idSemestre = idSemestre;
-    }
-
-    public List<Horario> getHorarioList() {
+    public ArrayList<Horario> getHorarioList() {
         return horarioList;
     }
 
-    public void setHorarioList(List<Horario> horarioList) {
+    public void setHorarioList(ArrayList<Horario> horarioList) {
         this.horarioList = horarioList;
     }
 
@@ -132,8 +112,4 @@ public class Disciplina implements Serializable {
         return this.nome;
     }
 
-    @Override
-    public boolean equals(Object disciplina) {
-        return this.id.equals(((Disciplina) disciplina).getId());
-    }
 }

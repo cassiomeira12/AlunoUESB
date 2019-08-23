@@ -15,14 +15,16 @@ import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
 import com.example.cassio.alunouesb.database.dao.HorarioDAO;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Horario;
+import com.example.cassio.alunouesb.model.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HorariosActivity extends AppCompatActivity {
 
+    private Usuario usuario = PrincipalActivity.usuario;
     private ListView listDisciplinas;
-    private List<Disciplina> disciplinaList;
+    private ArrayList<Disciplina> disciplinaList;
     private List<Horario> horarioList;
 
     private Button buttonSeg1;
@@ -57,8 +59,8 @@ public class HorariosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_horarios);
         setTitle("Meus Horários");
 
-        listDisciplinas = (ListView) findViewById(R.id.list_disciplinas);
-        disciplinaList = DisciplinaDAO.getInstance(this).buscarTodos(PrincipalActivity.USUARIO.getIdSemestre());
+        listDisciplinas = findViewById(R.id.list_disciplinas);
+        disciplinaList = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, configurarListView(disciplinaList));
 
@@ -74,11 +76,11 @@ public class HorariosActivity extends AppCompatActivity {
         //Disciplina disciplina;
 
         //Caso editou um Item
-        if (requestCode == REQUEST_ABRIR_DISCIPLINA && resultCode == 1) {
-            //disciplina = (Disciplina) data.getSerializableExtra("disciplina");
-            disciplinaList = DisciplinaDAO.getInstance(this).buscarTodos(PrincipalActivity.USUARIO.getIdSemestre());
-            adicionarDisciplina();
-        }
+//        if (requestCode == REQUEST_ABRIR_DISCIPLINA && resultCode == 1) {
+//            //disciplina = (Disciplina) data.getSerializableExtra("disciplina");
+//            disciplinaList = DisciplinaDAO.getInstance(this).buscarTodos(PrincipalActivity.usuario.getIdSemestre());
+//            adicionarDisciplina();
+//        }
 
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -147,8 +149,7 @@ public class HorariosActivity extends AppCompatActivity {
 
     private void adicionarDisciplina() {
         for (Disciplina disciplina : disciplinaList) {
-            horarioList = HorarioDAO.getInstance(this).buscarTodos(disciplina.getId());
-            for (Horario horario : horarioList) {
+            for (Horario horario : disciplina.getHorarioList()) {
                 this.setHorario(horario);
             }
         }
@@ -156,113 +157,112 @@ public class HorariosActivity extends AppCompatActivity {
     }
 
     private void setHorario(Horario horario) {
-        Disciplina disciplina = DisciplinaDAO.getInstance(this).carregaDadoById(horario.getIdDisciplina());
 
-        switch (horario.getDia()) {
-
-            case 0://Segunda
-
-                if (horario.getHorario() == 0) {
-                    this.buttonSeg1.setText(disciplina.getAbreviacao());
-                    this.buttonSeg1.setTag(disciplina);
-                    this.buttonSeg1.setEnabled(true);
-                } else if (horario.getHorario() == 1) {
-                    this.buttonSeg2.setText(disciplina.getAbreviacao());
-                    this.buttonSeg2.setTag(disciplina);
-                    this.buttonSeg2.setEnabled(true);
-                } else {
-                    this.buttonSeg3.setText(disciplina.getAbreviacao());
-                    this.buttonSeg3.setTag(disciplina);
-                    this.buttonSeg3.setEnabled(true);
-                }
-                break;
-
-            case 1://Terça
-
-                if (horario.getHorario() == 0) {
-                    this.buttonTer1.setText(disciplina.getAbreviacao());
-                    this.buttonTer1.setTag(disciplina);
-                    this.buttonTer1.setEnabled(true);
-                } else if (horario.getHorario() == 1) {
-                    this.buttonTer2.setText(disciplina.getAbreviacao());
-                    this.buttonTer2.setTag(disciplina);
-                    this.buttonTer2.setEnabled(true);
-                } else {
-                    this.buttonTer3.setText(disciplina.getAbreviacao());
-                    this.buttonTer3.setTag(disciplina);
-                    this.buttonTer3.setEnabled(true);
-                }
-                break;
-
-            case 2://Quarta
-
-                if (horario.getHorario() == 0) {
-                    this.buttonQuar1.setText(disciplina.getAbreviacao());
-                    this.buttonQuar1.setTag(disciplina);
-                    this.buttonQuar1.setEnabled(true);
-                } else if (horario.getHorario() == 1) {
-                    this.buttonQuar2.setText(disciplina.getAbreviacao());
-                    this.buttonQuar2.setTag(disciplina);
-                    this.buttonQuar2.setEnabled(true);
-                } else {
-                    this.buttonQuar3.setText(disciplina.getAbreviacao());
-                    this.buttonQuar3.setTag(disciplina);
-                    this.buttonQuar3.setEnabled(true);
-                }
-                break;
-
-            case 3://Quinta
-
-                if (horario.getHorario() == 0) {
-                    this.buttonQuin1.setText(disciplina.getAbreviacao());
-                    this.buttonQuin1.setTag(disciplina);
-                    this.buttonQuin1.setEnabled(true);
-                } else if (horario.getHorario() == 1) {
-                    this.buttonQuin2.setText(disciplina.getAbreviacao());
-                    this.buttonQuin2.setTag(disciplina);
-                    this.buttonQuin2.setEnabled(true);
-                } else {
-                    this.buttonQuin3.setText(disciplina.getAbreviacao());
-                    this.buttonQuin3.setTag(disciplina);
-                    this.buttonQuin3.setEnabled(true);
-                }
-                break;
-
-            case 4://Sexta
-
-                if (horario.getHorario() == 0) {
-                    this.buttonSex1.setText(disciplina.getAbreviacao());
-                    this.buttonSex1.setTag(disciplina);
-                    this.buttonSex1.setEnabled(true);
-                } else if (horario.getHorario() == 1) {
-                    this.buttonSex2.setText(disciplina.getAbreviacao());
-                    this.buttonSex2.setTag(disciplina);
-                    this.buttonSex2.setEnabled(true);
-                } else {
-                    this.buttonSex3.setText(disciplina.getAbreviacao());
-                    this.buttonSex3.setTag(disciplina);
-                    this.buttonSex3.setEnabled(true);
-                }
-                break;
-
-            case 5://Sabado
-
-                if (horario.getHorario() == 0) {
-                    this.buttonSab1.setText(disciplina.getAbreviacao());
-                    this.buttonSab1.setTag(disciplina);
-                    this.buttonSab1.setEnabled(true);
-                } else if (horario.getHorario() == 1) {
-                    this.buttonSab2.setText(disciplina.getAbreviacao());
-                    this.buttonSab2.setTag(disciplina);
-                    this.buttonSab2.setEnabled(true);
-                } else {
-                    this.buttonSab3.setText(disciplina.getAbreviacao());
-                    this.buttonSab3.setTag(disciplina);
-                    this.buttonSab3.setEnabled(true);
-                }
-                break;
-
-        }
+//        switch (horario.getDia()) {
+//
+//            case 0://Segunda
+//
+//                if (horario.getHorario() == 0) {
+//                    this.buttonSeg1.setText(disciplina.getAbreviacao());
+//                    this.buttonSeg1.setTag(disciplina);
+//                    this.buttonSeg1.setEnabled(true);
+//                } else if (horario.getHorario() == 1) {
+//                    this.buttonSeg2.setText(disciplina.getAbreviacao());
+//                    this.buttonSeg2.setTag(disciplina);
+//                    this.buttonSeg2.setEnabled(true);
+//                } else {
+//                    this.buttonSeg3.setText(disciplina.getAbreviacao());
+//                    this.buttonSeg3.setTag(disciplina);
+//                    this.buttonSeg3.setEnabled(true);
+//                }
+//                break;
+//
+//            case 1://Terça
+//
+//                if (horario.getHorario() == 0) {
+//                    this.buttonTer1.setText(disciplina.getAbreviacao());
+//                    this.buttonTer1.setTag(disciplina);
+//                    this.buttonTer1.setEnabled(true);
+//                } else if (horario.getHorario() == 1) {
+//                    this.buttonTer2.setText(disciplina.getAbreviacao());
+//                    this.buttonTer2.setTag(disciplina);
+//                    this.buttonTer2.setEnabled(true);
+//                } else {
+//                    this.buttonTer3.setText(disciplina.getAbreviacao());
+//                    this.buttonTer3.setTag(disciplina);
+//                    this.buttonTer3.setEnabled(true);
+//                }
+//                break;
+//
+//            case 2://Quarta
+//
+//                if (horario.getHorario() == 0) {
+//                    this.buttonQuar1.setText(disciplina.getAbreviacao());
+//                    this.buttonQuar1.setTag(disciplina);
+//                    this.buttonQuar1.setEnabled(true);
+//                } else if (horario.getHorario() == 1) {
+//                    this.buttonQuar2.setText(disciplina.getAbreviacao());
+//                    this.buttonQuar2.setTag(disciplina);
+//                    this.buttonQuar2.setEnabled(true);
+//                } else {
+//                    this.buttonQuar3.setText(disciplina.getAbreviacao());
+//                    this.buttonQuar3.setTag(disciplina);
+//                    this.buttonQuar3.setEnabled(true);
+//                }
+//                break;
+//
+//            case 3://Quinta
+//
+//                if (horario.getHorario() == 0) {
+//                    this.buttonQuin1.setText(disciplina.getAbreviacao());
+//                    this.buttonQuin1.setTag(disciplina);
+//                    this.buttonQuin1.setEnabled(true);
+//                } else if (horario.getHorario() == 1) {
+//                    this.buttonQuin2.setText(disciplina.getAbreviacao());
+//                    this.buttonQuin2.setTag(disciplina);
+//                    this.buttonQuin2.setEnabled(true);
+//                } else {
+//                    this.buttonQuin3.setText(disciplina.getAbreviacao());
+//                    this.buttonQuin3.setTag(disciplina);
+//                    this.buttonQuin3.setEnabled(true);
+//                }
+//                break;
+//
+//            case 4://Sexta
+//
+//                if (horario.getHorario() == 0) {
+//                    this.buttonSex1.setText(disciplina.getAbreviacao());
+//                    this.buttonSex1.setTag(disciplina);
+//                    this.buttonSex1.setEnabled(true);
+//                } else if (horario.getHorario() == 1) {
+//                    this.buttonSex2.setText(disciplina.getAbreviacao());
+//                    this.buttonSex2.setTag(disciplina);
+//                    this.buttonSex2.setEnabled(true);
+//                } else {
+//                    this.buttonSex3.setText(disciplina.getAbreviacao());
+//                    this.buttonSex3.setTag(disciplina);
+//                    this.buttonSex3.setEnabled(true);
+//                }
+//                break;
+//
+//            case 5://Sabado
+//
+//                if (horario.getHorario() == 0) {
+//                    this.buttonSab1.setText(disciplina.getAbreviacao());
+//                    this.buttonSab1.setTag(disciplina);
+//                    this.buttonSab1.setEnabled(true);
+//                } else if (horario.getHorario() == 1) {
+//                    this.buttonSab2.setText(disciplina.getAbreviacao());
+//                    this.buttonSab2.setTag(disciplina);
+//                    this.buttonSab2.setEnabled(true);
+//                } else {
+//                    this.buttonSab3.setText(disciplina.getAbreviacao());
+//                    this.buttonSab3.setTag(disciplina);
+//                    this.buttonSab3.setEnabled(true);
+//                }
+//                break;
+//
+//        }
     }
 
     private List<String> configurarListView(List<Disciplina> lista) {

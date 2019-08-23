@@ -58,10 +58,10 @@ public class DialogAdicionarHorario extends DialogFragment {
         private List<String> horarios = new ArrayList<>();
 
         public ViewHolder(View view) {
-            spinnerDia = (Spinner) view.findViewById(R.id.spinner_dia);
-            spinnerHorario = (Spinner) view.findViewById(R.id.spinner_horario);
-            salvar = (Button) view.findViewById(R.id.button_salvar);
-            cancelar = (Button) view.findViewById(R.id.button_cancelar);
+            spinnerDia = view.findViewById(R.id.spinner_dia);
+            spinnerHorario =  view.findViewById(R.id.spinner_horario);
+            salvar = view.findViewById(R.id.button_salvar);
+            cancelar = view.findViewById(R.id.button_cancelar);
 
 
             dias.add("Segunda");

@@ -73,29 +73,32 @@ public class AdicionarUsuarioActivity extends AppCompatActivity {
         String curso = usuarioCurso.getText().toString();
         String semestre = usuarioSemestre.getText().toString();
 
-        if (!nome.isEmpty() && !curso.isEmpty() && !semestre.isEmpty()) {
-
-            Usuario usuario = new Usuario(null, nome, curso);
-            long idUsuario = UsuarioDAO.getInstance(this).inserirDados(usuario);
-            usuario.setId(idUsuario);
-
-            Semestre semestreTemp = new Semestre(null, semestre, idUsuario);
-            long idSemestre = SemestreDAO.getInstance(this).inserirDados(semestreTemp);
-            semestreTemp.setId(idSemestre);
-
-            usuario.setIdSemestre(idSemestre);
-
-            UsuarioDAO.getInstance(this).alterarRegistro(usuario);
-
-            Intent intent = new Intent();
-            intent.putExtra("usuario", usuario);
-            setResult(1, intent);
-
-            finish();
-
-        } else {
-            Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);
-            toast.show();
-        }
+//        if (!nome.isEmpty() && !curso.isEmpty() && !semestre.isEmpty()) {
+//
+//            Usuario usuario = new Usuario();
+//            usuario.setNome(nome);
+//            usuario.setCurso(curso);
+//
+//            long idUsuario = UsuarioDAO.getInstance(this).inserirDados(usuario);
+//            usuario.setId(idUsuario);
+//
+//            Semestre semestreTemp = new Semestre(null, semestre, idUsuario);
+//            long idSemestre = SemestreDAO.getInstance(this).inserirDados(semestreTemp);
+//            semestreTemp.setId(idSemestre);
+//
+//            usuario.setIdSemestre(idSemestre);
+//
+//            UsuarioDAO.getInstance(this).alterarRegistro(usuario);
+//
+//            Intent intent = new Intent();
+//            intent.putExtra("usuario", usuario);
+//            setResult(1, intent);
+//
+//            finish();
+//
+//        } else {
+//            Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);
+//            toast.show();
+//        }
     }
 }

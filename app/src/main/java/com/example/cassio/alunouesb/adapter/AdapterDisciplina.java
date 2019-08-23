@@ -110,7 +110,6 @@ public class AdapterDisciplina extends Adapter {
 
         disciplinaList.get(disciplinaList.indexOf(disciplina)).setNome(disciplina.getNome());
         disciplinaList.get(disciplinaList.indexOf(disciplina)).setAbreviacao(disciplina.getAbreviacao());
-        disciplinaList.get(disciplinaList.indexOf(disciplina)).setIdProfessor(disciplina.getIdProfessor());
 
         disciplinaList.get(disciplinaList.indexOf(disciplina)).setUnidade1(disciplina.getUnidade1());
         disciplinaList.get(disciplinaList.indexOf(disciplina)).setUnidade2(disciplina.getUnidade2());

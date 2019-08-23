@@ -10,6 +10,7 @@ import com.example.cassio.alunouesb.database.contract.LembreteContract;
 import com.example.cassio.alunouesb.database.contract.ProfessorContract;
 import com.example.cassio.alunouesb.database.contract.SemestreContract;
 import com.example.cassio.alunouesb.database.contract.UsuarioContract;
+import com.example.cassio.alunouesb.model.Usuario;
 
 /**
  * Created by cassio on 02/09/17.
@@ -27,9 +28,12 @@ public class DadosOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_USUARIO = String.format(
             "CREATE TABLE " + UsuarioContract.TABELA + " ( " +
                     UsuarioContract.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    UsuarioContract.UID + " INTEGER, " +
                     UsuarioContract.NOME + " TEXT NOT NULL, " +
+                    UsuarioContract.EMAIL + " TEXT NOT NULL, " +
+                    UsuarioContract.SENHA + " TEXT NOT NULL, " +
                     UsuarioContract.CURSO + " TEXT NOT NULL, " +
-                    UsuarioContract.MATICULA + " TEXT, " +
+                    UsuarioContract.MATRICULA + " TEXT, " +
                     UsuarioContract.ID_SEMESTRE + " INTEGER NOT NULL);"
     );
 

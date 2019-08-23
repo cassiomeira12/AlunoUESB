@@ -48,20 +48,19 @@
         android:layout_marginTop="16dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="122dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Semestre Atual"/>
+                android:text="Semestre Atual" />
 
             <Spinner
                 android:id="@+id/spinner_semestre"
-                android:layout_width="100dp"
-                android:layout_height="40dp">
-            </Spinner>
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
 
         </LinearLayout>
 

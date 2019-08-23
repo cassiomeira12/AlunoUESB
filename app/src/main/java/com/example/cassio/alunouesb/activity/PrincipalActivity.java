@@ -3,6 +3,7 @@ package com.example.cassio.alunouesb.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,12 @@ import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.model.Document;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.w3c.dom.Text;
@@ -23,105 +30,93 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class PrincipalActivity extends AppCompatActivity {
 
-    public static Usuario USUARIO;
-    public static Semestre SEMESTRE;
+    public static Usuario usuario;
+    public static Semestre semestre;
+    public static final int ALTERAR_DADOS = 1;
+    public static final int NOVO_USUARIO = 2;
 
     private TextView usuarioNome;
     private TextView usuarioCurso;
     private TextView textSemestre;
     private ImageView imageCurso;
 
-    private Intent intent;
-
-    private int REQUEST_NOVO_USUARIO = 1;
-    private int REQUEST_ABRIR_USUARIO = 2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-        usuarioNome = (TextView) findViewById(R.id.usuario_nome);
-        usuarioCurso = (TextView) findViewById(R.id.usuario_curso);
-        textSemestre = (TextView) findViewById(R.id.text_semestre);
-        imageCurso = (ImageView) findViewById(R.id.image_curso);
+        usuarioNome = findViewById(R.id.usuario_nome);
+        usuarioCurso = findViewById(R.id.usuario_curso);
+        textSemestre = findViewById(R.id.text_semestre);
+        imageCurso = findViewById(R.id.image_curso);
+
+        if(FirebaseAuth.getInstance().getUid() != null ){
+
+            // carrega os dados do usuario
+            String uid = FirebaseAuth.getInstance().getUid();
+            FirebaseFirestore.getInstance().collection("/users").document(uid)
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            if(e != null){
+                                Toast.makeText(PrincipalActivity.this, "Erro no Snapshot", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            usuario = documentSnapshot.toObject(Usuario.class);
+                            carregarDados();
+                        }
+            });
 
 
 
-        if (!UsuarioDAO.getInstance(this).buscarTodos().isEmpty()) {
-
-            this.USUARIO = UsuarioDAO.getInstance(this).buscarTodos().get(0);
-            usuarioNome.setText(USUARIO.getNome());
-            usuarioCurso.setText(USUARIO.getCurso());
-            SEMESTRE = SemestreDAO.getInstance(this).carregaDadoById(USUARIO.getIdSemestre());
-            textSemestre.setText("Semestre " + SEMESTRE.getSemestre());
-            mudarImagemCurso(USUARIO.getCurso());
-
-        } else {
-
+        }else{
             Intent telaLogin = new Intent(this, LoginActivity.class);
+            telaLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(telaLogin);
-
         }
 
+
+
+    }
+
+    private void carregarDados() {
+        semestre = usuario.getSemestre(usuario.getIdSemestre());
+
+        usuarioNome.setText(usuario.getNome());
+        usuarioCurso.setText(usuario.getCurso());
+        textSemestre.setText(semestre.getSemestre());
+        mudarImagemCurso(usuario.getCurso());
     }
 
     public void chamarTelaHorarios(View view) {
-        this.intent = new Intent(this, HorariosActivity.class);
-        startActivity(intent);
+        Intent telaHorarios = new Intent(this, HorariosActivity.class);
+        startActivity(telaHorarios);
     }
 
     public void chamarTelaLembretes(View view) {
-        this.intent = new Intent(this, LembretesActivity.class);
-        startActivity(intent);
+        Intent telaLembretes = new Intent(this, LembretesActivity.class);
+        startActivity(telaLembretes);
     }
 
     public void chamarTelaDisciplinas(View view) {
-        this.intent = new Intent(this, DisciplinasActivity.class);
-        startActivity(intent);
+        Intent telaDisciplinas = new Intent(this, DisciplinasActivity.class);
+        startActivity(telaDisciplinas);
     }
 
     public void chamarTelaCalcularMedia(View view) {
-        this.intent = new Intent(this, CalcularMediaActivity.class);
-        startActivity(intent);
+        Intent telaCalcularMedia = new Intent(this, CalcularMediaActivity.class);
+        startActivity(telaCalcularMedia);
     }
 
     public void chamarTelaUsuario(View view) {
-
-        if (UsuarioDAO.getInstance(this).buscarTodos().isEmpty()) {
-            this.intent = new Intent(this, AdicionarUsuarioActivity.class);
-            startActivityForResult(intent, REQUEST_NOVO_USUARIO);
-
-        } else {
-            this.intent = new Intent(this, UsuarioActivity.class);
-            startActivityForResult(intent, REQUEST_ABRIR_USUARIO);
-        }
-
-
+         Intent telaUsuario = new Intent(this, UsuarioActivity.class);
+         startActivityForResult(telaUsuario, NOVO_USUARIO);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        //Caso adicionou um novo Item
-        if (requestCode == REQUEST_NOVO_USUARIO && data != null) {
-            USUARIO = (Usuario) data.getSerializableExtra("usuario");
-        }
-
-        if (requestCode == REQUEST_ABRIR_USUARIO && resultCode == 1) {
-            USUARIO = (Usuario) data.getSerializableExtra("usuario");
-        }
-
-        usuarioNome.setText(USUARIO.getNome());
-        usuarioCurso.setText(USUARIO.getCurso());
-        SEMESTRE = SemestreDAO.getInstance(this).carregaDadoById(USUARIO.getIdSemestre());
-        textSemestre.setText("Semestre " + SEMESTRE.getSemestre());
-        mudarImagemCurso(USUARIO.getCurso());
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     private void mudarImagemCurso(String curso) {
 
@@ -208,5 +203,14 @@ public class PrincipalActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == NOVO_USUARIO && resultCode == ALTERAR_DADOS){
+            carregarDados();
+        }
+        carregarDados();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

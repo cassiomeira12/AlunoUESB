@@ -57,26 +57,26 @@ public class AdicionarHorarioActivity extends AppCompatActivity {
         spinnerHorario.setAdapter(adapterHorario);
 
     }
-
-    public void salvarHorario(View view) {
-        int dia = dias.indexOf((String) spinnerDia.getSelectedItem());
-        int horario = horarios.indexOf((String) spinnerHorario.getSelectedItem());
-
-        Horario horarioTemp = new Horario(null, dia, horario, disciplina.getId());
-
-        long id = HorarioDAO.getInstance(this).inserirDados(horarioTemp);
-
-        if (id < 0) {
-            Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
-        } else {
-            horarioTemp.setId(id);
-            Intent intent = new Intent();
-            intent.putExtra("horario", horarioTemp);
-            setResult(1, intent);
-            finish();
-        }
-
-    }
+//
+//    public void salvarHorario(View view) {
+//        int dia = dias.indexOf((String) spinnerDia.getSelectedItem());
+//        int horario = horarios.indexOf((String) spinnerHorario.getSelectedItem());
+////
+////        Horario horarioTemp = new Horario(null, dia, horario, disciplina.getId());
+//
+//        long id = HorarioDAO.getInstance(this).inserirDados(horarioTemp);
+//
+//        if (id < 0) {
+//            Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
+//        } else {
+//            horarioTemp.setId(id);
+//            Intent intent = new Intent();
+//            intent.putExtra("horario", horarioTemp);
+//            setResult(1, intent);
+//            finish();
+//        }
+//
+//    }
 
 
 

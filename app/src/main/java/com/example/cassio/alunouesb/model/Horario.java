@@ -8,27 +8,16 @@ import java.io.Serializable;
 
 public class Horario implements Serializable {
 
-    private Long id;
     private int dia;
     private int horario;
-    private Long idDisciplina;
 
     //Construtor da classe
-    public Horario (Long id, int dia, int horario, Long idDisciplina) {
-        this.id = id;
+    public Horario (int dia, int horario) {
         this.dia = dia;
         this.horario = horario;
-        this.idDisciplina = idDisciplina;
     }
+    public Horario(){}
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getDia() {
         return dia;
@@ -44,14 +33,6 @@ public class Horario implements Serializable {
 
     public void setHorario(int horario) {
         this.horario = horario;
-    }
-
-    public Long getIdDisciplina() {
-        return idDisciplina;
-    }
-
-    public void setIdDisciplina(Long idDisciplina) {
-        this.idDisciplina = idDisciplina;
     }
 
     @Override

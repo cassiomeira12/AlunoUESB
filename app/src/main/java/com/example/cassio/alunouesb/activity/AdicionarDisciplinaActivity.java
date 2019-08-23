@@ -1,8 +1,10 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,9 +16,15 @@ import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
 import com.example.cassio.alunouesb.database.dao.ProfessorDAO;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Professor;
+import com.example.cassio.alunouesb.model.Semestre;
+import com.example.cassio.alunouesb.model.Usuario;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdicionarDisciplinaActivity extends AppCompatActivity {
 
+    private Usuario usuario = PrincipalActivity.usuario;
     private EditText nome;
     private EditText abreviatura;
     private EditText nomeProfessor;
@@ -27,10 +35,10 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_disciplina);
 
-        nome = (EditText) findViewById(R.id.text_disciplina_nome);
-        abreviatura = (EditText) findViewById(R.id.text_disciplina_abreviatura);
-        nomeProfessor = (EditText) findViewById(R.id.text_disciplina_professor);
-        emailProfessor = (EditText) findViewById(R.id.text_disciplina_email_professor);
+        nome = findViewById(R.id.text_disciplina_nome);
+        abreviatura = findViewById(R.id.text_disciplina_abreviatura);
+        nomeProfessor = findViewById(R.id.text_disciplina_professor);
+        emailProfessor = findViewById(R.id.text_disciplina_email_professor);
 
     }
 
@@ -68,29 +76,29 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
 
         if (!nome.isEmpty() && !abreviatura.isEmpty() && !nomeProfessor.isEmpty()) {
 
-            Professor professorTemp = new Professor(null, nomeProfessor);
-            professorTemp.setEmail(emailProfessor);
+            Professor professorTemp = new Professor(nomeProfessor, emailProfessor);
+            Disciplina disciplina = new Disciplina(nome, abreviatura, professorTemp);
 
-            long idProfessor = ProfessorDAO.getInstance(this).inserirDados(professorTemp);
+            Semestre semestre = usuario.getSemestreList().get(usuario.getIdSemestre());
+            semestre.adicionarDisciplina(disciplina);
+            Log.e("Teste", "Disciplina: " + nome + "  Professor: " + professorTemp.getNome());
 
-            long idSemestre = PrincipalActivity.SEMESTRE.getId();
+            FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AdicionarDisciplinaActivity.this, "Falha ao adicionar", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            finish();
+                        }
+                    });
 
-            Disciplina disciplina = new Disciplina(null, nome, abreviatura, idProfessor, idSemestre);
 
-            long id = DisciplinaDAO.getInstance(this).inserirDados(disciplina);
 
-            if (id < 0) {
-                Toast.makeText(getApplicationContext(), "Erro, ao inserir", Toast.LENGTH_LONG).show();
-            } else {
-                disciplina.setId(id);
-                Intent intent = new Intent();
-                intent.putExtra("disciplina", disciplina);
-                setResult(1, intent);//Passando resultado 1, a disciplina foi criada
-                finish();
-            }
-        } else {
-            Toast toast = Toast.makeText(this, "Dados insuficentes", Toast.LENGTH_LONG);
-            toast.show();
         }
     }
 }

@@ -53,7 +53,7 @@ public class SemestreDAO {
         String semestre = cursor.getString(cursor.getColumnIndexOrThrow(SemestreContract.SEMESTRE));
         long idUsuario = cursor.getInt(cursor.getColumnIndexOrThrow(SemestreContract.ID_USUARIO));
 
-        Semestre semestreTemp = new Semestre(idSemestre, semestre, idUsuario);
+        Semestre semestreTemp = new Semestre(semestre);
 
         return semestreTemp;
     }
@@ -65,7 +65,6 @@ public class SemestreDAO {
         db = banco.getWritableDatabase();
 
         valores.put(SemestreContract.SEMESTRE, semestre.getSemestre());
-        valores.put(SemestreContract.ID_USUARIO, semestre.getIdUsuario());
 
         resultadoID = db.insertOrThrow(SemestreContract.TABELA, null, valores);
         db.close();
@@ -76,15 +75,9 @@ public class SemestreDAO {
         ContentValues valores = new ContentValues();
         String where;
 
-        db = banco.getReadableDatabase();
-
-        where = SemestreContract.ID + "=" + semestre.getId();
 
         valores.put(SemestreContract.SEMESTRE, semestre.getSemestre());
-        valores.put(SemestreContract.ID_USUARIO, semestre.getIdUsuario());
 
-        db.update(SemestreContract.TABELA, valores, where, null);
-        db.close();
     }
 
     public void deletarRegistro(long id) {
@@ -115,7 +108,7 @@ public class SemestreDAO {
                 String semestre = resultado.getString(resultado.getColumnIndexOrThrow(SemestreContract.SEMESTRE));
                 long idUsuario = resultado.getInt(resultado.getColumnIndexOrThrow(SemestreContract.ID_USUARIO));
 
-                Semestre semestreTemp = new Semestre(id, semestre, idUsuario);
+                Semestre semestreTemp = new Semestre(semestre);
                 semestreList.add(semestreTemp);
 
             } while (resultado.moveToNext());
