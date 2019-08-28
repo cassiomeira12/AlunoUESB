@@ -1,6 +1,7 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,8 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +54,10 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     private TextView idSemestre;
     private ListView listHorarios;
 
+    //Number Picker
+    private Button negativoNumberPicker, positivoNumberPicker;
+    private TextView valueNumberPicker;
+
     private Switch switchMenu;
 
     private boolean permitirEdicao = true;
@@ -73,8 +80,9 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         notaMedia =  findViewById(R.id.text_media);
         notaFinal = findViewById(R.id.text_final);
         listHorarios = findViewById(R.id.list_horarios);
-
-
+        valueNumberPicker = findViewById(R.id.number_picker_value);
+        negativoNumberPicker = findViewById(R.id.number_picker_negative);
+        positivoNumberPicker = findViewById(R.id.number_picker_positive);
 
         disciplina = (Disciplina) getIntent().getSerializableExtra("disciplina");
         professor = disciplina.getProfessor();
@@ -88,6 +96,36 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         abreviatura.setText(disciplina.getAbreviacao());
         nomeProfessor.setText(professor.getNome());
         emailProfessor.setText(professor.getEmail());
+
+        negativoNumberPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setFalta(-1);
+            }
+        });
+
+        negativoNumberPicker.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                setFalta(-5);
+                return false;
+            }
+        });
+
+        positivoNumberPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setFalta(1);
+            }
+        });
+
+        positivoNumberPicker.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                setFalta(5);
+                return false;
+            }
+        });
 
         if (disciplina.getUnidade1() != 0) {
             unidade1.setText(String.valueOf(disciplina.getUnidade1()));
@@ -210,6 +248,19 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         this.unidade3.setEnabled(permitirEdicao);
         //this.notaMedia.setEnabled(permitirEdicao);
         //this.notaFinal.setEnabled(permitirEdicao);
+    }
+
+    private void setFalta(int valor){
+        int faltas = disciplina.getFaltas();
+
+        if(faltas + valor < 0 || faltas + valor > 100){
+            return;
+        }
+
+        faltas += valor;
+        disciplina.setFaltas(faltas);
+
+        valueNumberPicker.setText(faltas + "");
     }
 
     @Override

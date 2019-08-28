@@ -19,6 +19,7 @@ public class Disciplina implements Serializable {
     private float unidade3 = 0;
     private float notaFinal = 0;
     private float media = 0;
+    private int faltas = 0;
 
 
     //Construtor da Classe
@@ -105,6 +106,14 @@ public class Disciplina implements Serializable {
 
     public void setMedia(float media) {
         this.media = media;
+    }
+
+    public int getFaltas() {
+        return faltas;
+    }
+
+    public void setFaltas(int faltas) {
+        this.faltas = faltas;
     }
 
     @Override
