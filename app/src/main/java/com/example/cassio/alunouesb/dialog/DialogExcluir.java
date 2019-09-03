@@ -1,7 +1,9 @@
 package com.example.cassio.alunouesb.dialog;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -20,10 +22,9 @@ import com.example.cassio.alunouesb.R;
 public class DialogExcluir extends DialogFragment {
 
     private OnExcluir onExcluir;
-
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.dialog_excluir, container);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -47,9 +48,9 @@ public class DialogExcluir extends DialogFragment {
         final Button buttonNao;
 
         public ViewHolder(View view) {
-            textInformacao = (TextView) view.findViewById(R.id.text_informacao);
-            buttonSim = (Button) view.findViewById(R.id.button_sim);
-            buttonNao = (Button) view.findViewById(R.id.button_nao);
+            textInformacao = view.findViewById(R.id.text_informacao);
+            buttonSim = view.findViewById(R.id.button_sim);
+            buttonNao = view.findViewById(R.id.button_nao);
 
             textInformacao.setText(getTag());
 

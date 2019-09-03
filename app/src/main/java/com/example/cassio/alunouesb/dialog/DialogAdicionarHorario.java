@@ -1,5 +1,6 @@
 package com.example.cassio.alunouesb.dialog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.model.Horario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,5 +102,7 @@ public class DialogAdicionarHorario extends DialogFragment {
             dismiss();
 
         }
+
+
     }
 }

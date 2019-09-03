@@ -1,15 +1,20 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.R;
@@ -24,7 +29,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisciplinasActivity extends AppCompatActivity implements AdapterDisciplina.OnClick, AdapterDisciplina.OnLongClick, DialogExcluir.OnExcluir{
+public class DisciplinasActivity extends AppCompatActivity implements AdapterDisciplina.OnClick, AdapterDisciplina.OnLongClick, DialogExcluir.OnExcluir, SwipeRefreshLayout.OnRefreshListener{
 
     private Intent intent;
     private Usuario usuario = PrincipalActivity.usuario;
@@ -38,6 +43,8 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
     private int REQUEST_NOVA_DISCIPLINA = 1;
     private int REQUEST_ABRIR_DISCIPLINA = 2;
 
+    private SwipeRefreshLayout mRefreshPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +52,15 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
         setTitle("Minhas Disciplinas");
 
         recyclerView = findViewById(R.id.recycler_view_disciplinas);
+        mRefreshPage = findViewById(R.id.refreshPage);
+
+        mRefreshPage.setOnRefreshListener(this);
+
+        carregarDadosTela();
+    }
+
+    private void carregarDadosTela() {
+        this.usuario = PrincipalActivity.usuario;
 
         listaDisciplinas = (ArrayList) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
 
@@ -130,6 +146,7 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
             adapter.update(disciplina);
         }
 
+        carregarDadosTela();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -169,5 +186,12 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
         listaExclusao.clear();
         FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario); // apagar disciplinas selecionadas do banco de dados
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onRefresh() {
+        carregarDadosTela();
+        mRefreshPage.setRefreshing(false);
+
     }
 }

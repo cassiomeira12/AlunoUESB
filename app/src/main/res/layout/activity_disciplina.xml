@@ -307,8 +307,8 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:gravity="center"
-                                android:maxLines="1"
-                                android:text="0.0" />
+                                android:hint="0.0"
+                                android:maxLines="1" />
 
                         </LinearLayout>
 
@@ -330,12 +330,13 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:gravity="center"
-                                android:maxLines="1"
-                                android:text="0.0" />
+                                android:hint="0.0"
+                                android:maxLines="1" />
 
                         </LinearLayout>
 
                         <ImageView
+                            android:id="@+id/emotion"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
