@@ -273,7 +273,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
         if(media >= 7){
 
-            NumberFormat formatter = new DecimalFormat("#.00"); // formato para decimal com duas casas decimais
+            NumberFormat formatter = new DecimalFormat("0.00"); // formato para decimal com duas casas decimais
             media = Float.parseFloat(formatter.format(media));
 
             disciplina.setMedia(media);
@@ -283,20 +283,22 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
             disciplina.setNotaFinal(0);
 
         }else{
-            float mNotaFinal;
-            if(notaFinal.getText().toString().isEmpty()){ // se vazio, nota final recebe zero
-                mNotaFinal = 0;
-            }else{ // se nao vazio, nota final recebe o valor que esta no TextEdit
-                mNotaFinal = Float.valueOf(notaFinal.getText().toString());
+            if(media > 0){
+                float mNotaFinal;
+                if(notaFinal.getText().toString().isEmpty()){ // se vazio, nota final recebe zero
+                    mNotaFinal = 0;
+                }else{ // se nao vazio, nota final recebe o valor que esta no TextEdit
+                    mNotaFinal = Float.valueOf(notaFinal.getText().toString());
+                }
+
+                media = (float) ((media * 0.7) + mNotaFinal * 0.3); // calculo da media apos a prova final
+
+                NumberFormat formatter = new DecimalFormat("0.00"); // formato para decimal com duas casas decimais
+                media = Float.parseFloat(formatter.format(media));
+
+                disciplina.setMedia(media);
+                notaMedia.setText(String.valueOf(media));
             }
-
-            media = (float) ((media * 0.7) + mNotaFinal * 0.3); // calculo da media apos a prova final
-
-            NumberFormat formatter = new DecimalFormat("#.00"); // formato para decimal com duas casas decimais
-            media = Float.parseFloat(formatter.format(media));
-
-            disciplina.setMedia(media);
-            notaMedia.setText(String.valueOf(media));
         }
 
         if (!notaFinal.getText().toString().isEmpty()) {

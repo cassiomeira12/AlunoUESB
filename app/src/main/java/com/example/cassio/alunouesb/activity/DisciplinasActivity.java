@@ -36,7 +36,7 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
     private RecyclerView recyclerView;
     private AdapterDisciplina adapter;
 
-    private ArrayList listaDisciplinas;
+    private ArrayList listaDisciplinas = new ArrayList();
     public List<Disciplina> listaExclusao = new ArrayList<>();
     private List<View> listaViewSelecionadas = new ArrayList<>();
 
@@ -62,7 +62,9 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
     private void carregarDadosTela() {
         this.usuario = PrincipalActivity.usuario;
 
-        listaDisciplinas = (ArrayList) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+        if(usuario != null){ // se n fizer isso pode dar crash quando o usuario clicar rapido na tela Disciplinas
+            listaDisciplinas = (ArrayList) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+        }
 
         adapter = new AdapterDisciplina(listaDisciplinas, this, this, this);
 

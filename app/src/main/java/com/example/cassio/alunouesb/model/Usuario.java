@@ -18,7 +18,7 @@ public class Usuario implements Serializable {
     private String curso;
     private int matricula;
     private int idSemestre; //Semestre selecionado
-    private ArrayList<Semestre> semestreList;
+    private ArrayList<Semestre> semestreList = new ArrayList<>();
 
 
     //Construtor da Classe
