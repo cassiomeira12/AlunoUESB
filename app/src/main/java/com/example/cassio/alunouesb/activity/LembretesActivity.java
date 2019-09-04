@@ -31,7 +31,6 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     private Usuario usuario = PrincipalActivity.usuario;
     private RecyclerView recyclerView;
     private AdapterLembretes adapter;
-    private MenuItem excluir;
 
     public List<Lembrete> listaExclusao = new ArrayList<>();
     private List<View> listaViewSelecionadas = new ArrayList<>();
@@ -55,7 +54,7 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_lembretes, menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        excluir = menu.findItem(R.id.action_excluir);
+        MenuItem excluir = menu.findItem(R.id.action_excluir);
 
         if (listaExclusao.isEmpty()) {
             excluir.setVisible(false);

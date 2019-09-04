@@ -93,8 +93,6 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
             }
             invalidateOptionsMenu();
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -158,7 +156,7 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
 
     @Override
     protected void onRestart() {
-//        carregarDadosTela();
+        carregarDadosTela();
         super.onRestart();
     }
 }
