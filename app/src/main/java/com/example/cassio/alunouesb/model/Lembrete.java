@@ -8,30 +8,17 @@ import java.io.Serializable;
 
 public class Lembrete implements Serializable{
 
-    private Long id;
     private String titulo;
     private String mensagem;
-    private Long data;
-    private Long idSemestre;
 
 
     //Construtor da Classe
-    public Lembrete(Long id, String titulo, String mensagem, Long data) {
-        this.id = id;
+    public Lembrete(String titulo, String mensagem) {
         this.titulo = titulo;
         this.mensagem = mensagem;
-        this.data = data;
-        this.idSemestre = idSemestre;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Lembrete(){}
 
     public String getTitulo() {
         return titulo;
@@ -49,25 +36,5 @@ public class Lembrete implements Serializable{
         this.mensagem = mensagem;
     }
 
-    public Long getData() {
-        return data;
-    }
-
-    public void setData(Long data) {
-        this.data = data;
-    }
-
-    public Long getIdSemestre() {
-        return idSemestre;
-    }
-
-    public void setIdSemestre(Long idSemestre) {
-        this.idSemestre = idSemestre;
-    }
-
-    @Override
-    public boolean equals(Object lembrete) {
-        return this.id.equals(((Lembrete) lembrete).getId());
-    }
 
 }

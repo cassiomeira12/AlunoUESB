@@ -37,8 +37,6 @@ public class LembreteDAO {
 
         valores.put(LembreteContract.TITULO, lembrete.getTitulo());
         valores.put(LembreteContract.MENSAGEM, lembrete.getMensagem());
-        valores.put(LembreteContract.DATA, lembrete.getData());
-        valores.put(LembreteContract.ID_SEMESTRE, lembrete.getIdSemestre());
 
         resultadoID = db.insertOrThrow(LembreteContract.TABELA, null, valores);//Insere dados com Excessao
         db.close();
@@ -83,14 +81,6 @@ public class LembreteDAO {
 
         db = banco.getWritableDatabase();
 
-        where = LembreteContract.ID + "=" + lembrete.getId();
-
-        valores.put(LembreteContract.TITULO, lembrete.getTitulo());
-        valores.put(LembreteContract.MENSAGEM, lembrete.getMensagem());
-        valores.put(LembreteContract.DATA, lembrete.getData());
-        valores.put(LembreteContract.ID_SEMESTRE, lembrete.getIdSemestre());
-
-        db.update(LembreteContract.TABELA,valores,where,null);
         db.close();
     }
 
@@ -126,10 +116,7 @@ public class LembreteDAO {
                 String mensagem = resultado.getString(resultado.getColumnIndexOrThrow(LembreteContract.MENSAGEM));
                 long data = resultado.getLong(resultado.getColumnIndexOrThrow(LembreteContract.DATA));
 
-                Lembrete lembrete = new Lembrete(id, titulo, mensagem, data);
                 //lembreteList.add(lembrete);
-                lembreteList.add(0, lembrete);
-
             } while (resultado.moveToNext());
         }
 
@@ -163,8 +150,6 @@ public class LembreteDAO {
                 long data = resultado.getLong(resultado.getColumnIndexOrThrow(LembreteContract.DATA));
                 long idSemestre = resultado.getLong(resultado.getColumnIndexOrThrow(LembreteContract.ID_SEMESTRE));
 
-                Lembrete lembrete = new Lembrete(id, titulo, mensagem, data);
-                lembretes.add(lembrete);
 
             } while (resultado.moveToNext());
         }

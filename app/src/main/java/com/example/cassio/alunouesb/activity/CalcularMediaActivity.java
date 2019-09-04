@@ -1,6 +1,8 @@
 package com.example.cassio.alunouesb.activity;
 
 import java.text.DecimalFormat;
+
+import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
 import com.example.cassio.alunouesb.model.Disciplina;
+import com.example.cassio.alunouesb.model.Usuario;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import java.util.List;
 
 public class CalcularMediaActivity extends AppCompatActivity {
 
+    private Usuario usuario = PrincipalActivity.usuario;
     private Disciplina disciplina = null;
     private float mediaGeral;
 
@@ -40,8 +44,9 @@ public class CalcularMediaActivity extends AppCompatActivity {
     private TextView finalNecessaria;
     private ImageView imageResultado;
     private Button buttonCalcularMedia;
+    private MenuItem item;
 
-    private List<Disciplina> disciplinasList;
+    private ArrayList<Disciplina> disciplinasList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +54,30 @@ public class CalcularMediaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calcular_media);
         setTitle("Calcular Média");
 
-        spinnerDisciplina = (MaterialBetterSpinner) findViewById(R.id.spinner_disciplina);
-        unidade1 = (EditText) findViewById(R.id.text_unidade_1);
-        unidade2 = (EditText) findViewById(R.id.text_unidade_2);
-        unidade3 = (EditText) findViewById(R.id.text_unidade_3);
-        layoutProvaFinal = (LinearLayout) findViewById(R.id.layout_prova_final);
-        notaFinal = (EditText) findViewById(R.id.text_final);
-        media = (TextView) findViewById(R.id.text_media);
-        finalNecessaria = (TextView) findViewById(R.id.text_final_necessaria);
-        imageResultado = (ImageView) findViewById(R.id.image_resultado);
-        buttonCalcularMedia = (Button) findViewById(R.id.button_calcular_media);
+        spinnerDisciplina = findViewById(R.id.spinner_disciplina);
+        unidade1 = findViewById(R.id.text_unidade_1);
+        unidade2 = findViewById(R.id.text_unidade_2);
+        unidade3 =  findViewById(R.id.text_unidade_3);
+        layoutProvaFinal = findViewById(R.id.layout_prova_final);
+        notaFinal = findViewById(R.id.text_final);
+        media = findViewById(R.id.text_media);
+        finalNecessaria = findViewById(R.id.text_final_necessaria);
+        imageResultado = findViewById(R.id.image_resultado);
+        buttonCalcularMedia = findViewById(R.id.button_calcular_media);
 
         layoutProvaFinal.setVisibility(View.GONE);
         media.setVisibility(View.INVISIBLE);
         finalNecessaria.setVisibility(View.GONE);
         imageResultado.setVisibility(View.INVISIBLE);
 
+        disciplinasList = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+//        disciplinasList = new ArrayList<Disciplina>();
         configurarSpinner();
 
         spinnerDisciplina.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 disciplina = disciplinasList.get(i);
 
                 if (disciplina.getUnidade1() != 0) {
@@ -87,21 +95,20 @@ public class CalcularMediaActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_adicionar_lembrete, menu);
+        item = menu.findItem(R.id.action_salvar);
 
-        if (disciplina != null) {
+        if(disciplina != null){
+            item.setVisible(true);
 
-            getMenuInflater().inflate(R.menu.menu_adicionar_lembrete, menu);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        } else {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }else{
+            item.setVisible(false);
         }
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -123,6 +130,7 @@ public class CalcularMediaActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
                 spinnerDisciplina.setText("");
                 disciplina = null;
+                finish();
                 break;
 
         }
@@ -131,81 +139,96 @@ public class CalcularMediaActivity extends AppCompatActivity {
     }
 
     public void calcularMedia(View view) {
-        mediaGeral = mediaResultado(0);
 
-        media.setVisibility(View.VISIBLE);
-        media.setText("Média Geral: " + new DecimalFormat("0.00").format(mediaGeral));
+        if(disciplinasList.isEmpty()){
+            Toast.makeText(this, "Lista de disciplinas vazia", Toast.LENGTH_LONG).show();
+        }else{
+            mediaGeral = mediaResultado(0);
 
-
-        if (buttonCalcularMedia.getText().toString().equals("Calcular Média")) {
-
-            if (mediaGeral >= 7) {//Aprovado sem final
-                imageResultado.setVisibility(View.VISIBLE);
-                finalNecessaria.setVisibility(View.VISIBLE);
-                finalNecessaria.setText("Você foi Aprovado");
-                buttonCalcularMedia.setText("Limpar");
-                imageResultado.setVisibility(View.VISIBLE);
-                imageResultado.setImageResource(R.drawable.feliz);
-                invalidateOptionsMenu();
-
-            } else if (mediaGeral <= 2.7) {//Reprovado sem final
-
-                finalNecessaria.setVisibility(View.VISIBLE);
-                finalNecessaria.setText("Você foi Reprovado");
-                buttonCalcularMedia.setText("Limpar");
-                imageResultado.setVisibility(View.VISIBLE);
-                imageResultado.setImageResource(R.drawable.triste);
-                invalidateOptionsMenu();
-
-            } else {//Notas menores que 7
-                layoutProvaFinal.setVisibility(View.VISIBLE);
-                imageResultado.setVisibility(View.INVISIBLE);
-                finalNecessaria.setVisibility(View.VISIBLE);
-                finalNecessaria.setText("Você precisará tirar "+
-                        new DecimalFormat("0.00").format(finalNecessaria(mediaGeral)) +" na final!");
-                buttonCalcularMedia.setText("Adicionar Final");
-                invalidateOptionsMenu();
-            }
-
-        } else if (buttonCalcularMedia.getText().toString().equals("Limpar")) {
-
-            limparEntradas();
-            invalidateOptionsMenu();
-            spinnerDisciplina.setText("");
-            disciplina = null;
-
-        } else {
-
-            float notaFinal = Float.parseFloat(this.notaFinal.getText().toString());
-
-            finalNecessaria.setVisibility(View.VISIBLE);
-            mediaGeral = mediaResultado(notaFinal);
-
-            if (notaFinal >= finalNecessaria(mediaGeral)) {
-                finalNecessaria.setText("Você foi Aprovado");
-                imageResultado.setVisibility(View.VISIBLE);
-                imageResultado.setImageResource(R.drawable.feliz);
-            } else {
-                finalNecessaria.setText("Você foi Reprovado");
-                imageResultado.setVisibility(View.VISIBLE);
-                imageResultado.setImageResource(R.drawable.triste);
-            }
-
-            //finalNecessaria.setVisibility(View.GONE);
+            media.setVisibility(View.VISIBLE);
             media.setText("Média Geral: " + new DecimalFormat("0.00").format(mediaGeral));
-            buttonCalcularMedia.setText("Limpar");
-            invalidateOptionsMenu();
 
+
+            if (buttonCalcularMedia.getText().toString().equals("Calcular Média")) {
+
+                if (mediaGeral >= 7) {//Aprovado sem final
+                    imageResultado.setVisibility(View.VISIBLE);
+                    finalNecessaria.setVisibility(View.VISIBLE);
+                    finalNecessaria.setText("Você foi Aprovado");
+                    buttonCalcularMedia.setText("Limpar");
+                    imageResultado.setVisibility(View.VISIBLE);
+                    imageResultado.setImageResource(R.drawable.feliz);
+                    invalidateOptionsMenu();
+
+                } else if (mediaGeral <= 2.7) {//Reprovado sem final
+
+                    finalNecessaria.setVisibility(View.VISIBLE);
+                    finalNecessaria.setText("Você foi Reprovado");
+                    buttonCalcularMedia.setText("Limpar");
+                    imageResultado.setVisibility(View.VISIBLE);
+                    imageResultado.setImageResource(R.drawable.triste);
+                    invalidateOptionsMenu();
+
+                } else {//Notas menores que 7
+                    layoutProvaFinal.setVisibility(View.VISIBLE);
+                    imageResultado.setVisibility(View.INVISIBLE);
+                    finalNecessaria.setVisibility(View.VISIBLE);
+                    finalNecessaria.setText("Você precisará tirar "+
+                            new DecimalFormat("0.00").format(finalNecessaria(mediaGeral)) +" na final!");
+                    buttonCalcularMedia.setText("Adicionar Final");
+                    invalidateOptionsMenu();
+                }
+
+            } else if (buttonCalcularMedia.getText().toString().equals("Limpar")) {
+
+                limparEntradas();
+                invalidateOptionsMenu();
+                spinnerDisciplina.setText("");
+                disciplina = null;
+
+            } else {
+                float notaFinal = 0;
+                if(!this.notaFinal.getText().toString().isEmpty()){ // se nao estiver vazio
+                    notaFinal = Float.parseFloat(this.notaFinal.getText().toString());
+                }
+
+
+                finalNecessaria.setVisibility(View.VISIBLE);
+                mediaGeral = mediaResultado(notaFinal);
+
+                if (notaFinal >= finalNecessaria(mediaGeral)) {
+                    finalNecessaria.setText("Você foi Aprovado");
+                    imageResultado.setVisibility(View.VISIBLE);
+                    imageResultado.setImageResource(R.drawable.feliz);
+                } else {
+                    finalNecessaria.setText("Você foi Reprovado");
+                    imageResultado.setVisibility(View.VISIBLE);
+                    imageResultado.setImageResource(R.drawable.triste);
+                }
+
+                //finalNecessaria.setVisibility(View.GONE);
+                media.setText("Média Geral: " + new DecimalFormat("0.00").format(mediaGeral));
+                buttonCalcularMedia.setText("Limpar");
+                invalidateOptionsMenu();
+
+            }
         }
-
-
-
     }
 
     private float mediaResultado(float notaFinal) {
-        float unidade1 = Float.parseFloat(this.unidade1.getText().toString());
-        float unidade2 = Float.parseFloat(this.unidade2.getText().toString());
-        float unidade3 = Float.parseFloat(this.unidade3.getText().toString());
+        float unidade1 = 0;
+        float unidade2 = 0;
+        float unidade3 = 0;
+
+        if(!this.unidade1.getText().toString().isEmpty()){
+            unidade1 = Float.parseFloat(this.unidade1.getText().toString());
+        }if(!this.unidade2.getText().toString().isEmpty()){
+            unidade2 = Float.parseFloat(this.unidade2.getText().toString());
+        }
+        if(!this.unidade3.getText().toString().isEmpty()){
+            unidade3 = Float.parseFloat(this.unidade3.getText().toString());
+        }
+
         float resultado;
 
         if (notaFinal != 0) {
@@ -218,7 +241,7 @@ public class CalcularMediaActivity extends AppCompatActivity {
     }
 
     private float finalNecessaria(float media) {
-        Float teste = 2.80f;
+        float teste = 2.80f;
         if (media == teste) {
             return 10;
         }
@@ -234,9 +257,19 @@ public class CalcularMediaActivity extends AppCompatActivity {
     }
 
     private void salvarNotas() {
-        float unidade1 = Float.parseFloat(this.unidade1.getText().toString());
-        float unidade2 = Float.parseFloat(this.unidade2.getText().toString());
-        float unidade3 = Float.parseFloat(this.unidade3.getText().toString());
+        float unidade1 = 0;
+        float unidade2 = 0;
+        float unidade3 = 0;
+
+        if(!this.unidade1.getText().toString().isEmpty()){
+            unidade1 = Float.parseFloat(this.unidade1.getText().toString());
+        }
+        if(!this.unidade2.getText().toString().isEmpty()){
+            unidade2 = Float.parseFloat(this.unidade2.getText().toString());
+        }
+        if(!this.unidade3.getText().toString().isEmpty()){
+            unidade3 = Float.parseFloat(this.unidade3.getText().toString());
+        }
 
         if (!notaFinal.getText().toString().isEmpty()) {//Verificando se nao estar vazio
             float notaFinal = Float.parseFloat(this.notaFinal.getText().toString());

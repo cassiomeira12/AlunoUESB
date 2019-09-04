@@ -1,20 +1,24 @@
 package com.example.cassio.alunouesb.activity;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuView;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.dao.LembreteDAO;
 import com.example.cassio.alunouesb.model.Lembrete;
+import com.example.cassio.alunouesb.model.Usuario;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LembreteActivity extends AppCompatActivity {
+public class LembreteActivity extends AppCompatActivity{
+
+    private Usuario usuario =  PrincipalActivity.usuario;
 
     private Lembrete lembrete;
 
@@ -29,10 +33,11 @@ public class LembreteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lembrete);
         setTitle("Lembrete");
 
-        titulo = (EditText) findViewById(R.id.text_titulo_lembrete);
-        mensagem = (EditText) findViewById(R.id.text_mensagem_lembrete);
+        titulo = findViewById(R.id.text_titulo_lembrete);
+        mensagem = findViewById(R.id.text_mensagem_lembrete);
 
-        lembrete = (Lembrete) getIntent().getSerializableExtra("lembrete");
+        int idLembrete = (int) getIntent().getSerializableExtra("idLembrete");
+        lembrete = usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList().get(idLembrete);
 
         titulo.setText(lembrete.getTitulo());
         mensagem.setText(lembrete.getMensagem());
@@ -70,21 +75,24 @@ public class LembreteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     private void salvar() {
-        alterarDados();
-
-        LembreteDAO.getInstance(this).alteraRegistro(lembrete);
-
-        Intent intent = new Intent();
-        intent.putExtra("lembrete", lembrete);
-        setResult(1, intent);
-        finish();
-    }
-
-    private void alterarDados() {
         lembrete.setTitulo(titulo.getText().toString());
         lembrete.setMensagem(mensagem.getText().toString());
-        lembrete.setData(System.currentTimeMillis());
+
+        FirebaseFirestore.getInstance().collection("users").document(usuario.getUid()).set(usuario)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(LembreteActivity.this, "Falha ao adicionar lembrete", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        finish();
+                    }
+                });
     }
 
     private void habilitarEdicao() {

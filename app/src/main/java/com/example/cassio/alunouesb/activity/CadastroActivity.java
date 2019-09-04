@@ -142,6 +142,8 @@ public class CadastroActivity extends AppCompatActivity {
 
         usuario.addSemestre(semestreTemp);
 
+
+        //animaçao de carregamento
         // faz cadastro do usuario no firebase
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -155,11 +157,14 @@ public class CadastroActivity extends AppCompatActivity {
                         FirebaseFirestore.getInstance().collection("/users").document(uid).set(usuario); // adiciona usuario ao banco de dados do firebase
                         Toast.makeText(CadastroActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_SHORT).show();
 
+                        //FIM ANICACAO DE CARREGAMENTO - SUCESSO
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
+                        //FIM ANICACAO DE CARREGAMENTO - SUCESSO
                         Toast.makeText(CadastroActivity.this, e.getCause().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

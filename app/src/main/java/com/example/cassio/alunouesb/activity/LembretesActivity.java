@@ -2,10 +2,12 @@ package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,24 +18,23 @@ import com.example.cassio.alunouesb.adapter.AdapterLembretes;
 import com.example.cassio.alunouesb.database.dao.LembreteDAO;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Lembrete;
+import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LembretesActivity extends AppCompatActivity implements AdapterLembretes.OnClick, AdapterLembretes.OnLongClick, DialogExcluir.OnExcluir {
+public class LembretesActivity extends AppCompatActivity implements AdapterLembretes.OnClick, AdapterLembretes.OnLongClick, DialogExcluir.OnExcluir{
 
-    private Intent intent;
+    private Usuario usuario = PrincipalActivity.usuario;
     private RecyclerView recyclerView;
     private AdapterLembretes adapter;
+    private MenuItem excluir;
 
     public List<Lembrete> listaExclusao = new ArrayList<>();
     private List<View> listaViewSelecionadas = new ArrayList<>();
-
-    private int REQUEST_NOVO_LEMBRETE = 1;
-    private int REQUEST_ABRIR_LEMBRETE = 2;
-    //private int REQUEST_BUSCAR_IMAGEM = 3;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,33 +42,26 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
         setContentView(R.layout.activity_lembretes);
         setTitle("Meus Lembretes");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_lembretes);
-
-        if (savedInstanceState != null) {
-            listaExclusao = (List<Lembrete>) savedInstanceState.getSerializable("lista");
-        }
-
-        adapter = new AdapterLembretes(LembreteDAO.getInstance(this).buscarTodos(PrincipalActivity.usuario.getIdSemestre()), this, this, this);
-
-        recyclerView.setAdapter(adapter);
+        // pagina possui um Swipe para atualizar a lista
+        recyclerView = findViewById(R.id.recycler_view_lembretes);
 
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayout.VERTICAL,false);
         recyclerView.setLayoutManager(layout);
-    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable("lista",(Serializable) listaExclusao);
-        super.onSaveInstanceState(outState);
+        carregarDados(); // carrega a lista de lembretes
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lembretes, menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        excluir = menu.findItem(R.id.action_excluir);
+
         if (listaExclusao.isEmpty()) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            excluir.setVisible(false);
         } else {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getMenuInflater().inflate(R.menu.menu_lembretes, menu);
+            excluir.setVisible(true);
+
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -81,7 +75,9 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
             dialog.setOnExcluir(this);
             dialog.show(getSupportFragmentManager(), "Deseja excluir o lembrete?");
 
-        } else {
+        }else if(listaExclusao.isEmpty()){
+            finish();
+        }else {
 
             listaExclusao.clear();
             for (View view : listaViewSelecionadas) {
@@ -96,14 +92,14 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     public void onClick(View view) {
 
         if (listaExclusao.isEmpty()) {
-            intent = new Intent(this, LembreteActivity.class);
-            intent.putExtra("lembrete", (Lembrete) adapter.getItem((int) view.getTag()));
-            startActivityForResult(intent, REQUEST_ABRIR_LEMBRETE);
+            Intent telaLembrete = new Intent(this, LembreteActivity.class);
+
+            telaLembrete.putExtra("idLembrete", (Integer) view.getTag());
+            startActivity(telaLembrete);
 
         } else {
             adicionarParaExclusao(view);
         }
-
     }
 
     @Override
@@ -112,34 +108,14 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
         view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Lembrete lembrete;
-
-        //Caso adicionou um novo Item
-        if (requestCode == REQUEST_NOVO_LEMBRETE && data != null) {
-            lembrete = (Lembrete) data.getSerializableExtra("lembrete");
-            adapter.addItem(lembrete);
-        }
-
-        //Caso editou um Item
-        if (requestCode == REQUEST_ABRIR_LEMBRETE && resultCode == 1) {
-            lembrete = (Lembrete) data.getSerializableExtra("lembrete");
-            adapter.update(lembrete);
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void chamarTelaAdicionarLembretes(View view) {
         listaExclusao.clear();
         listaViewSelecionadas.clear();
         invalidateOptionsMenu();
         adapter.notifyDataSetChanged();
 
-        intent = new Intent(this, AdicionarLembreteActivity.class);
-        startActivityForResult(intent, REQUEST_NOVO_LEMBRETE);
+        Intent telaAdicionarLembrete = new Intent(this, AdicionarLembreteActivity.class);
+        startActivity(telaAdicionarLembrete);
     }
 
     private void adicionarParaExclusao(View view) {
@@ -162,10 +138,30 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     public void onExcluir() {
         for (Lembrete lembrete : listaExclusao) {
             adapter.removeItem(lembrete);
-            LembreteDAO.getInstance(this).deletaRegistro(lembrete.getId());
+            adapter.notifyDataSetChanged();
+            salvarBancoDeDados();
         }
 
         listaExclusao.clear();
         invalidateOptionsMenu();
+    }
+
+    private void salvarBancoDeDados() {
+        FirebaseFirestore.getInstance().collection("users").document(usuario.getUid()).set(usuario);
+    }
+
+    private void carregarDados() {
+        ArrayList<Lembrete> listLembretes = (ArrayList<Lembrete>) usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList();
+
+        adapter = new AdapterLembretes(listLembretes, this, this, this);
+
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onRestart() {
+        carregarDados();
+        super.onRestart();
     }
 }

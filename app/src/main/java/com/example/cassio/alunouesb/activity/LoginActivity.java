@@ -34,8 +34,6 @@ public class LoginActivity extends AppCompatActivity {
                 if(verificarCampos()){
                     //fazer login
                     fazerLogin();
-
-
                 }else{ // campo vazio
                     Toast.makeText(LoginActivity.this, "Campos inválidos", Toast.LENGTH_SHORT).show();
                 }
@@ -63,11 +61,17 @@ public class LoginActivity extends AppCompatActivity {
         String email = mEmail.getText().toString();
         String senha = mSenha.getText().toString();
 
+        //inicia tela de carregamento
+
+
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // pode-se colocar alguma tela indicamento o LOADING
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         limparCampos();
+                        // fecha tela de carregamento SUCESSO
+
+
                         Intent telaPrincipal = new Intent(LoginActivity.this, PrincipalActivity.class);
                         telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
                         startActivity(telaPrincipal);
@@ -76,6 +80,9 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
+                        //fecha tela de carregamento FALHA
+
+
                         Toast.makeText(LoginActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
                     }
                 });

@@ -49,6 +49,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     ArrayList<Disciplina> disciplinas = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
 
     private Disciplina disciplina;
+    private int idDisciplina;
     private ArrayList<Horario> horarioList;
     private Professor professor;
     private ArrayAdapter<Horario> adapter;
@@ -68,15 +69,10 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
     private int indiceExcluir;
 
-    //Number Picker
-    private Button negativoNumberPicker, positivoNumberPicker;
     private TextView valueNumberPicker;
-
-    private Switch switchMenu;
 
     private boolean permitirEdicao = true;
 
-    private int REQUEST_NOVO_HORARIO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +92,14 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         notaFinal = findViewById(R.id.text_final);
         listHorarios = findViewById(R.id.list_horarios);
         valueNumberPicker = findViewById(R.id.number_picker_value);
-        negativoNumberPicker = findViewById(R.id.number_picker_negative);
-        positivoNumberPicker = findViewById(R.id.number_picker_positive);
+        //Number Picker
+        Button negativoNumberPicker = findViewById(R.id.number_picker_negative);
+        Button positivoNumberPicker = findViewById(R.id.number_picker_positive);
         emotion = findViewById(R.id.emotion);
 
         //pegar disciplina
-        disciplina = (Disciplina) getIntent().getSerializableExtra("disciplina");
+        idDisciplina = (int) getIntent().getSerializableExtra("idDisciplina");
+        disciplina = usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList().get(idDisciplina);
 
         // cria uma lista com as disciplinas do usuario
         disciplinas = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
@@ -125,7 +123,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
 
         // colocar a quantidade de faltas no TextView
-        valueNumberPicker.setText("" + disciplina.getFaltas());
+        valueNumberPicker.setText(String.valueOf(disciplina.getFaltas()));
 
         // ao clicar no "negativo" = decrementa o numero de faltas
         negativoNumberPicker.setOnClickListener(new View.OnClickListener() {
@@ -225,20 +223,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Horario horario;
-
-        //Caso adicionou um novo Item
-        if (requestCode == REQUEST_NOVO_HORARIO && data != null) {
-            horario = (Horario) data.getSerializableExtra("horario");
-            adapter.add(horario);
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void salvar() {

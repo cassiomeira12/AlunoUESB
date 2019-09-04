@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.LoginActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".activity.CadastroActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".activity.PrincipalActivity">
+        <activity android:name=".activity.PrincipalActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
 
         <activity android:name=".activity.LembretesActivity"/>
 
-        <activity android:name=".activity.DisciplinasActivity" android:launchMode="singleTop"/>
+        <activity android:name=".activity.DisciplinasActivity"/>
 
         <activity android:name=".activity.CalcularMediaActivity">
             <meta-data
@@ -34,7 +34,9 @@
                 android:value=".activity.PrincipalActivity"/>
         </activity>
 
-        <activity android:name=".activity.LembreteActivity"/>
+        <activity android:name=".activity.LembreteActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.LembretesActivity"/>
+        </activity>
 
         <activity android:name=".activity.UsuarioActivity">
             <meta-data
@@ -62,8 +64,6 @@
         <activity android:name=".activity.AdicionarLembreteActivity"
             android:windowSoftInputMode="stateVisible" />
         <activity android:name=".activity.AdicionarHorarioActivity" />
-        <activity android:name=".activity.AdicionarUsuarioActivity"
-            android:windowSoftInputMode="stateVisible" />
 
     </application>
 

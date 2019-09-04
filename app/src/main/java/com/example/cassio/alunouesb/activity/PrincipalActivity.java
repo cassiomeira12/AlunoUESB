@@ -56,6 +56,8 @@ public class PrincipalActivity extends AppCompatActivity {
 
         if(FirebaseAuth.getInstance().getUid() != null ){
 
+            //inicia animacao de Carregamento simples
+
             // carrega os dados do usuario
             String uid = FirebaseAuth.getInstance().getUid();
             FirebaseFirestore.getInstance().collection("/users").document(uid)
@@ -71,16 +73,12 @@ public class PrincipalActivity extends AppCompatActivity {
                         }
             });
 
-
-
+            //finaliza animacao de carregamento simples
         }else{
             Intent telaLogin = new Intent(this, LoginActivity.class);
             telaLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(telaLogin);
         }
-
-
-
     }
 
     private void carregarDados() {
@@ -207,9 +205,6 @@ public class PrincipalActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == NOVO_USUARIO && resultCode == ALTERAR_DADOS){
-            carregarDados();
-        }
         carregarDados();
         super.onActivityResult(requestCode, resultCode, data);
     }

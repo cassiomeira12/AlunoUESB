@@ -11,8 +11,8 @@ import java.util.List;
 public class Semestre implements Serializable{
 
     private String semestre;
-    List<Disciplina> disciplinaList;
-    List<Lembrete> lembreteList;
+    private List<Disciplina> disciplinaList;
+    private List<Lembrete> lembreteList;
 
 
     //Construtor da Classe
@@ -28,9 +28,9 @@ public class Semestre implements Serializable{
         disciplinaList.add(disciplina);
     }
 
-    public void adicionarLembrete(Long idLembrete, String titulo, String mensagem, Long data) {
-        Lembrete lembrete = new Lembrete(idLembrete, titulo, mensagem, data);
-        lembreteList.add(lembrete);
+    public void adicionarLembrete(String titulo, String mensagem){
+//        Lembrete lembrete = new Lembrete(iitulo, mensagem);
+//        lembreteList.add(lembrete);
     }
 
 
@@ -50,8 +50,8 @@ public class Semestre implements Serializable{
         this.disciplinaList = disciplinaList;
     }
 
-    public List<Lembrete> getLembreteList() {
-        return lembreteList;
+    public ArrayList<Lembrete> getLembreteList() {
+        return (ArrayList<Lembrete>) lembreteList;
     }
 
     public void setLembreteList(List<Lembrete> lembreteList) {

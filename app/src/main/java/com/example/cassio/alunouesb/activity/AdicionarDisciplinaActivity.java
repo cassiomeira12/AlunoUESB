@@ -66,7 +66,6 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     public void salvarDisciplina() {
 
         String nome = this.nome.getText().toString();
@@ -81,7 +80,6 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
 
             Semestre semestre = usuario.getSemestreList().get(usuario.getIdSemestre());
             semestre.adicionarDisciplina(disciplina);
-            Log.e("Teste", "Disciplina: " + nome + "  Professor: " + professorTemp.getNome());
 
             FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
                     .addOnFailureListener(new OnFailureListener() {
@@ -96,9 +94,6 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-
-
-
         }
     }
 }

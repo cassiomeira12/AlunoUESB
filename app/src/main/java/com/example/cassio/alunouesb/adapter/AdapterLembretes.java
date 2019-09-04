@@ -51,15 +51,15 @@ public class AdapterLembretes extends Adapter {
 
         String data = "";
 
-        if (DateUtils.getMinutosPassado(lembrete.getData()) < 2) {
-            data = "Agora mesmo";
-        } else if (DateUtils.getMinutosPassado(lembrete.getData()) < 60) {
-            data = "Há " + DateUtils.getMinutosPassado(lembrete.getData()) + " minutos atrás";
-        } else if (DateUtils.getMinutosPassado(lembrete.getData()) < (24*60)) {
-            data = "Ontem às " + DateUtils.getHoraFromDate(lembrete.getData());
-        } else {
-            data = DateUtils.formatDateExtenso(lembrete.getData());
-        }
+//        if (DateUtils.getMinutosPassado(lembrete.getData()) < 2) {
+//            data = "Agora mesmo";
+//        } else if (DateUtils.getMinutosPassado(lembrete.getData()) < 60) {
+//            data = "Há " + DateUtils.getMinutosPassado(lembrete.getData()) + " minutos atrás";
+//        } else if (DateUtils.getMinutosPassado(lembrete.getData()) < (24*60)) {
+//            data = "Ontem às " + DateUtils.getHoraFromDate(lembrete.getData());
+//        } else {
+//            data = DateUtils.formatDateExtenso(lembrete.getData());
+//        }
 
         viewHolder.txtTitulo.setText(lembrete.getTitulo());
         viewHolder.txtMensagem.setText(lembrete.getMensagem());
@@ -124,7 +124,7 @@ public class AdapterLembretes extends Adapter {
 
         lembreteList.get(lembreteList.indexOf(lembrete)).setTitulo(lembrete.getTitulo());
         lembreteList.get(lembreteList.indexOf(lembrete)).setMensagem(lembrete.getMensagem());
-        lembreteList.get(lembreteList.indexOf(lembrete)).setData(lembrete.getData());
+//        lembreteList.get(lembreteList.indexOf(lembrete)).setData(lembrete.getData());
 
         notifyDataSetChanged();
         super.update(item);
