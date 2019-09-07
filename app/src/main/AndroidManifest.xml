@@ -26,7 +26,7 @@
 
         <activity android:name=".activity.LembretesActivity" android:launchMode="singleTop"/>
 
-        <activity android:name=".activity.DisciplinasActivity"/>
+        <activity android:name=".activity.DisciplinasActivity" android:launchMode="singleTop"/>
 
         <activity android:name=".activity.CalcularMediaActivity">
             <meta-data
