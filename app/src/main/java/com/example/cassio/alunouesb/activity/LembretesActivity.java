@@ -1,13 +1,10 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,14 +12,11 @@ import android.widget.LinearLayout;
 
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.adapter.AdapterLembretes;
-import com.example.cassio.alunouesb.database.dao.LembreteDAO;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.Serializable;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +144,7 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     }
 
     private void carregarDados() {
-        ArrayList<Lembrete> listLembretes = (ArrayList<Lembrete>) usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList();
+        ArrayList<Lembrete> listLembretes = usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList();
 
         adapter = new AdapterLembretes(listLembretes, this, this, this);
 

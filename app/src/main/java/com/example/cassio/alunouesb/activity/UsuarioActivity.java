@@ -132,8 +132,6 @@ public class UsuarioActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
     public void adicionarSemestre(View view) {
 
         String semestre = novoSemestre.getText().toString();

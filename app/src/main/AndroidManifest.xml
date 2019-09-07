@@ -24,7 +24,7 @@
                 android:value=".activity.PrincipalActivity"/>
         </activity>
 
-        <activity android:name=".activity.LembretesActivity"/>
+        <activity android:name=".activity.LembretesActivity" android:launchMode="singleTop"/>
 
         <activity android:name=".activity.DisciplinasActivity"/>
 

@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.dao.LembreteDAO;
 import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.firebase.firestore.FirebaseFirestore;

@@ -1,10 +1,8 @@
 package com.example.cassio.alunouesb.activity;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,8 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
-import com.example.cassio.alunouesb.database.dao.ProfessorDAO;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Professor;
 import com.example.cassio.alunouesb.model.Semestre;

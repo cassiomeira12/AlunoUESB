@@ -1,9 +1,8 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,18 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.DadosOpenHelper;
-import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
-import com.example.cassio.alunouesb.database.dao.HorarioDAO;
-import com.example.cassio.alunouesb.database.dao.LembreteDAO;
-import com.example.cassio.alunouesb.database.dao.ProfessorDAO;
-import com.example.cassio.alunouesb.database.dao.SemestreDAO;
-import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
