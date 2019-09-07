@@ -1,13 +1,7 @@
 package com.example.cassio.alunouesb.activity;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,16 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.dao.DisciplinaDAO;
-import com.example.cassio.alunouesb.database.dao.HorarioDAO;
-import com.example.cassio.alunouesb.database.dao.ProfessorDAO;
-import com.example.cassio.alunouesb.database.dao.SemestreDAO;
 import com.example.cassio.alunouesb.dialog.DialogAdicionarHorario;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Disciplina;
@@ -39,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DisciplinaActivity extends AppCompatActivity implements DialogAdicionarHorario.OnClickDialog, DialogExcluir.OnExcluir {
 
@@ -49,7 +35,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     ArrayList<Disciplina> disciplinas = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
 
     private Disciplina disciplina;
-    private int idDisciplina;
     private ArrayList<Horario> horarioList;
     private Professor professor;
     private ArrayAdapter<Horario> adapter;
@@ -98,7 +83,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
         emotion = findViewById(R.id.emotion);
 
         //pegar disciplina
-        idDisciplina = (int) getIntent().getSerializableExtra("idDisciplina");
+        int idDisciplina = (int) getIntent().getSerializableExtra("idDisciplina");
         disciplina = usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList().get(idDisciplina);
 
         // cria uma lista com as disciplinas do usuario
@@ -112,7 +97,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
         professor = disciplina.getProfessor();
         horarioList = disciplina.getHorarioList();
-        adapter = new ArrayAdapter<Horario>(this, android.R.layout.simple_list_item_1,horarioList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,horarioList);
         listHorarios.setAdapter(adapter);
 
 
@@ -362,7 +347,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
         faltas += valor;
 
-        valueNumberPicker.setText(faltas + "");
+        valueNumberPicker.setText(String.valueOf(faltas));
 
         disciplina.setFaltas(faltas);
 
@@ -373,7 +358,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
     private void carregaHorarios() {
         horarioList = disciplina.getHorarioList();
-        adapter = new ArrayAdapter<Horario>(this, android.R.layout.simple_list_item_1,horarioList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,horarioList);
         listHorarios.setAdapter(adapter);
     }
 

@@ -1,23 +1,17 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.dao.SemestreDAO;
-import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
-import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,13 +19,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.model.Document;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -69,6 +56,7 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
                                 Toast.makeText(PrincipalActivity.this, "Erro no Snapshot", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+                            assert documentSnapshot != null; // definir que nunca irá ser nulo
                             usuario = documentSnapshot.toObject(Usuario.class);
                             carregarDados();
                         }

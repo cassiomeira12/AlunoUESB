@@ -1,10 +1,9 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,8 +15,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.database.dao.SemestreDAO;
-import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -180,7 +177,7 @@ public class UsuarioActivity extends AppCompatActivity {
         ArrayList<Semestre> semestres = usuario.getSemestreList(); // lista de semestres do usuario
 
         for(int i = 0; i < semestres.size(); i++){
-            if(semestres.get(i).getSemestre() == semestre.getSemestre()){// verifica qual o ID do novo semestre selecionado na lista dos semestres do usuario
+            if(semestres.get(i).getSemestre().equals(semestre.getSemestre())){// verifica qual o ID do novo semestre selecionado na lista dos semestres do usuario
                 usuario.setIdSemestre(i); // seta o ID so semestre selecionado
                 break;
             }
