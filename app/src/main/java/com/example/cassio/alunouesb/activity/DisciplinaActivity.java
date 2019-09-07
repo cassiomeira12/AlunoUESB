@@ -202,12 +202,17 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
                 invalidateOptionsMenu();
                 break;
 
-            case R.id.action_cancelar:
-                finish();
+            case R.id.excluir_lembrete:
+                excluirDisciplina();
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void excluirDisciplina() {
+        disciplinas.remove(disciplina);
+        finish();
     }
 
     private void salvar() {
