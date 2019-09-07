@@ -50,6 +50,7 @@ public class LembreteActivity extends AppCompatActivity{
         inflater.inflate(R.menu.menu_lembrete, menu);
         menu.findItem(R.id.action_salvar).setVisible(permitirEdicao);
         menu.findItem(R.id.action_editar).setVisible(!permitirEdicao);
+        menu.findItem(R.id.excluir_lembrete).setVisible(!permitirEdicao);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -58,7 +59,8 @@ public class LembreteActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_cancelar:
+            case R.id.excluir_lembrete:
+                deletarLembrete();
                 finish();
                 break;
 
@@ -75,6 +77,11 @@ public class LembreteActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    private void deletarLembrete() {
+        usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList().remove(lembrete);
+        Toast.makeText(this, "Lembrete excluído", Toast.LENGTH_SHORT).show();
+        salvar();
+    }
 
     private void salvar() {
         lembrete.setTitulo(titulo.getText().toString());

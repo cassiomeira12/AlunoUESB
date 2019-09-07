@@ -13,8 +13,10 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_done_white_48dp"/>
     <item
-        android:id="@+id/action_cancelar"
-        android:title="@string/menu_cancelar"
-        app:showAsAction="never" />
+        android:id="@+id/excluir_lembrete"
+        android:title="Excluir"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_delete_white_24dp"/>
+
 
 </menu>

@@ -1,6 +1,7 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
-    private Button buttonEntrar;
     private TextView mEmail;
     private TextView mSenha;
 
@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        buttonEntrar = findViewById(R.id.button_entrar_login);
+        Button buttonEntrar = findViewById(R.id.button_entrar_login);
         mEmail = findViewById(R.id.text_email_login);
         mSenha = findViewById(R.id.text_senha_login);
 
@@ -79,15 +79,13 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         //fecha tela de carregamento FALHA
 
 
                         Toast.makeText(LoginActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-        return;
     }
 
     private void limparCampos() {

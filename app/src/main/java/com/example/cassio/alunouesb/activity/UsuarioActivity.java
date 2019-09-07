@@ -103,6 +103,8 @@ public class UsuarioActivity extends AppCompatActivity {
         this.menu = menu;
         menu.findItem(R.id.action_salvar).setVisible(permitirEdicao);
         menu.findItem(R.id.action_editar).setVisible(!permitirEdicao);
+        menu.findItem(R.id.excluir_lembrete).setTitle("Cancelar");
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -122,7 +124,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
                 break;
 
-            case R.id.action_cancelar:
+            case R.id.excluir_lembrete:
                 finish();
         }
 
