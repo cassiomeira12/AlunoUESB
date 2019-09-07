@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,6 +42,11 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
         setTitle("Minhas Disciplinas");
 
         recyclerView = findViewById(R.id.recycler_view_disciplinas);
+
+        DividerItemDecoration divider = new DividerItemDecoration(this, LinearLayout.VERTICAL);
+
+
+        recyclerView.addItemDecoration(divider);
 
         carregarDadosTela();
     }

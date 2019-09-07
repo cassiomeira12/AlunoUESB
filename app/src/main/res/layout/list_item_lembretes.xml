@@ -31,7 +31,7 @@
         android:id="@+id/text_data_lembrete_item"
         android:text="01/01/01"
         android:layout_gravity="end"
-        android:padding="8dp"/>
+        android:padding="2dp"/>
 
 
 

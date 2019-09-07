@@ -3,6 +3,7 @@ package com.example.cassio.alunouesb.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -39,6 +40,11 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
         recyclerView = findViewById(R.id.recycler_view_lembretes);
 
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayout.VERTICAL,false);
+
+        DividerItemDecoration divider = new DividerItemDecoration(this, LinearLayout.VERTICAL);
+
+
+        recyclerView.addItemDecoration(divider);
         recyclerView.setLayoutManager(layout);
 
         carregarDados(); // carrega a lista de lembretes

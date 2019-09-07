@@ -7,14 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:paddingLeft="12dp">
+            android:background="#eeeeee"
+            android:paddingStart="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -51,13 +52,20 @@
                 android:gravity="center"
                 android:text="Média"/>
 
+
+
         </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_disciplinas"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="12dp">
+            android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
 
