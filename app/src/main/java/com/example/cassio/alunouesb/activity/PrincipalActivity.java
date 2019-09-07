@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.database.dao.SemestreDAO;
 import com.example.cassio.alunouesb.database.dao.UsuarioDAO;
+import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
@@ -32,12 +35,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class PrincipalActivity extends AppCompatActivity {
+public class PrincipalActivity extends AppCompatActivity implements DialogExcluir.OnExcluir {
 
     public static Usuario usuario;
     public static Semestre semestre;
-    public static final int ALTERAR_DADOS = 1;
-    public static final int NOVO_USUARIO = 2;
 
     private TextView usuarioNome;
     private TextView usuarioCurso;
@@ -81,6 +82,24 @@ public class PrincipalActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_principal, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.logout){
+            //chamar Dialog de confirmacao
+            DialogExcluir sair = new DialogExcluir(); // reaproveitar o Dialog de excluir
+            sair.setOnExcluir(this);
+            sair.show(getSupportFragmentManager(), "Deseja sair da sua conta?");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void carregarDados() {
         semestre = usuario.getSemestre(usuario.getIdSemestre());
 
@@ -112,7 +131,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
     public void chamarTelaUsuario(View view) {
          Intent telaUsuario = new Intent(this, UsuarioActivity.class);
-         startActivityForResult(telaUsuario, NOVO_USUARIO);
+         startActivity(telaUsuario);
     }
 
 
@@ -204,8 +223,20 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onRestart() {
         carregarDados();
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onRestart();
+    }
+
+    @Override
+    public void onExcluir() { // reusa o Dialog de excluir para fazer Logout
+        FirebaseAuth.getInstance().signOut();
+        if(FirebaseAuth.getInstance().getUid() == null){
+            Intent telaLogin = new Intent(this, LoginActivity.class);
+            telaLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(telaLogin);
+        }else{
+            Toast.makeText(this, "Erro ao fazer Logout", Toast.LENGTH_LONG).show();
+        }
     }
 }

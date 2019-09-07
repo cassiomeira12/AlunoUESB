@@ -37,7 +37,6 @@ public class UsuarioActivity extends AppCompatActivity {
     private EditText novoSemestre;
 
     public static List<Semestre> semestreList;
-    private ArrayAdapter<Semestre> arrayAdapter;
     private Usuario usuario = PrincipalActivity.usuario;
 
     private boolean permitirEdicao = true;
@@ -68,7 +67,7 @@ public class UsuarioActivity extends AppCompatActivity {
         spinnerSemestre.setEnabled(false);
 
         semestreList = usuario.getSemestreList();
-        arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, semestreList);
+        ArrayAdapter<Semestre> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, semestreList);
         spinnerSemestre.setAdapter(arrayAdapter);
 //
         usuarioNome.setText(usuario.getNome());
@@ -96,7 +95,6 @@ public class UsuarioActivity extends AppCompatActivity {
 
             }
         });
-
 
         habilitarEdicao();
     }
