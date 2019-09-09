@@ -371,6 +371,7 @@
         android:layout_margin="16dp"
         android:elevation="12dp"
         android:onClick="chamarTelaAdicionarHorario"
-        android:src="@drawable/ic_add_white_24dp" />
+        android:src="@drawable/ic_add_white_24dp"
+        app:backgroundTint="@color/colorPrimary" />
 
 </FrameLayout>
