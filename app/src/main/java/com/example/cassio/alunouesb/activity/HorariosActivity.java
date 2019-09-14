@@ -265,7 +265,7 @@ public class HorariosActivity extends AppCompatActivity {
         List<String> resultado = new ArrayList<>();
 
         for (Disciplina disciplina : lista) {
-            resultado.add(disciplina.getAbreviacao() + "\t\t-\t\t" + disciplina.getNome());
+            resultado.add(disciplina.getAbreviacao() + " - " + disciplina.getNome());
         }
 
         return resultado;

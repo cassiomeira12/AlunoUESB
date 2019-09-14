@@ -1,6 +1,7 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,11 +15,12 @@ import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class AdicionarLembreteActivity extends AppCompatActivity {
     private Usuario usuario = PrincipalActivity.usuario;
     private EditText titulo;
     private EditText mensagem;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +63,16 @@ public class AdicionarLembreteActivity extends AppCompatActivity {
 
         Lembrete lembrete = new Lembrete(titulo, mensagem);
 
-        usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList().add(lembrete);
+        PrincipalActivity.usuario.getSemestre(usuario.getIdSemestre()).getLembreteList().add(lembrete);
 
-        FirebaseFirestore.getInstance().collection("users").document(usuario.getUid()).set(usuario);
-
+        Handler handler = new Handler();
+        Runnable thread = new Runnable() {
+            @Override
+            public void run() {
+                FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
+            }
+        };
+        handler.post(thread);
+        finish();
     }
-
-
 }

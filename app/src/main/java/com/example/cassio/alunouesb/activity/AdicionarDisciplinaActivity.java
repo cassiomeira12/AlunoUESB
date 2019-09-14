@@ -1,6 +1,7 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -74,22 +75,33 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
             Professor professorTemp = new Professor(nomeProfessor, emailProfessor);
             Disciplina disciplina = new Disciplina(nome, abreviatura, professorTemp);
 
-            Semestre semestre = usuario.getSemestreList().get(usuario.getIdSemestre());
-            semestre.adicionarDisciplina(disciplina);
+            PrincipalActivity.usuario.getSemestreList().get(usuario.getIdSemestre()).adicionarDisciplina(disciplina);
 
-            FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AdicionarDisciplinaActivity.this, "Falha ao adicionar", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            finish();
-                        }
-                    });
+            // criar Thread para adicionar ao Firebase
+            //Motivo: Internet pode estar lenta e demorar para inserir no firebase, demorando para sair da tela tb
+            Handler handler = new Handler();
+            Runnable thread = new Runnable() {
+                @Override
+                public void run() {
+                    FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(AdicionarDisciplinaActivity.this, "Falha ao adicionar", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(AdicionarDisciplinaActivity.this, "Adicionado com sucesso", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            };
+            handler.post(thread);
+            finish();
+
+
         }
     }
 }

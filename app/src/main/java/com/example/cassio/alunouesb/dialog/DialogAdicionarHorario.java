@@ -1,40 +1,63 @@
 package com.example.cassio.alunouesb.dialog;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.cassio.alunouesb.R;
-import com.example.cassio.alunouesb.model.Horario;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.cassio.alunouesb.R.layout.support_simple_spinner_dropdown_item;
 
 /**
  * Created by cassio on 12/09/17.
  */
 
-public class DialogAdicionarHorario extends DialogFragment {
+public class DialogAdicionarHorario extends DialogFragment implements  RadioGroup.OnCheckedChangeListener{
 
-
+    private RadioButton manha, tarde, noite;
     private OnClickDialog onClickDialog;
+    private RadioGroup radioGroup;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.dialog_adicionar_horario, container);
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        radioGroup = view.findViewById(R.id.radio_group);
+        manha = view.findViewById(R.id.radio_button_manha);
+        tarde = view.findViewById(R.id.radio_button_tarde);
+        noite = view.findViewById(R.id.radio_button_noite);
+
+
+        radioGroup.setOnCheckedChangeListener(this);
 
 
         new ViewHolder(view);
@@ -46,6 +69,68 @@ public class DialogAdicionarHorario extends DialogFragment {
         this.onClickDialog = onClickDialog;
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("ResourceType")
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        Resources res = getResources();
+        try {
+            switch (i){
+                case R.id.radio_button_manha:
+                    manha.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.selected_radio_background)));
+                    manha.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.WHITE)));
+                    manha.setTextColor(ColorStateList.valueOf(res.getColor(R.color.WHITE)));
+
+                    tarde.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.unselected_radio_background)));
+                    tarde.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.colorPrimary)));
+                    tarde.setTextColor(ColorStateList.valueOf(res.getColor(R.color.BLACK)));
+
+                    noite.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.unselected_radio_background)));
+                    noite.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.colorPrimary)));
+                    noite.setTextColor(ColorStateList.valueOf(res.getColor(R.color.BLACK)));
+
+
+                    break;
+                case R.id.radio_button_tarde:
+
+                    tarde.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.selected_radio_background)));
+                    tarde.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.WHITE)));
+                    tarde.setTextColor(ColorStateList.valueOf(res.getColor(R.color.WHITE)));
+
+                    manha.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.unselected_radio_background)));
+                    manha.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.colorPrimary)));
+                    manha.setTextColor(ColorStateList.valueOf(res.getColor(R.color.BLACK)));
+
+                    noite.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.unselected_radio_background)));
+                    noite.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.colorPrimary)));
+                    noite.setTextColor(ColorStateList.valueOf(res.getColor(R.color.BLACK)));
+
+
+                    break;
+                case R.id.radio_button_noite:
+
+                    noite.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.selected_radio_background)));
+                    noite.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.WHITE)));
+                    noite.setTextColor(ColorStateList.valueOf(res.getColor(R.color.WHITE)));
+
+                    manha.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.unselected_radio_background)));
+                    manha.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.colorPrimary)));
+                    manha.setTextColor(ColorStateList.valueOf(res.getColor(R.color.BLACK)));
+
+                    tarde.setBackground(Drawable.createFromXml(res, res.getXml(R.drawable.unselected_radio_background)));
+                    tarde.setButtonTintList(ColorStateList.valueOf(res.getColor(R.color.colorPrimary)));
+                    tarde.setTextColor(ColorStateList.valueOf(res.getColor(R.color.BLACK)));
+
+                    break;
+            }
+        } catch (XmlPullParserException e) {
+            Log.e("Erro", "Erro na busca pelo XML do check");
+        } catch (IOException e) {
+            Log.e("Erro", "Erro na busca pelo XML do check");
+        }
+    }
+
     public interface OnClickDialog {
         void onClickDialog(ViewHolder view);
     }
@@ -53,6 +138,7 @@ public class DialogAdicionarHorario extends DialogFragment {
     public class ViewHolder implements View.OnClickListener {
         public Spinner spinnerDia;
         public Spinner spinnerHorario;
+        public RadioGroup radioGroup;
         final Button salvar;
         final Button cancelar;
 
@@ -64,6 +150,7 @@ public class DialogAdicionarHorario extends DialogFragment {
             spinnerHorario =  view.findViewById(R.id.spinner_horario);
             salvar = view.findViewById(R.id.button_salvar);
             cancelar = view.findViewById(R.id.button_cancelar);
+            radioGroup = view.findViewById(R.id.radio_group);
 
 
             dias.add("Segunda");
@@ -105,4 +192,5 @@ public class DialogAdicionarHorario extends DialogFragment {
 
 
     }
+
 }

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +17,16 @@ import com.example.cassio.alunouesb.adapter.AdapterLembretes;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class LembretesActivity extends AppCompatActivity implements AdapterLembretes.OnClick, AdapterLembretes.OnLongClick, DialogExcluir.OnExcluir{
 
@@ -146,12 +153,12 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     }
 
     private void salvarBancoDeDados() {
-        FirebaseFirestore.getInstance().collection("users").document(usuario.getUid()).set(usuario);
+        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
     }
 
     private void carregarDados() {
-        ArrayList<Lembrete> listLembretes = usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList();
 
+        ArrayList<Lembrete> listLembretes = PrincipalActivity.usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList();
         adapter = new AdapterLembretes(listLembretes, this, this, this);
 
         recyclerView.setAdapter(adapter);

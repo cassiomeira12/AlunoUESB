@@ -2,6 +2,7 @@ package com.example.cassio.alunouesb.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -40,8 +41,8 @@ public class AdicionarHorarioActivity extends AppCompatActivity {
         horarios.add("2º Horário");
         horarios.add("3º Horário");
 
-        spinnerDia = findViewById(R.id.spinner_dia);
-        spinnerHorario = findViewById(R.id.spinner_horario);
+        spinnerDia = findViewById(R.id.spinner_dia_manha);
+        spinnerHorario = findViewById(R.id.spinner_horario_manha);
 
 
         ArrayAdapter<String> adapterDia = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, dias);
@@ -49,6 +50,10 @@ public class AdicionarHorarioActivity extends AppCompatActivity {
 
         spinnerDia.setAdapter(adapterDia);
         spinnerHorario.setAdapter(adapterHorario);
+
+    }
+
+    public void salvarHorario(View view){
 
     }
 }

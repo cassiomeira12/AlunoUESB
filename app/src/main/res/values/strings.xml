@@ -8,4 +8,11 @@
     <string name="menu_salvar">Salvar</string>
     <string name="menu_cancelar">Cancelar</string>
     <string name="menu_editar">Editar</string>
+    <string name="selecione_o_dia_e_um_hor_rio">Selecione o dia e um horário</string>
+    <string name="dia_da_semana">Dia da Semana</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="salvar">Salvar</string>
+    <string name="hor_rio">Horário</string>
+    <string name="dia_e_horario">Selecione o dia e o horário</string>
+    <integer name="radio_button_border">10</integer>
 </resources>

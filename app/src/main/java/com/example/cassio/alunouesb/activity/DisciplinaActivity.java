@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.dialog.DialogAdicionarHorario;
+import com.example.cassio.alunouesb.dialog.DialogAdicionarHorario.ViewHolder;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Horario;
@@ -27,7 +28,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-public class DisciplinaActivity extends AppCompatActivity implements DialogAdicionarHorario.OnClickDialog, DialogExcluir.OnExcluir {
+public class DisciplinaActivity extends AppCompatActivity implements DialogExcluir.OnExcluir, DialogAdicionarHorario.OnClickDialog {
 
     private Usuario usuario = PrincipalActivity.usuario;
 
@@ -51,6 +52,9 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     private ImageView emotion;
     private ListView listHorarios;
     private Menu menu;
+
+    private String excluir; // essa variavel diz qual elemento ira ser excluido, o horario da lista de horarios ou a disciplina
+    //pois ambos tem o mesm DialogExcluir
 
     private int indiceExcluir;
 
@@ -211,8 +215,10 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     }
 
     private void excluirDisciplina() {
-        disciplinas.remove(disciplina);
-        finish();
+        excluir = "disciplina";
+        DialogExcluir excluir = new DialogExcluir();
+        excluir.setOnExcluir(this);
+        excluir.show(getSupportFragmentManager(), "Deseja excluir esta disciplina?");
     }
 
     private void salvar() {
@@ -299,22 +305,38 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
     }
 
     @Override
-    public void onClickDialog(DialogAdicionarHorario.ViewHolder view) {
+    public void onClickDialog(ViewHolder view) {
 
         String dia = (String) view.spinnerDia.getSelectedItem();
         String horario = (String) view.spinnerHorario.getSelectedItem();
+        int idTurno = view.radioGroup.getCheckedRadioButtonId();
+
+        int turno = getTurno(idTurno);
 
         int intDia = convertDia(dia);
         int intHorario = convertHorario(horario);
 
-        disciplina.adicionarHorario(intDia, intHorario);
+        disciplina.adicionarHorario(turno, intDia, intHorario);
         carregaHorarios();
 
         salvarBancoDeDados();
 
     }
 
+    private int getTurno(int idTurno) {
+        switch (idTurno){
+            case R.id.radio_button_manha:
+                return 0;
+            case R.id.radio_button_tarde:
+                return 1;
+            case R.id.radio_button_noite:
+                return 2;
+        }
+        return -1;
+    }
+
     public void chamarTelaConfimarDeleteHorario(){
+        excluir = "horario";
         DialogExcluir remove = new DialogExcluir();
         remove.setOnExcluir(this);
         remove.show(getSupportFragmentManager(), "Deseja excluir este horário?");
@@ -322,7 +344,17 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
     @Override
     public void onExcluir() {
-        adapter.remove(adapter.getItem(indiceExcluir));
+
+        switch (excluir){
+            case "disciplina":
+                disciplinas.remove(disciplina);
+                finish();
+                break;
+            case "horario":
+                adapter.remove(adapter.getItem(indiceExcluir));
+                break;
+        }
+
         salvarBancoDeDados();
     }
 
@@ -369,7 +401,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogAdici
 
     private void salvarBancoDeDados() {
         //alterar o valor das faltas no banco de dados
-        FirebaseFirestore.getInstance().collection("users").document(usuario.getUid()).set(usuario);
+        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
     }
 
     private int convertDia(String dia) {

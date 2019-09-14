@@ -18,18 +18,23 @@ import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.adapter.AdapterDisciplina;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class DisciplinasActivity extends AppCompatActivity implements AdapterDisciplina.OnClick, AdapterDisciplina.OnLongClick, DialogExcluir.OnExcluir{
 
     private Usuario usuario = PrincipalActivity.usuario;
     private RecyclerView recyclerView;
     private AdapterDisciplina adapter;
-    private MenuItem excluir;
 
     private ArrayList<Disciplina> listaDisciplinas = new ArrayList<Disciplina>();
     public List<Disciplina> listaExclusao = new ArrayList<>();
@@ -47,6 +52,16 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
 
 
         recyclerView.addItemDecoration(divider);
+
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid());
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                //atualizar lista
+                Log.e("Teste", "Evente Listener hahah mlq");
+                carregarDadosTela();
+            }
+        });
 
         carregarDadosTela();
     }
@@ -69,7 +84,7 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_lembretes, menu);
-        excluir = menu.findItem(R.id.action_excluir);
+        MenuItem excluir = menu.findItem(R.id.action_excluir);
 
         if (listaExclusao.isEmpty()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -165,4 +180,19 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
         carregarDadosTela();
         super.onRestart();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(!listaExclusao.isEmpty()){
+            listaExclusao.clear();
+            for (View view : listaViewSelecionadas) {
+                view.setBackgroundResource(R.drawable.shape_cinza);
+            }
+            invalidateOptionsMenu();
+        }else{
+            finish();
+        }
+    }
+
+
 }

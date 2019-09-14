@@ -9,9 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LoginActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activity.CadastroActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".activity.PrincipalActivity" android:launchMode="singleTop">
+        <activity android:name=".FragmentDialog.NoiteFragment"></activity>
+        <activity android:name=".FragmentDialog.TardeFragment" />
+        <activity android:name=".FragmentDialog.ManhaFragment" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.CadastroActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activity.PrincipalActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,50 +30,48 @@
         <activity android:name=".activity.HorariosActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.PrincipalActivity"/>
+                android:value=".activity.PrincipalActivity" />
         </activity>
-
-        <activity android:name=".activity.LembretesActivity" android:launchMode="singleTop"/>
-
-        <activity android:name=".activity.DisciplinasActivity" android:launchMode="singleTop"/>
-
+        <activity
+            android:name=".activity.LembretesActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.DisciplinasActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".activity.CalcularMediaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.PrincipalActivity"/>
+                android:value=".activity.PrincipalActivity" />
         </activity>
-
         <activity android:name=".activity.LembreteActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activity.LembretesActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.LembretesActivity" />
         </activity>
-
         <activity android:name=".activity.UsuarioActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.PrincipalActivity"/>
+                android:value=".activity.PrincipalActivity" />
         </activity>
-
-        <activity android:name=".activity.DisciplinaActivity"
+        <activity
+            android:name=".activity.DisciplinaActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.DisciplinasActivity"/>
-
+                android:value=".activity.DisciplinasActivity" />
         </activity>
-
-
-        <activity android:name=".activity.AdicionarDisciplinaActivity"
+        <activity
+            android:name=".activity.AdicionarDisciplinaActivity"
             android:windowSoftInputMode="stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.DisciplinasActivity"/>
+                android:value=".activity.DisciplinasActivity" />
         </activity>
-
-        <activity android:name=".activity.AdicionarLembreteActivity"
+        <activity
+            android:name=".activity.AdicionarLembreteActivity"
             android:windowSoftInputMode="stateVisible" />
         <activity android:name=".activity.AdicionarHorarioActivity" />
-
     </application>
 
 </manifest>

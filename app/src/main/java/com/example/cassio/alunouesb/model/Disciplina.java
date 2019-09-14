@@ -31,8 +31,8 @@ public class Disciplina implements Serializable {
     }
     public Disciplina(){}
 
-    public void adicionarHorario(int dia, int horario) {
-        Horario horarioTemp = new Horario(dia, horario);
+    public void adicionarHorario(int turno, int dia, int horario) {
+        Horario horarioTemp = new Horario(turno, dia, horario);
         horarioList.add(horarioTemp);
     }
 

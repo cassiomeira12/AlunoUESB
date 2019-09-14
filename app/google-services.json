@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:464581834707:android:5699c4cedc331dc4",
+        "mobilesdk_app_id": "1:464581834707:android:66834e02c178a8473be126",
         "android_client_info": {
           "package_name": "com.example.cassio.alunouesb"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "464581834707-r4kf5vav0jmndlf00idtbj0565iic44i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.cassio.alunouesb",
-            "certificate_hash": "7551b4d8705f23f47f3cd61b6b85052535e1702e"
-          }
-        },
         {
           "client_id": "464581834707-n95781skktropev460ho79sdj935o8u6.apps.googleusercontent.com",
           "client_type": 3

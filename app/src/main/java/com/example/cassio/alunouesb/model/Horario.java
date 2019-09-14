@@ -10,11 +10,13 @@ public class Horario implements Serializable {
 
     private int dia;
     private int horario;
+    private int turno;
 
     //Construtor da classe
-    public Horario (int dia, int horario) {
+    public Horario (int turno, int dia, int horario) {
         this.dia = dia;
         this.horario = horario;
+        this.turno = turno;
     }
     public Horario(){}
 
@@ -35,6 +37,14 @@ public class Horario implements Serializable {
         this.horario = horario;
     }
 
+    public int getTurno() {
+        return turno;
+    }
+
+    public void setTurno(int turno) {
+        this.turno = turno;
+    }
+
     @Override
     public String toString() {
         String resultado = "";
@@ -45,23 +55,35 @@ public class Horario implements Serializable {
                 break;
 
             case 1:
-                resultado = "Terça\t";
+                resultado = "Terça";
                 break;
 
             case 2:
-                resultado = "Quarta\t";
+                resultado = "Quarta";
                 break;
 
             case 3:
-                resultado = "Quinta\t";
+                resultado = "Quinta";
                 break;
 
             case 4:
-                resultado = "Sexta\t";
+                resultado = "Sexta";
                 break;
 
             case 5:
-                resultado = "Sábado\t";
+                resultado = "Sábado";
+                break;
+        }
+
+        switch (this.turno){
+            case 0:
+                resultado += " - Manhã - ";
+                break;
+            case 1:
+                resultado += " - Tarde - ";
+                break;
+            case 2:
+                resultado += " - Noite - ";
                 break;
         }
 
@@ -78,7 +100,6 @@ public class Horario implements Serializable {
                 resultado += "3º Horário";
                 break;
         }
-
         return resultado;
     }
 }

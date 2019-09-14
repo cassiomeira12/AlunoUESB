@@ -12,4 +12,6 @@
     <color name="backPrimary">#3F51B5</color>
     <color name="backPrimaryDark">#303F9F</color>
     <color name="backAccent">#FF4081</color>
+    <color name="WHITE">#FFFFFF</color>
+    <color name="BLACK">#000000</color>
 </resources>
