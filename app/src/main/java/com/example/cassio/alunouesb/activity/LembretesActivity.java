@@ -170,4 +170,17 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
         carregarDados();
         super.onRestart();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(!listaExclusao.isEmpty()){
+            listaExclusao.clear();
+            for (View view : listaViewSelecionadas) {
+                view.setBackgroundResource(R.drawable.shape_cinza);
+            }
+            invalidateOptionsMenu();
+        }else{
+            finish();
+        }
+    }
 }

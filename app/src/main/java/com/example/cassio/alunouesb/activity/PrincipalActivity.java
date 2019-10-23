@@ -1,11 +1,13 @@
 package com.example.cassio.alunouesb.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +33,14 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     private TextView usuarioCurso;
     private TextView textSemestre;
     private ImageView imageCurso;
+    private FrameLayout progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
+        progressBar = findViewById(R.id.progressBarPrincipal);
         usuarioNome = findViewById(R.id.usuario_nome);
         usuarioCurso = findViewById(R.id.usuario_curso);
         textSemestre = findViewById(R.id.text_semestre);
@@ -45,6 +49,7 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         if(FirebaseAuth.getInstance().getUid() != null ){
 
             //inicia animacao de Carregamento simples
+            showProgressBar(true);
 
             // carrega os dados do usuario
             String uid = FirebaseAuth.getInstance().getUid();
@@ -59,14 +64,25 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
                             assert documentSnapshot != null; // definir que nunca irá ser nulo
                             usuario = documentSnapshot.toObject(Usuario.class);
                             carregarDados();
+                            showProgressBar(false);
                         }
             });
 
             //finaliza animacao de carregamento simples
+
+
         }else{
             Intent telaLogin = new Intent(this, LoginActivity.class);
             telaLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(telaLogin);
+        }
+    }
+
+    private void showProgressBar(boolean visible) {
+        if(visible){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            progressBar.setVisibility(View.GONE);
         }
     }
 

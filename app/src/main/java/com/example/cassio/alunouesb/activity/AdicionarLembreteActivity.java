@@ -63,7 +63,7 @@ public class AdicionarLembreteActivity extends AppCompatActivity {
 
         Lembrete lembrete = new Lembrete(titulo, mensagem);
 
-        PrincipalActivity.usuario.getSemestre(usuario.getIdSemestre()).getLembreteList().add(lembrete);
+        PrincipalActivity.usuario.getSemestre(usuario.getIdSemestre()).getLembreteList().add(0, lembrete);
 
         Handler handler = new Handler();
         Runnable thread = new Runnable() {

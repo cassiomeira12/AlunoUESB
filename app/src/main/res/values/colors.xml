@@ -14,4 +14,5 @@
     <color name="backAccent">#FF4081</color>
     <color name="WHITE">#FFFFFF</color>
     <color name="BLACK">#000000</color>
+    <color name="backgroundProgressBar">#20000000</color>
 </resources>

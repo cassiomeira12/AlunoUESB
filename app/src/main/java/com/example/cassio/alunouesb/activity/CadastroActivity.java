@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,10 @@ public class CadastroActivity extends AppCompatActivity {
     private TextView usuarioSemestre;
     private BetterSpinner usuarioCurso;
     private Usuario usuario;
+    private FrameLayout progressBar;
+
+    private String email;
+    private String senha;
     public boolean cadastroRealizado = false; // variavel de controle
 
 
@@ -39,6 +44,7 @@ public class CadastroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
+        progressBar = findViewById(R.id.progressBarCadastro);
         usuarioNome = findViewById(R.id.text_nome);
         usuarioEmail = findViewById(R.id.text_email);
         usuarioSenha = findViewById(R.id.text_senha);
@@ -56,6 +62,7 @@ public class CadastroActivity extends AppCompatActivity {
 
 
         mCadastrar.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 // verificar se os campos estão correntamente preenchidos
@@ -64,6 +71,7 @@ public class CadastroActivity extends AppCompatActivity {
                     salvarUsuario();
                 }else{
                     // enviar uma mensagem de erro
+                    Toast.makeText(CadastroActivity.this, "Preencha os campos corretamente.", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -117,14 +125,14 @@ public class CadastroActivity extends AppCompatActivity {
 
 
     public void salvarUsuario() {
-        // dar um DROP no banco de dados local para nao haver choque de usuarios
 
+        showProgressBar(true);
 
         String nome = usuarioNome.getText().toString();
         String curso = usuarioCurso.getText().toString();
         String semestre = usuarioSemestre.getText().toString();
-        String email = usuarioEmail.getText().toString();
-        String senha = usuarioSenha.getText().toString();
+        email = usuarioEmail.getText().toString();
+        senha = usuarioSenha.getText().toString();
 
         usuario = new Usuario(nome, email, senha, curso);
 
@@ -146,37 +154,53 @@ public class CadastroActivity extends AppCompatActivity {
 
 
                         FirebaseFirestore.getInstance().collection("/users").document(uid).set(usuario); // adiciona usuario ao banco de dados do firebase
+
+
+                        //FIM ANICACAO DE CARREGAMENTO
+
                         Toast.makeText(CadastroActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_SHORT).show();
 
-                        //FIM ANICACAO DE CARREGAMENTO - SUCESSO
+                        //login
+                        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // pode-se colocar alguma tela indicamento o LOADING
+                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        Intent telaPrincipal = new Intent(CadastroActivity.this, PrincipalActivity.class);
+                                        telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
+
+                                        showProgressBar(false);
+
+                                        startActivity(telaPrincipal);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        showProgressBar(false);
+
+                                        Toast.makeText(CadastroActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        //FIM ANICACAO DE CARREGAMENTO - SUCESSO
-                        Toast.makeText(CadastroActivity.this, e.getCause().getMessage(), Toast.LENGTH_SHORT).show();
+                        showProgressBar(false);
+                        //FIM ANICACAO DE CARREGAMENTO
+                        Toast.makeText(CadastroActivity.this, "Erro ao fazer cadastro", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        //login
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // pode-se colocar alguma tela indicamento o LOADING
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        Intent telaPrincipal = new Intent(CadastroActivity.this, PrincipalActivity.class);
-                        telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
-                        startActivity(telaPrincipal);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(CadastroActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
-                    }
-                });
+    }
 
+    private void showProgressBar(boolean visibility) {
+        if(visibility){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
 }
