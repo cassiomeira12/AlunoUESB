@@ -1,6 +1,7 @@
 package com.example.cassio.alunouesb.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.activity.DisciplinasActivity;
 import com.example.cassio.alunouesb.model.Disciplina;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -21,6 +23,7 @@ import java.util.List;
 public class AdapterDisciplina extends Adapter {
 
     private List<Disciplina> disciplinaList;
+    private DecimalFormat formatter = new DecimalFormat("#.##"); // formato para decimal com duas casas decimais
 
     private Context context;
     private OnClick onClick;
@@ -36,22 +39,23 @@ public class AdapterDisciplina extends Adapter {
 
 
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_item_disciplina, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
         Disciplina disciplina = disciplinaList.get(position);
 
         viewHolder.textNome.setText(disciplina.getAbreviacao());
-        viewHolder.textUnidade1.setText(String.valueOf(disciplina.getUnidade1()));
-        viewHolder.textUnidade2.setText(String.valueOf(disciplina.getUnidade2()));
-        viewHolder.textUnidade3.setText(String.valueOf(disciplina.getUnidade3()));
-        viewHolder.textMedia.setText(String.valueOf(disciplina.getMedia()));
+        viewHolder.textUnidade1.setText(formatter.format(disciplina.getUnidade1()));
+        viewHolder.textUnidade2.setText(formatter.format(disciplina.getUnidade2()));
+        viewHolder.textUnidade3.setText(formatter.format(disciplina.getUnidade3()));
+        viewHolder.textMedia.setText(formatter.format(disciplina.getMedia()));
 
         viewHolder.disciplinaItem.setTag(position);
 
@@ -126,7 +130,6 @@ public class AdapterDisciplina extends Adapter {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         final LinearLayout disciplinaItem;
-
         final TextView textNome;
         final TextView textUnidade1;
         final TextView textUnidade2;
@@ -134,15 +137,15 @@ public class AdapterDisciplina extends Adapter {
         final TextView textMedia;
 
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-            disciplinaItem = (LinearLayout) view.findViewById(R.id.disciplina_item);
+            disciplinaItem = view.findViewById(R.id.disciplina_item);
 
-            textNome = (TextView) view.findViewById(R.id.text_disciplina_nome);
-            textUnidade1 = (TextView) view.findViewById(R.id.text_uni1_item);
-            textUnidade2 = (TextView) view.findViewById(R.id.text_uni2_item);
-            textUnidade3 = (TextView) view.findViewById(R.id.text_uni3_item);
-            textMedia = (TextView) view.findViewById(R.id.text_media_item);
+            textNome = view.findViewById(R.id.text_disciplina_nome);
+            textUnidade1 = view.findViewById(R.id.text_uni1_item);
+            textUnidade2 = view.findViewById(R.id.text_uni2_item);
+            textUnidade3 = view.findViewById(R.id.text_uni3_item);
+            textMedia =  view.findViewById(R.id.text_media_item);
 
             disciplinaItem.setOnClickListener(AdapterDisciplina.this);
             disciplinaItem.setOnLongClickListener(AdapterDisciplina.this);

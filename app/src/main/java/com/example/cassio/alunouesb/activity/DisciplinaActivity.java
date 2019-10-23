@@ -2,6 +2,7 @@ package com.example.cassio.alunouesb.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+
+import static java.util.Date.parse;
 
 public class DisciplinaActivity extends AppCompatActivity implements DialogExcluir.OnExcluir, DialogAdicionarHorario.OnClickDialog {
 
@@ -61,6 +64,8 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
     private TextView valueNumberPicker;
 
     private boolean permitirEdicao = true;
+
+    DecimalFormat formatter = new DecimalFormat("#.##"); // formato para decimal com duas casas decimais
 
 
     @Override
@@ -149,19 +154,19 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         });
 
         if (disciplina.getUnidade1() != 0) {
-            unidade1.setText(String.valueOf(disciplina.getUnidade1()));
+            unidade1.setText(formatter.format(disciplina.getUnidade1()));
         }
         if (disciplina.getUnidade2() != 0) {
-            unidade2.setText(String.valueOf(disciplina.getUnidade2()));
+            unidade2.setText(formatter.format(disciplina.getUnidade2()));
         }
         if (disciplina.getUnidade3() != 0) {
-            unidade3.setText(String.valueOf(disciplina.getUnidade3()));
+            unidade3.setText(formatter.format(disciplina.getUnidade3()));
         }
         if (disciplina.getMedia() != 0) {
-            notaMedia.setText(String.valueOf(disciplina.getMedia()));
+            notaMedia.setText(formatter.format(disciplina.getMedia()));
         }
         if (disciplina.getNotaFinal() != 0) {
-            notaFinal.setText(String.valueOf(disciplina.getNotaFinal()));
+            notaFinal.setText(formatter.format(disciplina.getNotaFinal()));
         }
 
         listHorarios.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -222,14 +227,20 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
     }
 
     private void salvar() {
+        // recebe os valores para o nome da disciplina
         disciplina.setNome(nome.getText().toString());
+
+        // recebe os valores para abreviacao do nome da disciplina
         disciplina.setAbreviacao(abreviatura.getText().toString());
 
         professor.setNome(nomeProfessor.getText().toString());
         professor.setEmail(emailProfessor.getText().toString());
 
+
+        //notas
+        // se nota da primeira unidade for diferente de vazio
         if (!unidade1.getText().toString().isEmpty()) {
-            disciplina.setUnidade1(Float.valueOf(unidade1.getText().toString()));
+            disciplina.setUnidade1(Float.valueOf(unidade1.getText().toString()));// salva o valor no Objeto que sera enviado ao bd
         }else{
             unidade1.setText("");
             disciplina.setUnidade1(0);
@@ -251,13 +262,15 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
 
         float media =  (disciplina.getUnidade1() + disciplina.getUnidade2() + disciplina.getUnidade3()) / 3;
 
+        Log.e("Media", "" + media);
+
         if(media >= 7){
 
             NumberFormat formatter = new DecimalFormat("0.00"); // formato para decimal com duas casas decimais
             media = Float.parseFloat(formatter.format(media));
 
             disciplina.setMedia(media);
-            notaMedia.setText(String.valueOf(disciplina.getMedia()));
+            notaMedia.setText(formatter.format(disciplina.getMedia()));
 
             notaFinal.setText("");
             disciplina.setNotaFinal(0);
@@ -265,19 +278,20 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         }else{
             if(media > 0){
                 float mNotaFinal;
+
                 if(notaFinal.getText().toString().isEmpty()){ // se vazio, nota final recebe zero
                     mNotaFinal = 0;
                 }else{ // se nao vazio, nota final recebe o valor que esta no TextEdit
                     mNotaFinal = Float.valueOf(notaFinal.getText().toString());
                 }
 
-                media = (float) ((media * 0.7) + mNotaFinal * 0.3); // calculo da media apos a prova final
+                double aux1 = media * 0.7;
+                double aux2 = mNotaFinal * 0.3;
 
-                NumberFormat formatter = new DecimalFormat("0.00"); // formato para decimal com duas casas decimais
-                media = Float.parseFloat(formatter.format(media));
+                media = (float )(aux1 + aux2);
 
                 disciplina.setMedia(media);
-                notaMedia.setText(String.valueOf(media));
+                notaMedia.setText(formatter.format(media));
             }
         }
 
