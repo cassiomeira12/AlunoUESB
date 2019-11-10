@@ -1,5 +1,6 @@
 package com.example.cassio.alunouesb.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -21,8 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
     private TextView mEmail;
     private TextView mSenha;
-    private FrameLayout progressBar;
     private Button buttonEntrar;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,13 @@ public class LoginActivity extends AppCompatActivity {
         buttonEntrar = findViewById(R.id.button_entrar_login);
         mEmail = findViewById(R.id.text_email_login);
         mSenha = findViewById(R.id.text_senha_login);
-        progressBar = findViewById(R.id.progressBarLogin);
+
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Carregando");
+        mDialog.setIndeterminate(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCancelable(false);
+
 
         buttonEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 
@@ -70,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //inicia tela de carregamento
 
-        progressBar.setVisibility(View.VISIBLE);
+        mDialog.show();
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // pode-se colocar alguma tela indicamento o LOADING
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -82,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         limparCampos();
                         // fecha tela de carregamento SUCESSO
-                        progressBar.setVisibility(View.GONE);
+                        mDialog.dismiss();
 
                         startActivity(telaPrincipal);
 
@@ -95,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         //fecha tela de carregamento FALHA
 
-                        progressBar.setVisibility(View.GONE);
+                        mDialog.dismiss();
 
                         Toast.makeText(LoginActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
                     }

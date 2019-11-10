@@ -7,329 +7,70 @@
     tools:context=".activity.HorariosActivity"
     android:padding="8dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/shape_branco"
-        android:paddingRight="1dp"
-        android:paddingBottom="2dp">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Horário"/>
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Hor"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Segunda"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Seg" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Terça"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Ter" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Quarta"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Quar" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Quinta"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Quin" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Sexta"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Sex" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Sáb" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_horario_1"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="07:30\t09:10"/>
-
-            <Button
-                android:id="@+id/button_seg_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:padding="0dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_ter_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:padding="0dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_quar_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_quin_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_sex_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_sab_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_horario_2"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="09:10\t11:00"/>
-
-            <Button
-                android:id="@+id/button_seg_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:padding="0dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_ter_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_quar_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_quin_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_sex_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_sab_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_horario_3"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="11:00\t12:40"/>
-
-            <Button
-                android:id="@+id/button_seg_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_ter_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_quar_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_quin_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_sex_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-            <Button
-                android:id="@+id/button_sab_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:backgroundTint="#ffffff"
-                android:enabled="false"
-                android:padding="0dp"
-                android:gravity="center"
-                android:onClick="chamarTelaDisciplina"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Sábado"/>
 
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/listar_horarios"
+        android:background="#ffffff"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </ListView>
 
 
     <ListView
@@ -340,10 +81,5 @@
         android:layout_marginTop="32dp">
 
     </ListView>
-
-
-
-
-
 
 </LinearLayout>

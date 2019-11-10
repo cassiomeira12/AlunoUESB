@@ -1,5 +1,6 @@
 package com.example.cassio.alunouesb.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,11 +33,11 @@ public class CadastroActivity extends AppCompatActivity {
     private TextView usuarioSemestre;
     private BetterSpinner usuarioCurso;
     private Usuario usuario;
-    private FrameLayout progressBar;
 
     private String email;
     private String senha;
     public boolean cadastroRealizado = false; // variavel de controle
+    private ProgressDialog mDialog;
 
 
     @Override
@@ -44,7 +45,6 @@ public class CadastroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        progressBar = findViewById(R.id.progressBarCadastro);
         usuarioNome = findViewById(R.id.text_nome);
         usuarioEmail = findViewById(R.id.text_email);
         usuarioSenha = findViewById(R.id.text_senha);
@@ -52,6 +52,12 @@ public class CadastroActivity extends AppCompatActivity {
         mCancelar = findViewById(R.id.button_cancelar);
         usuarioCurso = findViewById(R.id.spinner_curso);
         usuarioSemestre = findViewById(R.id.text_semestre);
+
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Carregando");
+        mDialog.setIndeterminate(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCancelable(false);
 
         String[] cursos = {"Administração", "Agronomia", "Biologia", "Cinema", "Ciências Socias", "Ciência da Computação",
                 "Contabilidade", "Direito", "Economia", "Educação Física", "Engenharia Florestal", "Filosofia",
@@ -125,8 +131,8 @@ public class CadastroActivity extends AppCompatActivity {
 
 
     public void salvarUsuario() {
-
-        showProgressBar(true);
+        // animaçao de carregamento
+        mDialog.show();
 
         String nome = usuarioNome.getText().toString();
         String curso = usuarioCurso.getText().toString();
@@ -141,8 +147,6 @@ public class CadastroActivity extends AppCompatActivity {
 
         usuario.addSemestre(semestreTemp);
 
-
-        //animaçao de carregamento
         // faz cadastro do usuario no firebase
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -168,15 +172,15 @@ public class CadastroActivity extends AppCompatActivity {
                                         Intent telaPrincipal = new Intent(CadastroActivity.this, PrincipalActivity.class);
                                         telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
 
-                                        showProgressBar(false);
-
+                                        mDialog.dismiss();
                                         startActivity(telaPrincipal);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(Exception e) {
-                                        showProgressBar(false);
+                                        mDialog.dismiss();
+                                        //showProgressBar(false);
 
                                         Toast.makeText(CadastroActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
                                     }
@@ -187,20 +191,12 @@ public class CadastroActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        showProgressBar(false);
+                        mDialog.dismiss();
                         //FIM ANICACAO DE CARREGAMENTO
                         Toast.makeText(CadastroActivity.this, "Erro ao fazer cadastro", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-    }
-
-    private void showProgressBar(boolean visibility) {
-        if(visibility){
-            progressBar.setVisibility(View.VISIBLE);
-        }else{
-            progressBar.setVisibility(View.GONE);
-        }
     }
 
 }

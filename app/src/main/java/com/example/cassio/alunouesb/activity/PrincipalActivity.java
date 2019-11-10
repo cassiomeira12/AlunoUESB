@@ -34,6 +34,7 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     private TextView textSemestre;
     private ImageView imageCurso;
     private FrameLayout progressBar;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +47,19 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         textSemestre = findViewById(R.id.text_semestre);
         imageCurso = findViewById(R.id.image_curso);
 
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Carregando..");
+        mDialog.setIndeterminate(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCancelable(false);
+
+        
+
         if(FirebaseAuth.getInstance().getUid() != null ){
 
             //inicia animacao de Carregamento simples
-            showProgressBar(true);
+            //showProgressBar(true);
+            mDialog.show();
 
             // carrega os dados do usuario
             String uid = FirebaseAuth.getInstance().getUid();
@@ -64,7 +74,8 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
                             assert documentSnapshot != null; // definir que nunca irá ser nulo
                             usuario = documentSnapshot.toObject(Usuario.class);
                             carregarDados();
-                            showProgressBar(false);
+                            //showProgressBar(false);
+                            mDialog.dismiss();
                         }
             });
 
@@ -72,6 +83,7 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
 
 
         }else{
+            
             Intent telaLogin = new Intent(this, LoginActivity.class);
             telaLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(telaLogin);
