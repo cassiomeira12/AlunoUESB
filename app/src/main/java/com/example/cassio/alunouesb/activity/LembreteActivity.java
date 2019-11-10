@@ -10,15 +10,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.model.Lembrete;
+import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LembreteActivity extends AppCompatActivity{
 
-    private Usuario usuario =  PrincipalActivity.usuario;
+    private Semestre semestre =  PrincipalActivity.semestre;
 
     private Lembrete lembrete;
 
@@ -37,7 +41,7 @@ public class LembreteActivity extends AppCompatActivity{
         mensagem = findViewById(R.id.text_mensagem_lembrete);
 
         int idLembrete = (int) getIntent().getSerializableExtra("idLembrete");
-        lembrete = usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList().get(idLembrete);
+        lembrete = PrincipalActivity.semestre.getLembreteList().get(idLembrete);
 
         titulo.setText(lembrete.getTitulo());
         mensagem.setText(lembrete.getMensagem());
@@ -78,7 +82,7 @@ public class LembreteActivity extends AppCompatActivity{
     }
 
     private void deletarLembrete() {
-        usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList().remove(lembrete);
+        semestre.getLembreteList().remove(lembrete);
         Toast.makeText(this, "Lembrete excluído", Toast.LENGTH_SHORT).show();
         salvar();
     }
@@ -87,19 +91,10 @@ public class LembreteActivity extends AppCompatActivity{
         lembrete.setTitulo(titulo.getText().toString());
         lembrete.setMensagem(mensagem.getText().toString());
 
-        FirebaseFirestore.getInstance().collection("users").document(usuario.getUid()).set(usuario)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LembreteActivity.this, "Falha ao adicionar lembrete", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        finish();
-                    }
-                });
+
+        String semestreSelecionado = PrincipalActivity.semestre.getSemestre();
+        References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
+
     }
 
     private void habilitarEdicao() {

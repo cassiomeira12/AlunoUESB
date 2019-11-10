@@ -65,31 +65,48 @@ public class CalcularMediaActivity extends AppCompatActivity {
         finalNecessaria.setVisibility(View.GONE);
         imageResultado.setVisibility(View.INVISIBLE);
 
-        disciplinasList = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+        carregarDados();
+
+    }
+
+
+    public void carregarDados(){
+        if(PrincipalActivity.semestre != null){
+            disciplinasList = (ArrayList<Disciplina>) PrincipalActivity.semestre.getDisciplinaList();
 //        disciplinasList = new ArrayList<Disciplina>();
-        configurarSpinner();
+            configurarSpinner();
 
-        spinnerDisciplina.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            spinnerDisciplina.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                disciplina = disciplinasList.get(i);
+                    disciplina = disciplinasList.get(i);
 
-                if (disciplina.getUnidade1() != 0) {
-                    unidade1.setText(String.valueOf(disciplina.getUnidade1()));
+                    if (disciplina.getUnidade1() != 0) {
+                        unidade1.setText(String.valueOf(disciplina.getUnidade1()));
+                    }else{
+                        unidade1.setText("");
+                    }
+
+                    if (disciplina.getUnidade2() != 0) {
+                        unidade2.setText(String.valueOf(disciplina.getUnidade2()));
+
+                    }else{
+                        unidade2.setText("");
+                    }
+
+                    if (disciplina.getUnidade3() != 0) {
+                        unidade3.setText(String.valueOf(disciplina.getUnidade3()));
+
+                    }else{
+                        unidade3.setText("");
+                    }
                 }
+            });
+        }else{
+            Toast.makeText(this, "Falha na conexão com o servidor", Toast.LENGTH_SHORT).show();
+        }
 
-                if (disciplina.getUnidade2() != 0) {
-                    unidade2.setText(String.valueOf(disciplina.getUnidade2()));
-
-                }
-
-                if (disciplina.getUnidade3() != 0) {
-                    unidade3.setText(String.valueOf(disciplina.getUnidade3()));
-
-                }
-            }
-        });
     }
 
     @SuppressLint("ResourceType")

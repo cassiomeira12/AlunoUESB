@@ -16,13 +16,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.dialog.DialogAdicionarHorario;
 import com.example.cassio.alunouesb.dialog.DialogAdicionarHorario.ViewHolder;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Horario;
 import com.example.cassio.alunouesb.model.Professor;
+import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
@@ -33,10 +36,10 @@ import static java.util.Date.parse;
 
 public class DisciplinaActivity extends AppCompatActivity implements DialogExcluir.OnExcluir, DialogAdicionarHorario.OnClickDialog {
 
-    private Usuario usuario = PrincipalActivity.usuario;
+    private Semestre semestre =  PrincipalActivity.semestre;
 
     // lista com todas as disciplinas do usuario
-    ArrayList<Disciplina> disciplinas = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+    ArrayList<Disciplina> disciplinas = (ArrayList<Disciplina>) semestre.getDisciplinaList();
 
     private Disciplina disciplina;
     private ArrayList<Horario> horarioList;
@@ -93,10 +96,10 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
 
         //pegar disciplina
         int idDisciplina = (int) getIntent().getSerializableExtra("idDisciplina");
-        disciplina = usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList().get(idDisciplina);
+        disciplina = semestre.getDisciplinaList().get(idDisciplina);
 
         // cria uma lista com as disciplinas do usuario
-        disciplinas = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+        disciplinas = (ArrayList<Disciplina>) semestre.getDisciplinaList();
 
         for (Disciplina disc : disciplinas) {
             if(disc.getNome().equals(disciplina.getNome())){// verifica qual disciplina na lista do usuario possui o mesmo nome da disciplina que foi pega na intent
@@ -415,7 +418,9 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
 
     private void salvarBancoDeDados() {
         //alterar o valor das faltas no banco de dados
-        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
+
+        String semestreSelecionado =  PrincipalActivity.semestre.getSemestre();
+        References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
     }
 
     private int convertDia(String dia) {

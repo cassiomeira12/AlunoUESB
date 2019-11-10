@@ -11,6 +11,7 @@ import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Horario;
 import com.example.cassio.alunouesb.model.Horarios;
+import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class HorariosActivity extends AppCompatActivity {
 
-    private Usuario usuario = PrincipalActivity.usuario;
+    private Semestre semestre =  PrincipalActivity.semestre;
     private ListView listDisciplinas;
     private ListView listarHorarios;
     private ArrayList<Disciplina> disciplinaList;
@@ -32,7 +33,7 @@ public class HorariosActivity extends AppCompatActivity {
 
         listarHorarios = findViewById(R.id.listar_horarios);
         listDisciplinas = findViewById(R.id.list_disciplinas);
-        disciplinaList = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+        disciplinaList = (ArrayList<Disciplina>) semestre.getDisciplinaList();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, configurarListView(disciplinaList));
 

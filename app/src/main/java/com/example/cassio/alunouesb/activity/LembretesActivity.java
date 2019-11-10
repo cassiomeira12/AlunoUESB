@@ -11,11 +11,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.adapter.AdapterLembretes;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Lembrete;
+import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,6 +34,8 @@ import javax.annotation.Nullable;
 public class LembretesActivity extends AppCompatActivity implements AdapterLembretes.OnClick, AdapterLembretes.OnLongClick, DialogExcluir.OnExcluir{
 
     private Usuario usuario = PrincipalActivity.usuario;
+    private Semestre semestre =  PrincipalActivity.semestre;
+
     private RecyclerView recyclerView;
     private AdapterLembretes adapter;
 
@@ -143,7 +148,7 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     @Override
     public void onExcluir() {
         for (Lembrete lembrete : listaExclusao) {
-            adapter.removeItem(lembrete);
+            PrincipalActivity.semestre.getLembreteList().remove(lembrete);
             adapter.notifyDataSetChanged();
             salvarBancoDeDados();
         }
@@ -153,15 +158,22 @@ public class LembretesActivity extends AppCompatActivity implements AdapterLembr
     }
 
     private void salvarBancoDeDados() {
-        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
+        String semestreSelecionado =  PrincipalActivity.semestre.getSemestre();
+        References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
     }
 
     private void carregarDados() {
+        if(PrincipalActivity.semestre != null){
+            ArrayList<Lembrete> listLembretes = PrincipalActivity.semestre.getLembreteList();
+            adapter = new AdapterLembretes(listLembretes, this, this, this);
 
-        ArrayList<Lembrete> listLembretes = PrincipalActivity.usuario.getSemestreList().get(usuario.getIdSemestre()).getLembreteList();
-        adapter = new AdapterLembretes(listLembretes, this, this, this);
+            recyclerView.setAdapter(adapter);
 
-        recyclerView.setAdapter(adapter);
+        }else{
+            // Algum erro de conexao que fez isso acontecer
+            Toast.makeText(this, "Falha na conexão com o servidor", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

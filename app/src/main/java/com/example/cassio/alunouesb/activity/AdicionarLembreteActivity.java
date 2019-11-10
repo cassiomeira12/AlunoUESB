@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.model.Lembrete;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -63,13 +64,14 @@ public class AdicionarLembreteActivity extends AppCompatActivity {
 
         Lembrete lembrete = new Lembrete(titulo, mensagem);
 
-        PrincipalActivity.usuario.getSemestre(usuario.getIdSemestre()).getLembreteList().add(0, lembrete);
+        PrincipalActivity.semestre.getLembreteList().add(0, lembrete);
 
         Handler handler = new Handler();
         Runnable thread = new Runnable() {
             @Override
             public void run() {
-                FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario);
+                String semestreSelecionado = PrincipalActivity.semestre.getSemestre();
+                References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
             }
         };
         handler.post(thread);

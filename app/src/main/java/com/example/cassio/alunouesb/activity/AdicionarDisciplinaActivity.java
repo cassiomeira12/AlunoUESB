@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.model.Disciplina;
 import com.example.cassio.alunouesb.model.Professor;
 import com.example.cassio.alunouesb.model.Semestre;
@@ -21,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdicionarDisciplinaActivity extends AppCompatActivity {
 
-    private Usuario usuario = PrincipalActivity.usuario;
     private EditText nome;
     private EditText abreviatura;
     private EditText nomeProfessor;
@@ -75,7 +75,7 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
             Professor professorTemp = new Professor(nomeProfessor, emailProfessor);
             Disciplina disciplina = new Disciplina(nome, abreviatura, professorTemp);
 
-            PrincipalActivity.usuario.getSemestreList().get(usuario.getIdSemestre()).adicionarDisciplina(disciplina);
+            PrincipalActivity.semestre.adicionarDisciplina(disciplina);
 
             // criar Thread para adicionar ao Firebase
             //Motivo: Internet pode estar lenta e demorar para inserir no firebase, demorando para sair da tela tb
@@ -83,19 +83,8 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
             Runnable thread = new Runnable() {
                 @Override
                 public void run() {
-                    FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario)
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(AdicionarDisciplinaActivity.this, "Falha ao adicionar", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(AdicionarDisciplinaActivity.this, "Adicionado com sucesso", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    String semestreSelecionado = PrincipalActivity.semestre.getSemestre();
+                    References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
                 }
             };
             handler.post(thread);

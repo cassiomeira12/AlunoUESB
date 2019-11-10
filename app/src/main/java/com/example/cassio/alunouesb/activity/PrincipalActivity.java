@@ -3,7 +3,9 @@ package com.example.cassio.alunouesb.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,14 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Source;
 
 import javax.annotation.Nullable;
 
@@ -35,6 +41,7 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     private ImageView imageCurso;
     private FrameLayout progressBar;
     private ProgressDialog mDialog;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,30 +67,34 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
             //inicia animacao de Carregamento simples
             //showProgressBar(true);
             mDialog.show();
-
             // carrega os dados do usuario
-            String uid = FirebaseAuth.getInstance().getUid();
-            FirebaseFirestore.getInstance().collection("/users").document(uid)
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                            if(e != null){
-                                Toast.makeText(PrincipalActivity.this, "Erro no Snapshot", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            assert documentSnapshot != null; // definir que nunca irá ser nulo
-                            usuario = documentSnapshot.toObject(Usuario.class);
+            References.db.collection("/profile").document("/user").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                    if(task.isSuccessful()){// se completou com sucesso
+
+                        DocumentSnapshot document = task.getResult(); // recebe dados
+
+                        if(document.exists()){ // se os dados existem
+                            usuario = document.toObject(Usuario.class); // passa os dados para a instancia do usuario
                             carregarDados();
-                            //showProgressBar(false);
+                        }else{
                             mDialog.dismiss();
+                            Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
                         }
+
+                    }else{
+                        mDialog.dismiss();
+                        Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
+                    }
+                }
             });
 
             //finaliza animacao de carregamento simples
 
-
         }else{
-            
+
             Intent telaLogin = new Intent(this, LoginActivity.class);
             telaLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(telaLogin);
@@ -117,12 +128,38 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     }
 
     private void carregarDados() {
-        semestre = usuario.getSemestre(usuario.getIdSemestre());
+        String semestreSelecionado = usuario.getSemestre(usuario.getIdSemestre());
 
-        usuarioNome.setText(usuario.getNome());
-        usuarioCurso.setText(usuario.getCurso());
-        textSemestre.setText(semestre.getSemestre());
-        mudarImagemCurso(usuario.getCurso());
+        References.db.collection("/semestres").document(semestreSelecionado).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+
+                    if(document.exists()){
+                        semestre = document.toObject(Semestre.class);
+
+
+                        usuarioNome.setText(usuario.getNome());
+                        usuarioCurso.setText(usuario.getCurso());
+                        textSemestre.setText(semestre.getSemestre());
+                        mudarImagemCurso(usuario.getCurso());
+
+                        mDialog.dismiss();
+                    }else{
+                        mDialog.dismiss();
+                        Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
+                    }
+
+                }else{
+                    mDialog.dismiss();
+                    Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 
     public void chamarTelaHorarios(View view) {

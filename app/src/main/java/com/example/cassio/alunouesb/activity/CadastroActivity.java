@@ -3,7 +3,9 @@ package com.example.cassio.alunouesb.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cassio.alunouesb.R;
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firestore.v1.FirestoreGrpc;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -136,16 +140,16 @@ public class CadastroActivity extends AppCompatActivity {
 
         String nome = usuarioNome.getText().toString();
         String curso = usuarioCurso.getText().toString();
-        String semestre = usuarioSemestre.getText().toString();
+        final String semestre = usuarioSemestre.getText().toString();
         email = usuarioEmail.getText().toString();
         senha = usuarioSenha.getText().toString();
 
         usuario = new Usuario(nome, email, senha, curso);
 
         // instancia o semestre
-        Semestre semestreTemp = new Semestre(semestre);
+        final Semestre semestreTemp = new Semestre(semestre);
 
-        usuario.addSemestre(semestreTemp);
+        usuario.addSemestre(semestreTemp.getSemestre());
 
         // faz cadastro do usuario no firebase
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha)
@@ -157,32 +161,45 @@ public class CadastroActivity extends AppCompatActivity {
                         usuario.setUid(uid);
 
 
-                        FirebaseFirestore.getInstance().collection("/users").document(uid).set(usuario); // adiciona usuario ao banco de dados do firebase
+                        References.uid = uid;
+                        References.db = FirebaseFirestore.getInstance().collection("/users").document(uid);
 
 
-                        //FIM ANICACAO DE CARREGAMENTO
-
-                        Toast.makeText(CadastroActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_SHORT).show();
-
-                        //login
-                        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // pode-se colocar alguma tela indicamento o LOADING
-                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        References.db.collection("/users").document(References.uid) // cria referencia do usuario no banco de dados
+                                .collection("/profile").document("user").set(usuario)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onSuccess(AuthResult authResult) {
-                                        Intent telaPrincipal = new Intent(CadastroActivity.this, PrincipalActivity.class);
-                                        telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
+                                    public void onSuccess(Void aVoid) {
+                                        References.db.collection("/users").document(References.uid) // cria referencia do semestre no bando de dados
+                                                .collection("/semestres").document(semestreTemp.getSemestre()).set(semestreTemp)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        //login
+                                                        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha) // faz login
+                                                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                                                    @Override
+                                                                    public void onSuccess(AuthResult authResult) {
+                                                                        Intent telaPrincipal = new Intent(CadastroActivity.this, PrincipalActivity.class);
+                                                                        telaPrincipal.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //limpa a pilha de Activities
 
-                                        mDialog.dismiss();
-                                        startActivity(telaPrincipal);
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        mDialog.dismiss();
-                                        //showProgressBar(false);
+                                                                        mDialog.dismiss();
+                                                                        //startActivity(telaPrincipal);
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(Exception e) {
+                                                                        mDialog.dismiss();
+                                                                        //showProgressBar(false);
 
-                                        Toast.makeText(CadastroActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(CadastroActivity.this, "Falha ao fazer login", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+                                                    }
+
+                                                });
+
                                     }
                                 });
 

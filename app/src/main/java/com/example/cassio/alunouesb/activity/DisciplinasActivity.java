@@ -12,12 +12,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.dialog.DialogExcluir;
 import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.adapter.AdapterDisciplina;
 import com.example.cassio.alunouesb.model.Disciplina;
+import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -32,7 +36,6 @@ import javax.annotation.Nullable;
 
 public class DisciplinasActivity extends AppCompatActivity implements AdapterDisciplina.OnClick, AdapterDisciplina.OnLongClick, DialogExcluir.OnExcluir{
 
-    private Usuario usuario = PrincipalActivity.usuario;
     private RecyclerView recyclerView;
     private AdapterDisciplina adapter;
 
@@ -53,24 +56,16 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
 
         recyclerView.addItemDecoration(divider);
 
-        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid());
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                //atualizar lista
-                Log.e("Teste", "Evente Listener hahah mlq");
-                carregarDadosTela();
-            }
-        });
-
         carregarDadosTela();
     }
 
     private void carregarDadosTela() {
-        this.usuario = PrincipalActivity.usuario;
 
-        if(usuario != null){ // se n fizer isso pode dar crash quando o usuario clicar rapido na tela Disciplinas
-            listaDisciplinas = (ArrayList<Disciplina>) usuario.getSemestreList().get(usuario.getIdSemestre()).getDisciplinaList();
+        if(PrincipalActivity.semestre != null){ // se n fizer isso pode dar crash quando o usuario clicar rapido na tela Disciplinas
+            listaDisciplinas = (ArrayList<Disciplina>) PrincipalActivity.semestre.getDisciplinaList();
+        }else{
+            // algum erro com a conexao pode fazer isso
+            Toast.makeText(this, "Falha na conexão com o servidor", Toast.LENGTH_SHORT).show();
         }
 
         adapter = new AdapterDisciplina(listaDisciplinas, this, this, this);
@@ -167,12 +162,20 @@ public class DisciplinasActivity extends AppCompatActivity implements AdapterDis
     public void onExcluir() {
         for (Disciplina disciplina : listaExclusao) {
             adapter.removeItem(disciplina);
-            usuario.getSemestreList().remove(disciplina);
+            PrincipalActivity.semestre.getDisciplinaList().remove(disciplina);
         }
 
         listaExclusao.clear();
-        FirebaseFirestore.getInstance().collection("/users").document(usuario.getUid()).set(usuario); // apagar disciplinas selecionadas do banco de dados
-        invalidateOptionsMenu();
+
+        if(References.uid != null){
+            String semestreSelecionado = PrincipalActivity.semestre.getSemestre();
+            References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);// apagar disciplinas selecionadas do banco de dados
+            invalidateOptionsMenu();
+        }else{
+            Toast.makeText(this, "Faça login para prosseguir.", Toast.LENGTH_SHORT).show();
+            //start activity login
+        }
+
     }
 
     @Override

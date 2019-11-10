@@ -18,7 +18,7 @@ public class Usuario implements Serializable {
     private String curso;
     private int matricula;
     private int idSemestre; //Semestre selecionado
-    private ArrayList<Semestre> semestreList = new ArrayList<>();
+    private ArrayList<String> semestreList = new ArrayList<>();
 
 
     //Construtor da Classe
@@ -31,11 +31,6 @@ public class Usuario implements Serializable {
         this.semestreList = new ArrayList<>();
     }
     public Usuario(){}
-
-    public void adiconarSemestre(Long idSemestre, String semestre) {
-        Semestre semestreTemp = new Semestre(semestre);
-        semestreList.add(semestreTemp);
-    }
 
     public String getNome() {
         return nome;
@@ -61,11 +56,11 @@ public class Usuario implements Serializable {
         this.matricula = matricula;
     }
 
-    public ArrayList<Semestre> getSemestreList() {
+    public ArrayList<String> getSemestreList() {
         return semestreList;
     }
 
-    public void setSemestreList(ArrayList<Semestre> semestreList) {
+    public void setSemestreList(ArrayList<String> semestreList) {
         this.semestreList = semestreList;
     }
 
@@ -101,7 +96,7 @@ public class Usuario implements Serializable {
         this.uid = uiid;
     }
 
-    public void addSemestre(Semestre semestre){
+    public void addSemestre(String semestre){
         semestreList.add(semestre);
     }
 
@@ -109,7 +104,7 @@ public class Usuario implements Serializable {
         semestreList.remove(id);
     }
 
-    public Semestre getSemestre(int id){
+    public String getSemestre(int id){
         return semestreList.get(id);
     }
 }
