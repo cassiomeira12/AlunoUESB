@@ -9,9 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FragmentDialog.NoiteFragment"></activity>
-        <activity android:name=".FragmentDialog.TardeFragment" />
-        <activity android:name=".FragmentDialog.ManhaFragment" />
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

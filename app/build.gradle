@@ -34,6 +34,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-auth:16.0.5'
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
+
+    // imagem circular
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 }
 

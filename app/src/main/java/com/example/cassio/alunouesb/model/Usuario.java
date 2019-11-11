@@ -19,6 +19,7 @@ public class Usuario implements Serializable {
     private int matricula;
     private int idSemestre; //Semestre selecionado
     private ArrayList<String> semestreList = new ArrayList<>();
+    private String urlPhotoProfile = "";
 
 
     //Construtor da Classe
@@ -29,6 +30,7 @@ public class Usuario implements Serializable {
         this.curso = curso;
         this.idSemestre = 0;
         this.semestreList = new ArrayList<>();
+        this.urlPhotoProfile = "";
     }
     public Usuario(){}
 
@@ -106,5 +108,13 @@ public class Usuario implements Serializable {
 
     public String getSemestre(int id){
         return semestreList.get(id);
+    }
+
+    public String getUrlPhotoProfile(){
+        return this.urlPhotoProfile;
+    }
+
+    public void setUrlPhotoProfile(String url){
+        this.urlPhotoProfile = url;
     }
 }

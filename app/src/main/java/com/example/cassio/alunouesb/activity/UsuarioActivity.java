@@ -1,15 +1,21 @@
 package com.example.cassio.alunouesb.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -17,13 +23,27 @@ import com.example.cassio.alunouesb.R;
 import com.example.cassio.alunouesb.db.References;
 import com.example.cassio.alunouesb.model.Semestre;
 import com.example.cassio.alunouesb.model.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UsuarioActivity extends AppCompatActivity {
+    private static final int PICK_IMAGE = 1234;
 
     private EditText usuarioNome;
     private MaterialBetterSpinner spinnerCurso;
@@ -32,12 +52,15 @@ public class UsuarioActivity extends AppCompatActivity {
     private EditText novoSemestre;
     private ArrayAdapter<String> arrayAdapter;
 
+    private CircleImageView imagePerfil;
+
 
     private Usuario usuario = PrincipalActivity.usuario;
     private boolean permitirEdicao = true;
     private Menu menu;
 
     private ProgressDialog mDialog;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +72,12 @@ public class UsuarioActivity extends AppCompatActivity {
         spinnerCurso = findViewById(R.id.spinner_usuario_curso);
         matricula = findViewById(R.id.text_matricula);
         novoSemestre = findViewById(R.id.text_novo_semestre);
+
+        progressBar = findViewById(R.id.progressBarProfile);
+
+        imagePerfil = findViewById(R.id.imagemPerfil);
+
+        carregarImagemDePerfil();
 
 
         String[] cursos = {"Administração", "Agronomia", "Biologia", "Cinema", "Ciências Socias", "Ciência da Computação",
@@ -64,9 +93,9 @@ public class UsuarioActivity extends AppCompatActivity {
         spinnerSemestre.setEnabled(false);
 
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, usuario.getSemestreList());
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, usuario.getSemestreList());
         spinnerSemestre.setAdapter(arrayAdapter);
-//
+
         usuarioNome.setText(usuario.getNome());
         spinnerCurso.setText(usuario.getCurso());
 
@@ -165,6 +194,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
         novoSemestre.setText("");
     }
+
     public void salvarModificacoes() {
 
         String nome = usuarioNome.getText().toString();
@@ -219,5 +249,133 @@ public class UsuarioActivity extends AppCompatActivity {
         spinnerCurso.setEnabled(permitirEdicao);
         spinnerSemestre.setEnabled(permitirEdicao);
 
+    }
+
+
+    public void selecionarImagem(View view){
+
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), PICK_IMAGE);
+
+    }
+
+    // carrega imagem do usuario do ImageView (localmente ou pela internet)
+    private void carregarImagemDePerfil() {
+
+        final File arquivo = new File(getBaseContext().getFilesDir(), "profile");
+
+        if (arquivo.exists()){ // existe na memoria interna no cell
+
+            Uri uri = Uri.fromFile(arquivo);
+
+            try {
+
+                Bitmap imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imagePerfil.setImageBitmap(imagem); // carrega imagem no imageView
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else{ // se nao existe na memoria interna, faz download do firebase
+
+            FileDownloadTask download = FirebaseStorage.getInstance().getReference("/images" + References.uid + "profile").getFile(arquivo);
+
+            download.addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                    if(task.isSuccessful()) { // direto do Storage do usuario
+                        if (arquivo.exists()) {
+
+                            Uri uri = Uri.fromFile(arquivo);
+
+                            try {
+                                Bitmap imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                                imagePerfil.setImageBitmap(imagem);
+
+                                FileOutputStream saida = new FileOutputStream(arquivo);
+
+                                if (imagem != null) { //
+                                    imagem.compress(Bitmap.CompressFormat.PNG, 100, saida);
+                                    saida.flush();
+                                    saida.close();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else{ // task is not Successful
+
+                        final String uriPath = PrincipalActivity.usuario.getUrlPhotoProfile(); // url from profile usuario
+
+
+                        if(!uriPath.equals("")){ // not null
+                            // faz download
+                            Picasso.get().load(uriPath).into(imagePerfil);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // setar Imagem no ImageView, salva na memoria do APP e faz Upload para o banco de dados
+        if(requestCode == PICK_IMAGE){
+            if(data != null){ // imagem selecionada
+
+                Uri imagemSelecionada = data.getData();
+
+                imagePerfil.setImageURI(imagemSelecionada); // seta imagem no ImageView
+
+                try { // salva localmente na memoria do APP
+                    File arquivo = new File(getBaseContext().getFilesDir(), "profile");
+
+                    FileOutputStream saida = new FileOutputStream(arquivo);
+
+                    Bitmap imagem = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imagemSelecionada);
+
+
+                    imagem.compress(Bitmap.CompressFormat.PNG, 100, saida);
+
+                    saida.flush();
+                    saida.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final StorageReference storage = References.storageProfile;
+
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setProgress(0);
+
+                storage.putFile(imagemSelecionada) // salva no Storage do usuario
+                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task1) {
+                                progressBar.setVisibility(View.INVISIBLE);
+
+                                storage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        PrincipalActivity.usuario.setUrlPhotoProfile(uri.toString());
+                                        References.db.collection("profile").document("user").set(usuario); // salavr URL no banco de dados
+                                    }
+                                });
+
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                double porcentagem = (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                Log.e("Porc", porcentagem + "");
+                                progressBar.setProgress((int) porcentagem);
+                            }
+                        });
+            }
+         }
     }
 }
