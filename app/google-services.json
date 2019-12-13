@@ -34,6 +34,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464581834707:android:8c60c63e9ff121d13be126",
+        "android_client_info": {
+          "package_name": "com.navan.app.alunouesb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464581834707-ktp9q8vc747epssiq92mjldm27e0r7ut.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.navan.app.alunouesb",
+            "certificate_hash": "2b32e36362897a54c078c4dbd3e1f12ca1ebc393"
+          }
+        },
+        {
+          "client_id": "464581834707-n95781skktropev460ho79sdj935o8u6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApOy24CMXosCpqkHS9KIAsBUwrK8QgEXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464581834707-n95781skktropev460ho79sdj935o8u6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

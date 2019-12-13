@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AlunoUESB.iml" filepath="$PROJECT_DIR$/AlunoUESB.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file:///mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/Aluno UESB.iml" filepath="/mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/Aluno UESB.iml" />
+      <module fileurl="file:///mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/app/app.iml" filepath="/mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/app/app.iml" />
     </modules>
   </component>
 </project>

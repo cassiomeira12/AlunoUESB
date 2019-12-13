@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/backCinza"
     android:padding="8dp"
-    tools:context="com.example.cassio.alunouesb.activity.DisciplinaActivity">
+    tools:context="com.navan.app.alunouesb.activity.DisciplinaActivity">
 
 
     <ScrollView
