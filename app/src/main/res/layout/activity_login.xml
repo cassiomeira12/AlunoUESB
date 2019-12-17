@@ -57,7 +57,7 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/txtLogin"
+                        android:id="@+id/edtLogin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/login"
@@ -67,7 +67,7 @@
                         android:layout_marginRight="@dimen/margin_card"/>
 
                     <EditText
-                        android:id="@+id/txtPassword"
+                        android:id="@+id/edtPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/senha"

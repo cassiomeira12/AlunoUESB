@@ -40,7 +40,7 @@
                     android:text="@string/criar_conta"/>
 
                 <EditText
-                    android:id="@+id/txtName"
+                    android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/nome"
@@ -50,7 +50,7 @@
                     android:layout_marginRight="@dimen/margin_card"/>
 
                 <EditText
-                    android:id="@+id/txtEmail"
+                    android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
@@ -71,7 +71,7 @@
                     android:layout_marginRight="@dimen/margin_card"/>
 
                 <EditText
-                    android:id="@+id/txtPassword"
+                    android:id="@+id/edtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/senha"
@@ -81,7 +81,7 @@
                     android:layout_marginRight="@dimen/margin_card"/>
 
                 <EditText
-                    android:id="@+id/txtPasswordComfirmed"
+                    android:id="@+id/edtPasswordComfirmed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/repita_a_senha"

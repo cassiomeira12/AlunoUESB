@@ -15,7 +15,6 @@ import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import com.navan.app.alunouesb.view.dialog.ProgressDialog
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_login.txtPassword
 
 class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContract.View {
     internal lateinit var progressDialog: ProgressDialog
@@ -45,7 +44,9 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContr
     }
 
     fun signIn(view: View) {
-        loginPresenter.onLogin(this, txtLogin.text.toString(), txtPassword.text.toString())
+        val email = edtLogin.text.toString().trim()
+        val password = edtPassword.text.toString()
+        loginPresenter.onLogin(this, email, password)
     }
 
     fun recuperarSenha(view: View) {
@@ -70,11 +71,11 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContr
     }
 
     override fun setLoginNameError(message: String) {
-        txtLogin?.error = message
+        edtLogin.error = message
     }
 
     override fun setPasswordNameError(message: String) {
-        txtPassword?.error = message
+        edtPassword.error = message
     }
 
     fun navigateToHome(user: BaseUser) {
