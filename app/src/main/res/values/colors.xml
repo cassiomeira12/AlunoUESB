@@ -2,7 +2,21 @@
 <resources>
     <color name="colorPrimary">#26c6da</color>
     <color name="colorPrimaryDark">#00ACC1</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#303F9F</color>
+    <color name="backgroud">#FFFFFF</color>
+
+    <color name="backgroud_shape">#FFFFFF</color>
+    <color name="border_shape">#E9E9E9</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="backgroud_card">@color/colorPrimary</color>
+
+    <color name="btn_text_color">#FFFFFF</color>
+    <color name="btn_text_link">#2196F3</color>
+
+
+
+
 
     <color name="color1">#00bcd4</color>
     <color name="color2">#00ACC1</color>
