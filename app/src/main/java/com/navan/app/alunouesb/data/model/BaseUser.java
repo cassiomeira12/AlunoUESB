@@ -22,8 +22,6 @@ public class BaseUser implements Serializable {
     public boolean emailVerified;
     @SerializedName("password")
     public String password;
-    @SerializedName("phone")
-    public String phone;
     @SerializedName("createAt")
     public Date createAt;
     @SerializedName("updateAt")
@@ -33,13 +31,36 @@ public class BaseUser implements Serializable {
 
     }
 
+    public BaseUser(String uID, Status status, String name, String email, Boolean emailVerified, Date createAt, Date updateAt) {
+        this.uID = uID;
+        this.status = status;
+        this.name = name;
+        this.email = email;
+        this.emailVerified = emailVerified;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+    }
+
+    public void setUser(BaseUser user) {
+        this.uID = user.uID;
+        this.status = user.status;
+        this.name = user.name;
+        this.email = user.email;
+        this.emailVerified = user.emailVerified;
+        this.createAt = user.createAt;
+        this.updateAt = user.updateAt;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return "BaseUser" +
-                "\nid ".concat(uID) +
+                "\nuID ".concat(uID) +
+                "\nstatus ".concat(status.toString()) +
                 "\nname ".concat(name) +
                 "\nemail ".concat(email) +
-                "\nemailVerified ".concat(String.valueOf(emailVerified));
+                "\nemailVerified ".concat(String.valueOf(emailVerified)) +
+                "\ncreateAt ".concat(createAt.toString()) +
+                "\nupdateAt ".concat(updateAt.toString());
     }
 }

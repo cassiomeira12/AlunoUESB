@@ -17,15 +17,21 @@ class ContinueUserDataActivity : AppCompatActivity() {
     }
 
     fun termosUso(view: View) {
-        Log.d("asdf", "sdfa")
+        val intent = Intent(getApplication(), TermosAppActivity::class.java)
+        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.TERMO_DE_USO)
+        startActivity(intent)
     }
 
     fun politicaPrivacidade(view: View) {
-        Log.d("asdf", "sdfa")
+        val intent = Intent(getApplication(), TermosAppActivity::class.java)
+        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.POLITICA_DE_PRIVACIDADE)
+        startActivity(intent)
     }
 
     fun politicaDados(view: View) {
-        Log.d("asdf", "sdfa")
+        val intent = Intent(getApplication(), TermosAppActivity::class.java)
+        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.POLITICA_DE_DADOS)
+        startActivity(intent)
     }
 
     fun avancar(view: View) {

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.app.contract.IUser
 import com.android.app.presenter.login.UserPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import com.navan.app.alunouesb.view.login.ContinueUserDataActivity
@@ -41,32 +42,27 @@ class SplashActivity : AppCompatActivity(), IUser.View {
             startActivity(Intent(getApplication(), LoginActivity::class.java))
             finish()
         } else {
+            UserSingleton.instance.setUser(user) //Salvar dados numa unica instancia de user
             if (user.emailVerified) {//Verificacao de email
-                navigateToMainActivity(user)
+                navigateToMainActivity()
             } else {
-                navigateToVerifiedEmail(user)
+                navigateToVerifiedEmail()
             }
         }
     }
 
-    private fun navigateToMainActivity(user: BaseUser) {
-        val intent = Intent(getApplication(), PrincipalActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+    private fun navigateToMainActivity() {
+        startActivity(Intent(getApplication(), PrincipalActivity::class.java))
         finish()
     }
 
-    private fun navigateToContinueUserData(user: BaseUser) {
-        val intent = Intent(getApplication(), ContinueUserDataActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+    private fun navigateToContinueUserData() {
+        startActivity(Intent(getApplication(), ContinueUserDataActivity::class.java))
         finish()
     }
 
-    private fun navigateToVerifiedEmail(user: BaseUser) {
-        val intent = Intent(getApplication(), VerifiedEmailActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+    private fun navigateToVerifiedEmail() {
+        startActivity(Intent(getApplication(), VerifiedEmailActivity::class.java))
         finish()
     }
 

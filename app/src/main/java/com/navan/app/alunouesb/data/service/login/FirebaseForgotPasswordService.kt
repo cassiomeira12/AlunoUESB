@@ -11,12 +11,11 @@ class FirebaseForgotPasswordService (var listener: IForgotPasswordContract.Liste
         FirebaseAuth.getInstance().sendPasswordResetEmail(email).
                 addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "Sendo email reset password successful")
+                        Log.d(TAG, "Email para recuperar senha enviado com sucesso")
                         listener.onSuccess()
                     } else {
                         Log.e(TAG, task.exception.toString())
-                        task.exception?.printStackTrace()
-                        listener.onFailure(task.exception.toString())
+                        listener.onFailure("Erro ao enviar email")
                     }
                 }
     }

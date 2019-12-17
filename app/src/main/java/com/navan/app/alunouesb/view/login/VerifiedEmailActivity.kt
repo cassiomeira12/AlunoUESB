@@ -7,13 +7,12 @@ import android.view.View
 import com.android.app.contract.IVerifiedEmailContract
 import com.android.app.presenter.login.VerifiedEmailPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import kotlinx.android.synthetic.main.activity_verified_email.*
 
 class VerifiedEmailActivity : AppCompatActivity(), IVerifiedEmailContract.View {
-    val TAG = this::class.java.canonicalName
-
     internal lateinit var iPresenter: IVerifiedEmailContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,27 +21,27 @@ class VerifiedEmailActivity : AppCompatActivity(), IVerifiedEmailContract.View {
 
         iPresenter = VerifiedEmailPresenter(this)
 
-        val user = intent.getSerializableExtra("user") as BaseUser
+        val user = UserSingleton.instance
         txtEmail.text = user.email
 
-        if (iPresenter.isEmailVerified(user)) {
-            navigateToMainActivity(user)
+        //Verificar confirmacao de email
+        val emailVerified = iPresenter.isEmailVerified(user)
+        user.emailVerified = emailVerified //Atualizar emailVerified do usuario
+
+        if (emailVerified) {
+            navigateToMainActivity()
         } else {
             iPresenter.sendEmailVerification()
         }
     }
 
-    private fun navigateToMainActivity(user: BaseUser) {
-        val intent = Intent(getApplication(), PrincipalActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+    private fun navigateToMainActivity() {
+        startActivity(Intent(getApplication(), PrincipalActivity::class.java))
         finish()
     }
 
-    private fun navigateToContinueUserData(user: BaseUser) {
-        val intent = Intent(getApplication(), ContinueUserDataActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+    private fun navigateToContinueUserData() {
+        startActivity(Intent(getApplication(), ContinueUserDataActivity::class.java))
         finish()
     }
 

@@ -7,12 +7,10 @@ import android.util.Patterns
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.navan.app.alunouesb.R
-import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.UserSingleton
 import kotlinx.android.synthetic.main.activity_signup.*
 
 class SignupActivity : AppCompatActivity() {
-    internal lateinit var _user: BaseUser
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
@@ -25,11 +23,7 @@ class SignupActivity : AppCompatActivity() {
 
     fun onSignUp(view: View) {
         if (isDataValid()) {
-            val intent = Intent(getApplication(), CreateAccountActivity::class.java)
-            intent.putExtra("user", _user)
-            intent.putExtra("login", txtEmail.text.toString())
-            intent.putExtra("password", txtPassword.text.toString())
-            startActivity(intent)
+            startActivity(Intent(getApplication(), CreateAccountActivity::class.java))
             finish()
         }
     }
@@ -67,29 +61,33 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
-        val isDataValid = isNameValid && isEmailValid && /*isPhoneValid &&*/ isPassswordValid
+        val isDataValid = isNameValid && isEmailValid && isPassswordValid
 
         if (isDataValid) {
-            _user = BaseUser()
-            _user.name = name
-            _user.email = email
-            _user.password = firstPassword
-            //_user.phone = phone
+            UserSingleton.instance.name = name
+            UserSingleton.instance.email = email
+            UserSingleton.instance.password = firstPassword
         }
 
         return isDataValid
     }
 
     fun termosUso(view: View) {
-
+        val intent = Intent(getApplication(), TermosAppActivity::class.java)
+        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.TERMO_DE_USO)
+        startActivity(intent)
     }
 
     fun politicaPrivacidade(view: View) {
-
+        val intent = Intent(getApplication(), TermosAppActivity::class.java)
+        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.POLITICA_DE_PRIVACIDADE)
+        startActivity(intent)
     }
 
     fun politicaDados(view: View) {
-
+        val intent = Intent(getApplication(), TermosAppActivity::class.java)
+        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.POLITICA_DE_DADOS)
+        startActivity(intent)
     }
 
 }

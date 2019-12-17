@@ -38,11 +38,11 @@
     <string name="confirmar">Confirmar</string>
     <string name="xxxx">XXXX</string>
     <string name="termos_de_uso">Termos de uso</string>
+    <string name="texto_termos_de_uso">Texto termos de uso</string>
     <string name="politica_de_privacidade">Política de privacidade</string>
+    <string name="texto_politica_de_privacidade">Texto da política de privacidade</string>
     <string name="politica_de_dados">Política de dados</string>
-    <string name="termos_uso">termos de uso</string>
-    <string name="politica_privacidade">politica de privacidade</string>
-    <string name="politica_dados">politica de dados</string>
+    <string name="texto_politica_de_dados">Texto da política de dados</string>
     <string name="avancar">Avançar</string>
     <string name="dados_login_incorretos">Dados de login incorretos</string>
     <string name="email_invalido">Email inválido</string>

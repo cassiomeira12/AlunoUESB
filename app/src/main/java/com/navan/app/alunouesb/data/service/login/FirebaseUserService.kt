@@ -13,11 +13,9 @@ class FirebaseUserService(var listener : IUser.Listener) : IUser.Service {
     override fun currentUser(context: Context) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
-            Log.d(TAG, "Usuario nao logado")
-            listener.onResult(null)
+            listener.onResult(null) //Usuario nao logado
         } else {
-            Log.d(TAG, "Usuario logado")
-            val email = currentUser?.email
+            val email = currentUser.email
             findUserByEmail(email!!)
         }
     }
@@ -34,16 +32,15 @@ class FirebaseUserService(var listener : IUser.Listener) : IUser.Service {
                 .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-                    Log.d(TAG, "Size " + querySnapshot.size())
                     if (querySnapshot.size() == 0) {
-                        Log.d(TAG, "Usuario nao encontrado")
+                        Log.e(TAG, "Usuario nao encontrado com email " + email)
                         listener.onResult(null)//Erro usuario nao encontrado
                     } else if (querySnapshot.size() == 1) {
+                        Log.d(TAG, "Usuario logado " + email)
                         val user = querySnapshot.documents.get(0).toObject(BaseUser::class.java)
-                        Log.d(TAG, user.toString())
                         listener.onResult(user)
                     } else {
-                        Log.d(TAG, "Erro, mais de uma conta com mesmo email")
+                        Log.e(TAG, "Foram encontradas " + querySnapshot.size() + " contas com email " + email)
                         listener.onResult(null)
                     }
                 }

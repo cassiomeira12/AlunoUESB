@@ -7,13 +7,10 @@ import com.android.app.data.services.login.FirebaseForgotPasswordService
 
 class ForgotPasswordPresenter (view: IForgotPasswordContract.View) : IForgotPasswordContract.Presenter, IForgotPasswordContract.Listener {
     var view: IForgotPasswordContract.View? = view
-
     var service: IForgotPasswordContract.Service = FirebaseForgotPasswordService(this)
 
     override fun onSend(email: String) {
-        val isEmailValid = isDataValid(email)
-
-        if (isEmailValid) {
+        if (isDataValid(email)) {
             service.onSend(email)
         } else {
             view?.onFailureResult("Email inválido")

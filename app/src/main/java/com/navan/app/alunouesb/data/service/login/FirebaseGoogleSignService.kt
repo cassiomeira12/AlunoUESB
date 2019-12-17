@@ -94,7 +94,6 @@ class FirebaseGoogleSignService (var listener : IGoogleSignContract.Listener): I
 
         user.name = googleUser.displayName
         user.email = googleUser.email
-        user.phone = googleUser.phoneNumber
         user.avatarURL = googleUser.photoUrl.toString()
         user.password = null //Nao adicionar a senha no BD
 

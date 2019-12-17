@@ -5,8 +5,6 @@ import com.android.app.data.services.login.FirebaseVerifiedEmailService
 import com.navan.app.alunouesb.data.model.BaseUser
 
 class VerifiedEmailPresenter (view: IVerifiedEmailContract.View) : IVerifiedEmailContract.Presenter, IVerifiedEmailContract.Listener {
-    val TAG = this::class.java.canonicalName
-
     var view : IVerifiedEmailContract.View? = view
     var service: IVerifiedEmailContract.Service = FirebaseVerifiedEmailService(this)
 
@@ -32,6 +30,4 @@ class VerifiedEmailPresenter (view: IVerifiedEmailContract.View) : IVerifiedEmai
         view?.hideProgress()
         view?.onFailure(message)
     }
-
-
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.app.contract.ICreateAccountContract
 import com.android.app.presenter.login.CreateAccountPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
 import kotlinx.android.synthetic.main.activity_create_account.*
 
@@ -22,9 +23,9 @@ class CreateAccountActivity : AppCompatActivity(), ICreateAccountContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
 
-        _user = intent.getSerializableExtra("user") as BaseUser
-        _login = intent.getStringExtra("login") as String
-        _password = intent.getStringExtra("password") as String
+        _user = UserSingleton.instance
+        _login = _user.email
+        _password = _user.password
 
         iPresenter = CreateAccountPresenter(this)
     }
@@ -54,12 +55,11 @@ class CreateAccountActivity : AppCompatActivity(), ICreateAccountContract.View {
     }
 
     override fun onCreatedSuccess(user: BaseUser) {
+        UserSingleton.instance.setUser(user) //Atualizando instancia do usuario
         txtMessage.text = getString(R.string.conta_criada_com_sucesso)
         Handler().postDelayed(
                 Runnable {
-                    val intent = Intent(getApplicationContext(), VerifiedEmailActivity::class.java)
-                    intent.putExtra("user", user)
-                    startActivity(intent)
+                    startActivity(Intent(getApplicationContext(), VerifiedEmailActivity::class.java))
                     finish()
                 }, 1500
         )

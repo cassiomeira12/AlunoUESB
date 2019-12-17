@@ -7,7 +7,7 @@
     tools:context=".view.login.TermosAppActivity">
 
     <TextView
-        android:id="@+id/txt_termos_app"
+        android:id="@+id/txtTermos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

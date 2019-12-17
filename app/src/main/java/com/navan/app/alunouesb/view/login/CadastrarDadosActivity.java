@@ -23,19 +23,19 @@ public class CadastrarDadosActivity extends AppCompatActivity {
 
     public void termosUso(View view) {
         Intent intent = new Intent(getApplication(), TermosAppActivity.class);
-        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.TERMO_USO);
+        intent.putExtra(TermosAppActivity.Companion.getTERMO(), TermosAppActivity.Companion.getTERMO_DE_USO());
         startActivity(intent);
     }
 
     public void politicaPrivacidade(View view) {
         Intent intent = new Intent(getApplication(), TermosAppActivity.class);
-        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.POLITICA_PRIVACIDADE);
+        intent.putExtra(TermosAppActivity.Companion.getTERMO(), TermosAppActivity.Companion.getPOLITICA_DE_PRIVACIDADE());
         startActivity(intent);
     }
 
     public void politicaDados(View view) {
         Intent intent = new Intent(getApplication(), TermosAppActivity.class);
-        intent.putExtra(TermosAppActivity.TERMO, TermosAppActivity.POLITICA_DADOS);
+        intent.putExtra(TermosAppActivity.Companion.getTERMO(), TermosAppActivity.Companion.getPOLITICA_DE_DADOS());
         startActivity(intent);
     }
 }

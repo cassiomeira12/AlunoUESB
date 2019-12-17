@@ -14,11 +14,11 @@ class FirebaseVerifiedEmailService (var listener : IVerifiedEmailContract.Listen
         user?.sendEmailVerification()?.
                 addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Log.d(TAG, "Email de verificação enviado com sucesso!")
                         listener.onSuccess("Email de verificação enviado com sucesso!")
-                        Log.d(TAG, "Email verification send successful")
                     } else {
                         listener.onFailure("Não foi possível enviar o email de verificação")
-                        Log.d(TAG, "Email verification send error")
+                        Log.e(TAG, task.exception.toString())
                     }
                 }
     }
@@ -28,7 +28,7 @@ class FirebaseVerifiedEmailService (var listener : IVerifiedEmailContract.Listen
         val db = FirebaseFirestore.getInstance()
         db.collection("users")
                 .document(user.uID)
-                .update("emailVerified", emailVerified);
+                .update("emailVerified", emailVerified)
         return emailVerified
     }
 

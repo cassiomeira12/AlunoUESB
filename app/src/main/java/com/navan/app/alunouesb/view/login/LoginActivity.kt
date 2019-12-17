@@ -10,6 +10,7 @@ import com.android.app.contract.ILoginContract
 import com.android.app.presenter.login.GoogleSignPresenter
 import com.android.app.presenter.login.LoginPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import com.navan.app.alunouesb.view.dialog.ProgressDialog
@@ -85,27 +86,22 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContr
     }
 
     private fun navigateToMainActivity(user: BaseUser) {
-        val intent = Intent(getApplication(), PrincipalActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+        startActivity(Intent(getApplication(), PrincipalActivity::class.java))
         finish()
     }
 
     private fun navigateToContinueUserData(user: BaseUser) {
-        val intent = Intent(getApplication(), ContinueUserDataActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+        startActivity(Intent(getApplication(), ContinueUserDataActivity::class.java))
         finish()
     }
 
     private fun navigateToVerifiedEmail(user: BaseUser) {
-        val intent = Intent(getApplication(), VerifiedEmailActivity::class.java)
-        intent.putExtra("user", user)
-        startActivity(intent)
+        startActivity(Intent(getApplication(), VerifiedEmailActivity::class.java))
         finish()
     }
 
     override fun onSuccess(user: BaseUser) {
+        UserSingleton.instance.setUser(user)
         navigateToHome(user)
     }
 
