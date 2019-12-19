@@ -27,7 +27,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/usuario_nome"
+                    android:id="@+id/txtNome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nome do Usuário"
@@ -35,7 +35,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <TextView
-                    android:id="@+id/usuario_curso"
+                    android:id="@+id/txtCurso"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Curso do Usuário"
@@ -43,7 +43,7 @@
                     android:layout_marginTop="8dp"/>
 
                 <TextView
-                    android:id="@+id/text_semestre"
+                    android:id="@+id/txtSemestre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Semestre do Usuário"

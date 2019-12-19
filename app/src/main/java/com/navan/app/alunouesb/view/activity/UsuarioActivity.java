@@ -96,7 +96,7 @@ public class UsuarioActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, usuario.getSemestreList());
         spinnerSemestre.setAdapter(arrayAdapter);
 
-        usuarioNome.setText(usuario.getNome());
+        //usuarioNome.setText(usuario.getNome());
         spinnerCurso.setText(usuario.getCurso());
 
         if(usuario.getMatricula() == 0){
@@ -217,7 +217,7 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         }
 
-        usuario.setNome(nome);
+        //usuario.setNome(nome);
         usuario.setCurso(curso);
 
         if(matricula != 0) {
@@ -306,13 +306,13 @@ public class UsuarioActivity extends AppCompatActivity {
                         }
                     }else{ // task is not Successful
 
-                        final String uriPath = PrincipalActivity.usuario.getUrlPhotoProfile(); // url from profile usuario
-
-
-                        if(!uriPath.equals("")){ // not null
-                            // faz download
-                            Picasso.get().load(uriPath).into(imagePerfil);
-                        }
+//                        final String uriPath = PrincipalActivity.usuario.getUrlPhotoProfile(); // url from profile usuario
+//
+//
+//                        if(!uriPath.equals("")){ // not null
+//                            // faz download
+//                            Picasso.get().load(uriPath).into(imagePerfil);
+//                        }
                     }
                 }
             });
@@ -357,13 +357,13 @@ public class UsuarioActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task1) {
                                 progressBar.setVisibility(View.INVISIBLE);
 
-                                storage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        PrincipalActivity.usuario.setUrlPhotoProfile(uri.toString());
-                                        References.db.collection("profile").document("user").set(usuario); // salavr URL no banco de dados
-                                    }
-                                });
+//                                storage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                    @Override
+//                                    public void onSuccess(Uri uri) {
+//                                        PrincipalActivity.usuario.setUrlPhotoProfile(uri.toString());
+//                                        References.db.collection("profile").document("user").set(usuario); // salavr URL no banco de dados
+//                                    }
+//                                });
 
                             }
                         })

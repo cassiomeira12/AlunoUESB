@@ -13,8 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.app.contract.IUser;
+import com.android.app.presenter.login.UserPresenter;
 import com.navan.app.alunouesb.R;
+import com.navan.app.alunouesb.data.UserSingleton;
 import com.navan.app.alunouesb.data.db.References;
+import com.navan.app.alunouesb.data.model.BaseUser;
 import com.navan.app.alunouesb.view.dialog.DialogExcluir;
 import com.navan.app.alunouesb.data.model.Semestre;
 import com.navan.app.alunouesb.data.model.Usuario;
@@ -22,14 +26,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.navan.app.alunouesb.view.login.LoginActivity;
+
+import org.jetbrains.annotations.Nullable;
 
 public class PrincipalActivity extends AppCompatActivity implements DialogExcluir.OnExcluir {
 
     public static Usuario usuario;
     public static Semestre semestre;
 
-    private TextView usuarioNome;
-    private TextView usuarioCurso;
+    private TextView txtNome;
+    private TextView txtCurso;
     private TextView textSemestre;
     private ImageView imageCurso;
     private FrameLayout progressBar;
@@ -42,8 +49,8 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         setContentView(R.layout.activity_principal);
 
         progressBar = findViewById(R.id.progressBarPrincipal);
-        usuarioNome = findViewById(R.id.usuario_nome);
-        usuarioCurso = findViewById(R.id.usuario_curso);
+        txtNome = findViewById(R.id.txtNome);
+        txtCurso = findViewById(R.id.txtCurso);
         textSemestre = findViewById(R.id.text_semestre);
         imageCurso = findViewById(R.id.image_curso);
 
@@ -53,45 +60,7 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.setCancelable(false);
 
-        
-
-        if(FirebaseAuth.getInstance().getUid() != null ){
-
-            //inicia animacao de Carregamento simples
-            //showProgressBar(true);
-            mDialog.show();
-            // carrega os dados do usuario
-            References.db.collection("/profile").document("/user").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                    if(task.isSuccessful()){// se completou com sucesso
-
-                        DocumentSnapshot document = task.getResult(); // recebe dados
-
-                        if(document.exists()){ // se os dados existem
-                            usuario = document.toObject(Usuario.class); // passa os dados para a instancia do usuario
-                            carregarDados();
-                        }else{
-                            mDialog.dismiss();
-                            Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
-                        }
-
-                    }else{
-                        mDialog.dismiss();
-                        Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            //finaliza animacao de carregamento simples
-
-        }else{
-
-            Intent telaLogin = new Intent(this, LoginActivity.class);
-            telaLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(telaLogin);
-        }
+        mostrarDadosUsuario();
     }
 
     private void showProgressBar(boolean visible) {
@@ -111,7 +80,6 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.logout){
-            //chamar Dialog de confirmacao
             DialogExcluir sair = new DialogExcluir(); // reaproveitar o Dialog de excluir
             sair.setOnExcluir(this);
             sair.show(getSupportFragmentManager(), "Deseja sair da sua conta?");
@@ -120,39 +88,13 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         return super.onOptionsItemSelected(item);
     }
 
-    private void carregarDados() {
-        String semestreSelecionado = usuario.getSemestre(usuario.getIdSemestre());
+    private void mostrarDadosUsuario() {
+        BaseUser user = UserSingleton.Companion.getInstance();
 
-        References.db.collection("/semestres").document(semestreSelecionado).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if(task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-
-                    if(document.exists()){
-                        semestre = document.toObject(Semestre.class);
-
-
-                        usuarioNome.setText(usuario.getNome());
-                        usuarioCurso.setText(usuario.getCurso());
-                        textSemestre.setText(semestre.getSemestre());
-                        mudarImagemCurso(usuario.getCurso());
-
-                        mDialog.dismiss();
-                    }else{
-                        mDialog.dismiss();
-                        Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
-                    }
-
-                }else{
-                    mDialog.dismiss();
-                    Toast.makeText(PrincipalActivity.this, "Falha na conexão com o servidor" , Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
+        txtNome.setText(user.name);
+        //txtCurso
+        //textSemestre
+        //mudarImagemCurso();
     }
 
     public void chamarTelaHorarios(View view) {
@@ -179,7 +121,6 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
          Intent telaUsuario = new Intent(this, UsuarioActivity.class);
          startActivity(telaUsuario);
     }
-
 
     private void mudarImagemCurso(String curso) {
 
@@ -269,20 +210,13 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     }
 
     @Override
-    protected void onRestart() {
-        carregarDados();
-        super.onRestart();
-    }
-
-    @Override
     public void onExcluir() { // reusa o Dialog de excluir para fazer Logout
-        FirebaseAuth.getInstance().signOut();
-        if(FirebaseAuth.getInstance().getUid() == null){
-            Intent telaLogin = new Intent(this, LoginActivity.class);
-            telaLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(telaLogin);
-        }else{
-            Toast.makeText(this, "Erro ao fazer Logout", Toast.LENGTH_LONG).show();
-        }
+        new UserPresenter(new IUser.View() {
+            @Override
+            public void onResult(@Nullable BaseUser user) {
+                startActivity(new Intent(getApplication(), LoginActivity.class));
+                finish();
+            }
+        }).signOut(this);
     }
 }

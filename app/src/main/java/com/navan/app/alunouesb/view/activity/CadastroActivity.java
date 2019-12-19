@@ -154,7 +154,7 @@ public class CadastroActivity extends AppCompatActivity {
                     public void onSuccess(AuthResult authResult) {
 
                         String uid = FirebaseAuth.getInstance().getUid();// id do usuario no firebase
-                        usuario.setUid(uid);
+                        //usuario.setUid(uid);
 
 
                         References.uid = uid;
