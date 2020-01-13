@@ -140,7 +140,8 @@ public class CadastroActivity extends AppCompatActivity {
         email = usuarioEmail.getText().toString();
         senha = usuarioSenha.getText().toString();
 
-        usuario = new Usuario(nome, email, senha, curso);
+        usuario = new Usuario();
+        usuario.setCurso(curso);
 
         // instancia o semestre
         final Semestre semestreTemp = new Semestre(semestre);

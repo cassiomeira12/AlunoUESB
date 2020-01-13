@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.android.app.contract.IUser;
 import com.android.app.presenter.login.UserPresenter;
 import com.navan.app.alunouesb.R;
+import com.navan.app.alunouesb.data.CompleteUserSingleton;
 import com.navan.app.alunouesb.data.UserSingleton;
 import com.navan.app.alunouesb.data.db.References;
 import com.navan.app.alunouesb.data.model.BaseUser;
@@ -39,19 +42,16 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     private TextView txtCurso;
     private TextView textSemestre;
     private ImageView imageCurso;
-    private FrameLayout progressBar;
     private ProgressDialog mDialog;
-    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-        progressBar = findViewById(R.id.progressBarPrincipal);
         txtNome = findViewById(R.id.txtNome);
         txtCurso = findViewById(R.id.txtCurso);
-        textSemestre = findViewById(R.id.text_semestre);
+        textSemestre = findViewById(R.id.txtSemestrePrincipal);
         imageCurso = findViewById(R.id.image_curso);
 
         mDialog = new ProgressDialog(this);
@@ -61,14 +61,6 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         mDialog.setCancelable(false);
 
         mostrarDadosUsuario();
-    }
-
-    private void showProgressBar(boolean visible) {
-        if(visible){
-            progressBar.setVisibility(View.VISIBLE);
-        }else{
-            progressBar.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -89,12 +81,12 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     }
 
     private void mostrarDadosUsuario() {
-        BaseUser user = UserSingleton.Companion.getInstance();
+        Usuario user = CompleteUserSingleton.Companion.getInstance();
 
         txtNome.setText(user.name);
-        //txtCurso
-        //textSemestre
-        //mudarImagemCurso();
+        txtCurso.setText(user.getCurso());
+        textSemestre.setText(user.getSemestre(user.getIdSemestre()));
+        mudarImagemCurso(user.getCurso());
     }
 
     public void chamarTelaHorarios(View view) {

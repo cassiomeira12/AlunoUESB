@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.navan.app.alunouesb.R;
+import com.navan.app.alunouesb.data.CompleteUserSingleton;
 import com.navan.app.alunouesb.data.db.References;
 import com.navan.app.alunouesb.data.model.Semestre;
 import com.navan.app.alunouesb.data.model.Usuario;
@@ -55,7 +56,7 @@ public class UsuarioActivity extends AppCompatActivity {
     private CircleImageView imagePerfil;
 
 
-    private Usuario usuario = PrincipalActivity.usuario;
+    private Usuario usuario = CompleteUserSingleton.Companion.getInstance();
     private boolean permitirEdicao = true;
     private Menu menu;
 
@@ -96,7 +97,7 @@ public class UsuarioActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, usuario.getSemestreList());
         spinnerSemestre.setAdapter(arrayAdapter);
 
-        //usuarioNome.setText(usuario.getNome());
+        usuarioNome.setText(usuario.name);
         spinnerCurso.setText(usuario.getCurso());
 
         if(usuario.getMatricula() == 0){
@@ -106,7 +107,7 @@ public class UsuarioActivity extends AppCompatActivity {
         }
 
 
-        spinnerSemestre.setSelection(arrayAdapter.getPosition(PrincipalActivity.semestre.getSemestre()));
+        spinnerSemestre.setSelection(arrayAdapter.getPosition(usuario.getSemestre(usuario.getIdSemestre())));
 
         habilitarEdicao();
 
@@ -217,7 +218,7 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         }
 
-        //usuario.setNome(nome);
+        usuario.name = nome;
         usuario.setCurso(curso);
 
         if(matricula != 0) {
@@ -227,7 +228,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
 
         if(References.uid != null){
-            PrincipalActivity.usuario = usuario;
+            CompleteUserSingleton.Companion.getInstance().setUsuario(usuario);
 
             References.db.collection("profile").document("user").set(usuario);
 
@@ -322,8 +323,9 @@ public class UsuarioActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // setar Imagem no ImageView, salva na memoria do APP e faz Upload para o banco de dados
-        if(requestCode == PICK_IMAGE){
-            if(data != null){ // imagem selecionada
+
+        if (requestCode == PICK_IMAGE) {
+            if (data != null) { // imagem selecionada
 
                 Uri imagemSelecionada = data.getData();
 
@@ -376,6 +378,7 @@ public class UsuarioActivity extends AppCompatActivity {
                             }
                         });
             }
-         }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file:///mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/Aluno UESB.iml" filepath="/mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/Aluno UESB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AlunoUESB.iml" filepath="$PROJECT_DIR$/.idea/AlunoUESB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/AlunoUESB-app.iml" filepath="$PROJECT_DIR$/app/AlunoUESB-app.iml" />
       <module fileurl="file:///mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/app/app.iml" filepath="/mnt/HD-Backup/Cassio-Meira/Desenvolvimento-Software/Mobile-Application/AlunoUESB/Aluno UESB/app/app.iml" />
     </modules>
   </component>

@@ -43,7 +43,7 @@
                     android:layout_marginTop="8dp"/>
 
                 <TextView
-                    android:id="@+id/txtSemestre"
+                    android:id="@+id/txtSemestrePrincipal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Semestre do Usuário"
@@ -176,22 +176,5 @@
 
         </ScrollView>
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/progressBarPrincipal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@color/backgroundProgressBar">
-
-
-        <ProgressBar
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="8dp"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
-
 
 </FrameLayout>

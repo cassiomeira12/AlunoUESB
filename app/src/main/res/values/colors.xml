@@ -29,4 +29,10 @@
     <color name="WHITE">#FFFFFF</color>
     <color name="BLACK">#000000</color>
     <color name="backgroundProgressBar">#20000000</color>
+
+    <color name="button_presentation">#60000000</color>
+    <color name="slideCurso">#4dd0e1</color>
+    <color name="slideMatricula">#81c784</color>
+    <color name="slideSemestre">#ff8a65</color>
+    <color name="slideDisciplinas">#9c27b0</color>
 </resources>

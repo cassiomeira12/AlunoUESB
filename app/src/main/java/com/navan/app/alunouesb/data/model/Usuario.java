@@ -14,11 +14,12 @@ public class Usuario extends BaseUser implements Serializable {
     private ArrayList<String> semestreList = new ArrayList<>();
 
     //Construtor da Classe
-    public Usuario (String nome, String email, String senha, String curso) {
-        this.email = email;
+    public Usuario (String curso, int matricula, String semestre) {
         this.curso = curso;
+        this.matricula = matricula;
         this.idSemestre = 0;
         this.semestreList = new ArrayList<>();
+        addSemestre(semestre);
     }
 
     public Usuario() {
@@ -57,13 +58,6 @@ public class Usuario extends BaseUser implements Serializable {
         this.idSemestre = idSemestre;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public void addSemestre(String semestre){
         semestreList.add(semestre);
@@ -75,6 +69,22 @@ public class Usuario extends BaseUser implements Serializable {
 
     public String getSemestre(int id){
         return semestreList.get(id);
+    }
+
+    public void setUsuario(Usuario user){
+
+        this.curso = user.getCurso();
+        this.matricula = user.getMatricula();
+        this.semestreList = user.getSemestreList();
+        this.idSemestre = user.getIdSemestre();
+        this.uID = user.uID;
+        this.status = user.status;
+        this.name = user.name;
+        this.email = user.email;
+        this.emailVerified = user.emailVerified;
+        this.createAt = user.createAt;
+        this.updateAt = user.updateAt;
+
     }
 
 }
