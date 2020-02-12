@@ -5,6 +5,7 @@ import com.android.app.contract.IVerifiedEmailContract
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 class FirebaseVerifiedEmailService (var listener : IVerifiedEmailContract.Listener) : IVerifiedEmailContract.Service {
     val TAG = this::class.java.canonicalName
@@ -23,7 +24,7 @@ class FirebaseVerifiedEmailService (var listener : IVerifiedEmailContract.Listen
                 }
     }
 
-    override fun isEmailVerified(user: BaseUser): Boolean {
+    override fun isEmailVerified(user: Usuario): Boolean {
         val emailVerified = FirebaseAuth.getInstance().currentUser!!.isEmailVerified
         val db = FirebaseFirestore.getInstance()
         db.collection("users")

@@ -1,6 +1,6 @@
 package com.android.app.contract
 
-import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 interface IVerifiedEmailContract {
 
@@ -14,12 +14,12 @@ interface IVerifiedEmailContract {
     interface Presenter {
         fun onDestroy()
         fun sendEmailVerification()
-        fun isEmailVerified(user: BaseUser): Boolean
+        fun isEmailVerified(user: Usuario): Boolean
     }
 
     interface Service {
         fun sendEmailVerification()
-        fun isEmailVerified(user: BaseUser): Boolean
+        fun isEmailVerified(user: Usuario): Boolean
     }
 
     interface Listener {

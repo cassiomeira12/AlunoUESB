@@ -1,4 +1,4 @@
-package com.android.app.data.services.login
+package com.navan.app.alunouesb.data.service.login
 
 import android.content.Context
 import android.util.Log
@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.data.model.Usuario
 
-class FirebaseUserService(var listener : IUser.Listener) : IUser.Service {
+class FirebaseCompleteUserService (var listener : IUser.Listener) : IUser.Service {
     val TAG = this::class.java.canonicalName
 
     override fun currentUser(context: Context) {
@@ -27,6 +27,9 @@ class FirebaseUserService(var listener : IUser.Listener) : IUser.Service {
         listener.onResult(null)
     }
 
+
+
+    // Modificar esta funcao
     private fun findUserByEmail(email: String) {
         val db = FirebaseFirestore.getInstance()
         db.collection("users")

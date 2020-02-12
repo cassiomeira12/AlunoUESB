@@ -7,6 +7,7 @@ import android.view.View
 import com.android.app.contract.IVerifiedEmailContract
 import com.android.app.presenter.login.VerifiedEmailPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.CompleteUserSingleton
 import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
@@ -21,7 +22,7 @@ class VerifiedEmailActivity : AppCompatActivity(), IVerifiedEmailContract.View {
 
         iPresenter = VerifiedEmailPresenter(this)
 
-        val user = UserSingleton.instance
+        val user = CompleteUserSingleton.instance
         txtEmail.text = user.email
 
         //Verificar confirmacao de email

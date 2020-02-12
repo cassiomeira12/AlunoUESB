@@ -2,11 +2,12 @@ package com.android.app.contract
 
 import android.content.Context
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 interface IUser {
 
     interface View {
-        fun onResult(user: BaseUser?)
+        fun onResult(user: Usuario?)
     }
 
     interface Presenter {
@@ -21,7 +22,7 @@ interface IUser {
     }
 
     interface Listener {
-        fun onResult(user: BaseUser?)
+        fun onResult(user: Usuario?)
     }
 
 }

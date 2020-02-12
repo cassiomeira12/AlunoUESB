@@ -6,6 +6,7 @@ import com.android.app.contract.ILoginContract
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 class FirebaseLoginService (var listener : ILoginContract.Listener) : ILoginContract.Service {
     val TAG = this::class.java.canonicalName
@@ -14,6 +15,9 @@ class FirebaseLoginService (var listener : ILoginContract.Listener) : ILoginCont
         FirebaseAuth.getInstance().signInWithEmailAndPassword(login, password).
                 addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+
+                        Log.e("LOGIN", "LOGOU COM SUCESSO")
+
                         val user = FirebaseAuth.getInstance().currentUser
                         findUserByEmail(user?.email!!)
                     } else {
@@ -35,7 +39,7 @@ class FirebaseLoginService (var listener : ILoginContract.Listener) : ILoginCont
                         Log.d(TAG, "Usuario nao encontrado")
                         listener.onFailure("Usuário não encontrado")//Erro usuario nao encontrado
                     } else if (querySnapshot.size() == 1) {
-                        val user = querySnapshot.documents.get(0).toObject(BaseUser::class.java)
+                        val user = querySnapshot.documents.get(0).toObject(Usuario::class.java)
                         Log.d(TAG, user.toString())
                         listener.onSuccess(user!!)
                     }

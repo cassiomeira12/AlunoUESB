@@ -5,6 +5,7 @@ import android.content.Intent
 import com.android.app.contract.IGoogleSignContract
 import com.android.app.data.services.login.FirebaseGoogleSignService
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 class GoogleSignPresenter (view: IGoogleSignContract.View): IGoogleSignContract.Presenter, IGoogleSignContract.Listener {
     var view: IGoogleSignContract.View? = view
@@ -27,7 +28,7 @@ class GoogleSignPresenter (view: IGoogleSignContract.View): IGoogleSignContract.
         this.view = null
     }
 
-    override fun onSuccess(user: BaseUser) {
+    override fun onSuccess(user: Usuario) {
         view?.hideProgress()
         view?.onSuccess(user)
     }

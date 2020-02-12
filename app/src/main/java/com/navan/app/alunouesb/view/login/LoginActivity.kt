@@ -10,10 +10,13 @@ import com.android.app.contract.ILoginContract
 import com.android.app.presenter.login.GoogleSignPresenter
 import com.android.app.presenter.login.LoginPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.CompleteUserSingleton
 import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import com.navan.app.alunouesb.view.dialog.ProgressDialog
+import com.navan.app.alunouesb.view.presentation.Presentation
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContract.View {
@@ -78,12 +81,17 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContr
         edtPassword.error = message
     }
 
-    fun navigateToHome(user: BaseUser) {
+    fun navigateToHome(user: Usuario) {
         if (user.emailVerified) {
-            navigateToMainActivity(user)
+            navigateToPresentationActivity()
         } else {
             navigateToVerifiedEmail(user)
         }
+    }
+
+    private fun navigateToPresentationActivity(){
+        startActivity(Intent(getApplication(), Presentation::class.java))
+        finish()
     }
 
     private fun navigateToMainActivity(user: BaseUser) {
@@ -96,14 +104,14 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View, IGoogleSignContr
         finish()
     }
 
-    private fun navigateToVerifiedEmail(user: BaseUser) {
+    private fun navigateToVerifiedEmail(user: Usuario) {
         startActivity(Intent(getApplication(), VerifiedEmailActivity::class.java))
         finish()
     }
 
-    override fun onSuccess(user: BaseUser) {
-        UserSingleton.instance.setUser(user)
-        navigateToHome(user)
+    override fun onSuccess(user: Usuario) {
+        CompleteUserSingleton.instance.setUsuario(user)
+        navigateToPresentationActivity()
     }
 
     override fun onFailure(message: String) {

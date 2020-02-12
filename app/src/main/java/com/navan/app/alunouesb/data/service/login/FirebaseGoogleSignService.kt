@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.navan.app.alunouesb.R
 import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.data.model.Status
+import com.navan.app.alunouesb.data.model.Usuario
 import java.util.*
 
 class FirebaseGoogleSignService (var listener : IGoogleSignContract.Listener): IGoogleSignContract.Service {
@@ -76,7 +77,7 @@ class FirebaseGoogleSignService (var listener : IGoogleSignContract.Listener): I
                         if (task.result!!.isEmpty) {//Caso nao exista o usuario ja cadastrado
                             createAccount(googleUser)//Cadastrar novo usuario
                         } else {
-                            val user = task.result!!.documents.get(0).toObject(BaseUser::class.java)
+                            val user = task.result!!.documents.get(0).toObject(Usuario::class.java)
                             listener.onSuccess(user!!)
                         }
                     } else {
@@ -90,7 +91,7 @@ class FirebaseGoogleSignService (var listener : IGoogleSignContract.Listener): I
         val db = FirebaseFirestore.getInstance()
         val uID = db.collection("users").document().id
 
-        val user = BaseUser()
+        val user = Usuario()
 
         user.name = googleUser.displayName
         user.email = googleUser.email

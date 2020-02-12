@@ -8,6 +8,7 @@ import com.android.app.contract.ILoginContract
 import com.android.app.data.services.login.FirebaseLoginService
 import com.navan.app.alunouesb.R
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 class LoginPresenter (view: ILoginContract.View) : ILoginContract.Presenter, ILoginContract.Listener {
     var view: ILoginContract.View? = view
@@ -43,7 +44,7 @@ class LoginPresenter (view: ILoginContract.View) : ILoginContract.Presenter, ILo
         this.view = null
     }
 
-    override fun onSuccess(user: BaseUser) {
+    override fun onSuccess(user: Usuario) {
         view?.hideProgress()
         view?.onSuccess(user)
     }

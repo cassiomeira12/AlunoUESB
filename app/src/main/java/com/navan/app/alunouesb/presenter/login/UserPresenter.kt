@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.app.contract.IUser
 import com.android.app.data.services.login.FirebaseUserService
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 class UserPresenter (view: IUser.View) : IUser.Presenter, IUser.Listener {
     var view: IUser.View? = view
@@ -21,7 +22,7 @@ class UserPresenter (view: IUser.View) : IUser.Presenter, IUser.Listener {
         this.view = null
     }
 
-    override fun onResult(user: BaseUser?) {
+    override fun onResult(user: Usuario?) {
         view?.onResult(user)
     }
 

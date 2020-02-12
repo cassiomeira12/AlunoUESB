@@ -1,34 +1,37 @@
-package com.navan.app.alunouesb.view.login;
+package com.navan.app.alunouesb.view.login
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.android.app.contract.ICreateAccountContract
-import com.android.app.presenter.login.CreateAccountPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.contract.ICreateAccountCompleteContract
 import com.navan.app.alunouesb.data.CompleteUserSingleton
 import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
+import com.navan.app.alunouesb.presenter.login.CreateCompleteAccountPresenter
+import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import kotlinx.android.synthetic.main.activity_create_account.*
 
-class CreateAccountActivity : AppCompatActivity(), ICreateAccountContract.View {
-    internal lateinit var iPresenter: ICreateAccountContract.Presenter
+class CreateCompleteAccountActivity : AppCompatActivity(), ICreateAccountCompleteContract.View {
 
-    internal lateinit var _user: BaseUser
-    internal lateinit var _login: String
-    internal lateinit var _password: String
+    internal lateinit var iPresenter: ICreateAccountCompleteContract.Presenter
+
+    internal lateinit var _user: Usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_account)
+        setContentView(R.layout.activity_create_complete_account)
 
-        _user = UserSingleton.instance
-        _login = _user.email
-        _password = _user.password
+        _user = CompleteUserSingleton.instance
 
-        iPresenter = CreateAccountPresenter(this)
+        iPresenter = CreateCompleteAccountPresenter(this)
     }
 
     override fun onResume() {
@@ -36,13 +39,8 @@ class CreateAccountActivity : AppCompatActivity(), ICreateAccountContract.View {
         createAccount()
     }
 
-    override fun onDestroy() {
-        iPresenter.onDestroy()
-        super.onDestroy()
-    }
-
     private fun createAccount() {
-        iPresenter.register(this, _user, _login, _password)
+        iPresenter.register(this, _user)
     }
 
     override fun showProgress() {
@@ -55,21 +53,22 @@ class CreateAccountActivity : AppCompatActivity(), ICreateAccountContract.View {
         imgResult.visibility = View.VISIBLE
     }
 
-    override fun onCreatedSuccess(user: BaseUser) {
-        UserSingleton.instance.setUser(user) //Atualizando instancia do usuario
-        CompleteUserSingleton.instance.setUser(user)
+    override fun onCreatedSuccess(user: Usuario) {
+        CompleteUserSingleton.instance.setUsuario(user) //Atualizando instancia do usuario
         txtMessage.text = getString(R.string.conta_criada_com_sucesso)
         Handler().postDelayed(
                 Runnable {
-                    startActivity(Intent(getApplicationContext(), VerifiedEmailActivity::class.java))
+                    val intent = Intent(getApplicationContext(), PrincipalActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
                     finish()
                 }, 1500
         )
     }
 
+
     override fun onFailure(message: String) {
         imgResult.setImageResource(R.drawable.error)
         txtMessage.text = message
     }
-
 }

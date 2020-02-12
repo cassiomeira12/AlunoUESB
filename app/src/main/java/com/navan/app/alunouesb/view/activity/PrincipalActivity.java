@@ -3,35 +3,27 @@ package com.navan.app.alunouesb.view.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.app.contract.IUser;
 import com.android.app.presenter.login.UserPresenter;
 import com.navan.app.alunouesb.R;
 import com.navan.app.alunouesb.data.CompleteUserSingleton;
-import com.navan.app.alunouesb.data.UserSingleton;
-import com.navan.app.alunouesb.data.db.References;
 import com.navan.app.alunouesb.data.model.BaseUser;
-import com.navan.app.alunouesb.view.dialog.DialogExcluir;
 import com.navan.app.alunouesb.data.model.Semestre;
 import com.navan.app.alunouesb.data.model.Usuario;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.navan.app.alunouesb.view.dialog.DialogExcluir;
 import com.navan.app.alunouesb.view.login.LoginActivity;
 
 import org.jetbrains.annotations.Nullable;
+
+import static java.sql.DriverManager.println;
 
 public class PrincipalActivity extends AppCompatActivity implements DialogExcluir.OnExcluir {
 
@@ -59,6 +51,21 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
         mDialog.setIndeterminate(true);
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.setCancelable(false);
+
+        Usuario user = CompleteUserSingleton.Companion.getInstance();
+
+        System.out.println("Curso: " + user.getCurso());
+        System.out.println("Matricula: " + user.getMatricula());
+        System.out.println("Semestre list: " + user.getSemestreList().toString());
+        System.out.println("Id semestre: " + user.getIdSemestre());
+        System.out.println("uID: " + user.uID);
+        System.out.println("Status: " + user.status);
+        System.out.println("Id semestre: " + user.getIdSemestre());
+        System.out.println("nome: " + user.name);
+        System.out.println("email: " + user.email);
+        System.out.println("EmailVirified: " + user.emailVerified);
+        System.out.println("creatAt: " + user.createAt);
+        System.out.println("updateAt: " + user.updateAt);
 
         mostrarDadosUsuario();
     }
@@ -204,7 +211,12 @@ public class PrincipalActivity extends AppCompatActivity implements DialogExclui
     @Override
     public void onExcluir() { // reusa o Dialog de excluir para fazer Logout
         new UserPresenter(new IUser.View() {
+
             @Override
+            public void onResult(@Nullable Usuario user) {
+
+            }
+
             public void onResult(@Nullable BaseUser user) {
                 startActivity(new Intent(getApplication(), LoginActivity.class));
                 finish();

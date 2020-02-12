@@ -2,24 +2,24 @@ package com.navan.app.alunouesb.view.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.widget.*
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.core.view.get
-import androidx.core.view.size
-import com.google.android.gms.common.server.converter.StringToIntConverter
 import com.navan.app.alunouesb.R
 import com.navan.app.alunouesb.data.CompleteUserSingleton
 import com.navan.app.alunouesb.data.UserSingleton
 import com.navan.app.alunouesb.data.model.Usuario
 import com.navan.app.alunouesb.data.shared_preferences.SPInfo
+import com.navan.app.alunouesb.presenter.login.CreateCompleteAccountPresenter
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
-import com.navan.app.alunouesb.view.presentation.slides_fragments.AddDisciplinasSlide
+import com.navan.app.alunouesb.view.login.CreateCompleteAccountActivity
 import com.navan.app.alunouesb.view.presentation.slides_fragments.CursoSlide
 import com.navan.app.alunouesb.view.presentation.slides_fragments.MatriculaSlide
 import com.navan.app.alunouesb.view.presentation.slides_fragments.SemestreSlide
 import io.github.dreierf.materialintroscreen.MaterialIntroActivity
-import kotlinx.android.synthetic.main.fragment_curso.view.*
+import java.sql.DriverManager
 
 class Presentation : MaterialIntroActivity(){
 
@@ -46,7 +46,7 @@ class Presentation : MaterialIntroActivity(){
 
     // Verifica no SharedPreferences se a tela de Presentation ja foi vista
     private fun verifyPresentationActivity(){
-        if(SPInfo(this).isIntroShown()){
+        if(CompleteUserSingleton.instance.matricula != 0){
             startActivity( Intent(this, PrincipalActivity::class.java))
             finish()
         }
@@ -71,20 +71,32 @@ class Presentation : MaterialIntroActivity(){
         val editTextSemestre: EditText = findViewById(R.id.editTextSemestre)
         val semestre = editTextSemestre.text.toString()
 
+        Log.e("DADOS", "Curso: " + curso + "   Matricula: " + matricula + "    Semestre: " + semestre)
 
-        //usuario
-        val user = Usuario(curso, matricula, semestre)
-        user.setUser(UserSingleton.instance) // Baser User
-
-        CompleteUserSingleton.instance.setUsuario(user) // Usuario completo
+        CompleteUserSingleton.instance.curso = curso // Usuario completo
+        CompleteUserSingleton.instance.matricula = matricula
+        CompleteUserSingleton.instance.addSemestre(semestre)
 
 
-        SPInfo(this).updateIntroStatus(true)
-        val intent = Intent(this, PrincipalActivity::class.java)
+        // tela de carregamento
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        this.startActivity(intent)
-        super.onFinish()
+        if(isDataValid()){
+            if(CompleteUserSingleton.instance.matricula != 0){
+                startActivity(Intent(getApplicationContext(), CreateCompleteAccountActivity::class.java))
+                finish()
+            }
+
+        }
+
+
+
+    }
+
+
+    fun isDataValid(): Boolean {
+        // verifica os dados inseridos
+
+        return true
     }
 
 }

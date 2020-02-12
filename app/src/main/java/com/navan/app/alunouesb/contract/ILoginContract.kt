@@ -2,13 +2,14 @@ package com.android.app.contract
 
 import android.app.Activity
 import com.navan.app.alunouesb.data.model.BaseUser
+import com.navan.app.alunouesb.data.model.Usuario
 
 interface ILoginContract {
 
     interface View {
         fun showProgress()
         fun hideProgress()
-        fun onSuccess(user: BaseUser)
+        fun onSuccess(user: Usuario)
         fun onFailure(message: String)
 
         fun setLoginNameError(message: String)
@@ -25,7 +26,7 @@ interface ILoginContract {
     }
 
     interface Listener {
-        fun onSuccess(user: BaseUser)
+        fun onSuccess(user: Usuario)
         fun onFailure(message : String)
     }
 

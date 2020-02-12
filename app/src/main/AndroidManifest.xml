@@ -110,6 +110,9 @@
             android:name=".view.presentation.Presentation"
             android:theme="@style/Theme.Intro"/>
         <activity
+            android:name=".view.login.CreateCompleteAccountActivity"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity
             android:name=".view.SplashActivity"
             android:theme="@style/LaunchTheme">
             <intent-filter>

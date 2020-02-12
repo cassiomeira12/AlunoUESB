@@ -3,14 +3,13 @@ package com.navan.app.alunouesb.view
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.app.contract.IUser
 import com.android.app.presenter.login.UserPresenter
 import com.navan.app.alunouesb.R
+import com.navan.app.alunouesb.data.CompleteUserSingleton
 import com.navan.app.alunouesb.data.UserSingleton
-import com.navan.app.alunouesb.data.model.BaseUser
-import com.navan.app.alunouesb.data.shared_preferences.SPInfo
+import com.navan.app.alunouesb.data.model.Usuario
 import com.navan.app.alunouesb.view.activity.PrincipalActivity
 import com.navan.app.alunouesb.view.login.ContinueUserDataActivity
 import com.navan.app.alunouesb.view.login.LoginActivity
@@ -43,14 +42,37 @@ class SplashActivity : AppCompatActivity(), IUser.View {
         super.onDestroy()
     }
 
-    override fun onResult(user: BaseUser?) {
+    override fun onResult(user: Usuario?) {
         if (user == null) {
             startActivity(Intent(getApplication(), LoginActivity::class.java))
             finish()
         } else {
-            UserSingleton.instance.setUser(user) //Salvar dados numa unica instancia de BaseUser
-            if (user.emailVerified) {//Verificacao de email
+
+            println("DADOOOOOS")
+            println("Curso: " + user.curso)
+            println("Matricula: " + user.matricula)
+            println("Semestre list: " + user.semestreList.toString())
+            println("Id semestre: " + user.idSemestre)
+            println("uID: " + user.uID)
+            println("Status: " + user.status)
+            println("Id semestre: " + user.idSemestre)
+            println("nome: " + user.name)
+            println("email: " + user.email)
+            println("EmailVirified: " + user.emailVerified)
+            println("creatAt: " + user.createAt)
+            println("updateAt: " + user.updateAt)
+
+
+            CompleteUserSingleton.instance.setUsuario(user)
+            if(user.matricula != 0){ // se for !0 de zero, usuario esta comopleto e ja foi verificado o email
+                // usuario completo
                 navigateToMainActivity()
+                return
+            }
+
+            if (user.emailVerified) {//Verificacao de email
+
+                navigateToPresentationActivity()
             } else {
                 navigateToVerifiedEmail()
             }
@@ -58,6 +80,11 @@ class SplashActivity : AppCompatActivity(), IUser.View {
     }
 
     private fun navigateToMainActivity() {
+        startActivity(Intent(getApplication(), PrincipalActivity::class.java))
+        finish()
+    }
+
+    private fun navigateToPresentationActivity(){
         startActivity(Intent(getApplication(), Presentation::class.java))
         finish()
     }
