@@ -6,11 +6,11 @@ import java.io.Serializable;
  * Created by cassio on 02/09/17.
  */
 
-public class Lembrete implements Serializable{
+public class Lembrete implements Serializable {
 
+    private String id;
     private String titulo;
     private String mensagem;
-
 
     //Construtor da Classe
     public Lembrete(String titulo, String mensagem) {
@@ -18,7 +18,17 @@ public class Lembrete implements Serializable{
         this.mensagem = mensagem;
     }
 
-    public Lembrete(){}
+    public Lembrete() {
+
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public String getTitulo() {
         return titulo;

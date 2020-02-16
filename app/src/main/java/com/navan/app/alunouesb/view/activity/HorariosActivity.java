@@ -31,13 +31,13 @@ public class HorariosActivity extends AppCompatActivity {
 
         listarHorarios = findViewById(R.id.listar_horarios);
         listDisciplinas = findViewById(R.id.list_disciplinas);
-        disciplinaList = (ArrayList<Disciplina>) semestre.getDisciplinaList();
+        //disciplinaList = (ArrayList<Disciplina>) semestre.getDisciplinaList();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, configurarListView(disciplinaList));
+        //ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, configurarListView(disciplinaList));
 
-        listDisciplinas.setAdapter(adapter);
-        carregarHorarios();
-        carregarListaTipoHorarios();
+        //listDisciplinas.setAdapter(adapter);
+        //carregarHorarios();
+        //carregarListaTipoHorarios();
 
     }
 
