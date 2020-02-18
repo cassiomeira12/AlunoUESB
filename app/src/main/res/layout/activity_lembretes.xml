@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:context=".view.activity.LembretesActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_lembretes"
@@ -12,6 +13,11 @@
         android:layout_height="match_parent"
         android:layout_marginTop="4dp"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/float_button_lembretes"
@@ -19,12 +25,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:onClick="chamarTelaAdicionarLembretes"
+        android:onClick="onClick"
         android:elevation="12dp"
         android:backgroundTint="@color/colorPrimary"
         app:borderWidth="0dp"
         android:background="@color/colorPrimary"
         android:src="@drawable/ic_add_white_24dp"/>
-
 
 </FrameLayout>
