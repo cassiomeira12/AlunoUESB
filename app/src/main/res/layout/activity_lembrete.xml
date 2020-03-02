@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,31 +7,46 @@
     android:padding="16dp"
     tools:context="com.navan.app.alunouesb.view.activity.LembreteActivity">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Titulo"/>
-    <EditText
-        android:id="@+id/text_titulo_lembrete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Digite um titulo"
-        android:enabled="false"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:text="Lembrete"/>
-    <EditText
-        android:id="@+id/text_mensagem_lembrete"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="Digite seu lembrete aqui"
-        android:enabled="false"
-        android:background="@android:color/transparent"
-        android:gravity="top"/>
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Titulo"/>
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/text_titulo_lembrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite um titulo"
+            android:maxLines="1"
+            android:enabled="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="Lembrete"/>
+
+        <EditText
+            android:id="@+id/text_mensagem_lembrete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Digite seu lembrete aqui"
+            android:enabled="false"
+            android:background="@android:color/transparent"
+            android:gravity="top"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

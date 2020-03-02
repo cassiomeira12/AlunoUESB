@@ -64,11 +64,11 @@ public class AdapterLembretes extends Adapter {
 
         viewHolder.lembreteItem.setTag(position);
 
-        if (((LembretesActivity) context).listaExclusao.contains(lembrete)) {
-            ((ViewHolder) holder).lembreteItem.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
-        } else {
-            ((ViewHolder) holder).lembreteItem.setBackgroundResource(R.drawable.shape_cinza);
-        }
+//        if (((LembretesActivity) context).listaExclusao.contains(lembrete)) {
+//            ((ViewHolder) holder).lembreteItem.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+//        } else {
+//            ((ViewHolder) holder).lembreteItem.setBackgroundResource(R.drawable.shape_cinza);
+//        }
     }
 
     @Override

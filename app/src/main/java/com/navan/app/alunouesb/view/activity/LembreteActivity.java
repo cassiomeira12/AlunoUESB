@@ -5,22 +5,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.app.presenter.login.LembretePresenter;
 import com.navan.app.alunouesb.R;
-import com.navan.app.alunouesb.data.db.References;
+import com.navan.app.alunouesb.contract.ILembreteContract;
 import com.navan.app.alunouesb.data.model.Lembrete;
-import com.navan.app.alunouesb.data.model.Semestre;
 
-public class LembreteActivity extends AppCompatActivity{
+import org.jetbrains.annotations.NotNull;
 
-    private Semestre semestre =  PrincipalActivity.semestre;
+import java.util.List;
+
+public class LembreteActivity extends AppCompatActivity implements ILembreteContract.View {
 
     private Lembrete lembrete;
 
+    private ProgressBar progressBar;
     private EditText titulo;
     private EditText mensagem;
+
+    private ILembreteContract.Presenter iPresenter;
 
     private boolean permitirEdicao = false;
 
@@ -30,15 +37,20 @@ public class LembreteActivity extends AppCompatActivity{
         setContentView(R.layout.activity_lembrete);
         setTitle("Lembrete");
 
+        iPresenter = new LembretePresenter(this);
+
+        progressBar = findViewById(R.id.progressBar);
         titulo = findViewById(R.id.text_titulo_lembrete);
         mensagem = findViewById(R.id.text_mensagem_lembrete);
 
-        int idLembrete = (int) getIntent().getSerializableExtra("idLembrete");
-        lembrete = PrincipalActivity.semestre.getLembreteList().get(idLembrete);
+        lembrete = (Lembrete) getIntent().getSerializableExtra("lembrete");
 
+        showData();
+    }
+
+    private void showData() {
         titulo.setText(lembrete.getTitulo());
         mensagem.setText(lembrete.getMensagem());
-
     }
 
     @Override
@@ -53,46 +65,61 @@ public class LembreteActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.excluir_lembrete:
-                deletarLembrete();
-                finish();
+                iPresenter.remove(lembrete);
                 break;
 
             case R.id.action_salvar:
-                this.salvar();
+                lembrete.setTitulo(titulo.getText().toString());
+                lembrete.setMensagem(mensagem.getText().toString());
+                iPresenter.update(lembrete);
                 break;
 
             case R.id.action_editar:
                 habilitarEdicao();
-                invalidateOptionsMenu();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private void deletarLembrete() {
-        semestre.getLembreteList().remove(lembrete);
-        Toast.makeText(this, "Lembrete excluído", Toast.LENGTH_SHORT).show();
-        salvar();
-    }
-
-    private void salvar() {
-        lembrete.setTitulo(titulo.getText().toString());
-        lembrete.setMensagem(mensagem.getText().toString());
-
-
-        String semestreSelecionado = PrincipalActivity.semestre.getSemestre();
-        References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
-
     }
 
     private void habilitarEdicao() {
         this.permitirEdicao = (!permitirEdicao);
         titulo.setEnabled(permitirEdicao);
         mensagem.setEnabled(permitirEdicao);
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onListSuccess(@NotNull List<? extends Lembrete> list) { }
+
+    @Override
+    public void onCreatedSuccess(@NotNull Lembrete item) { }
+
+    @Override
+    public void onUpdateSuccess(@NotNull Lembrete item) {
+        Toast.makeText(this, "Atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+        habilitarEdicao();
+    }
+
+    @Override
+    public void onRemovedSuccess(@NotNull Lembrete item) {
+        Toast.makeText(this, "Excluído com sucesso!", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void onFailure(@NotNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
