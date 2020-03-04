@@ -6,9 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,22 +16,17 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.navan.app.alunouesb.R;
+import com.navan.app.alunouesb.contract.IUserContract;
 import com.navan.app.alunouesb.data.CompleteUserSingleton;
-import com.navan.app.alunouesb.data.db.References;
 import com.navan.app.alunouesb.data.model.Semestre;
 import com.navan.app.alunouesb.data.model.Usuario;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+import com.navan.app.alunouesb.presenter.usuario.UsuarioPresenter;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,8 +35,11 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UsuarioActivity extends AppCompatActivity {
+public class UsuarioActivity extends AppCompatActivity implements IUserContract.View {
+    File arquivo;
     private static final int PICK_IMAGE = 1234;
+
+    IUserContract.Presenter iPresenter;
 
     private EditText usuarioNome;
     private MaterialBetterSpinner spinnerCurso;
@@ -55,8 +50,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
     private CircleImageView imagePerfil;
 
-
-    private Usuario usuario = CompleteUserSingleton.Companion.getInstance();
+    private Usuario usuario;
     private boolean permitirEdicao = true;
     private Menu menu;
 
@@ -68,6 +62,11 @@ public class UsuarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
         setTitle("Meus Dados");
+
+        usuario = CompleteUserSingleton.Companion.getInstance();
+
+        iPresenter = new UsuarioPresenter(this);
+        arquivo = new File(getBaseContext().getFilesDir(), "profilePic");
 
         usuarioNome = findViewById(R.id.text_usuario_nome);
         spinnerCurso = findViewById(R.id.spinner_usuario_curso);
@@ -89,7 +88,6 @@ public class UsuarioActivity extends AppCompatActivity {
         spinnerCurso.setAdapter(adapterCurso);
 
 
-
         spinnerSemestre = findViewById(R.id.spinner_semestre);
         spinnerSemestre.setEnabled(false);
 
@@ -105,7 +103,6 @@ public class UsuarioActivity extends AppCompatActivity {
         }else{
             matricula.setText(String.valueOf(usuario.getMatricula()));
         }
-
 
         spinnerSemestre.setSelection(arrayAdapter.getPosition(usuario.getSemestre(usuario.getIdSemestre())));
 
@@ -150,7 +147,6 @@ public class UsuarioActivity extends AppCompatActivity {
                 finish();
         }
 
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -174,22 +170,10 @@ public class UsuarioActivity extends AppCompatActivity {
                 }
             }
 
-            References.db.collection("/semestres").document(semestre).set(semestreTemp)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            mDialog.dismiss();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            mDialog.dismiss();
-                        }
-                    });
-
             usuario.getSemestreList().add(semestre);
             spinnerSemestre.setSelection(arrayAdapter.getPosition(semestre));
+
+            iPresenter.update(usuario);
 
         }
 
@@ -225,16 +209,7 @@ public class UsuarioActivity extends AppCompatActivity {
             usuario.setMatricula(matricula);
         }
 
-
-
-        if(References.uid != null){
-            CompleteUserSingleton.Companion.getInstance().setUsuario(usuario);
-
-            References.db.collection("profile").document("user").set(usuario);
-
-        }else{
-            // fazer login
-        }
+        iPresenter.update(usuario);
 
         habilitarEdicao();
 
@@ -263,8 +238,6 @@ public class UsuarioActivity extends AppCompatActivity {
     // carrega imagem do usuario do ImageView (localmente ou pela internet)
     private void carregarImagemDePerfil() {
 
-        final File arquivo = new File(getBaseContext().getFilesDir(), "profile");
-
         if (arquivo.exists()){ // existe na memoria interna no cell
 
             Uri uri = Uri.fromFile(arquivo);
@@ -280,43 +253,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
         }else{ // se nao existe na memoria interna, faz download do firebase
 
-            FileDownloadTask download = FirebaseStorage.getInstance().getReference("/images" + References.uid + "profile").getFile(arquivo);
-
-            download.addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-                    if(task.isSuccessful()) { // direto do Storage do usuario
-                        if (arquivo.exists()) {
-
-                            Uri uri = Uri.fromFile(arquivo);
-
-                            try {
-                                Bitmap imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                                imagePerfil.setImageBitmap(imagem);
-
-                                FileOutputStream saida = new FileOutputStream(arquivo);
-
-                                if (imagem != null) { //
-                                    imagem.compress(Bitmap.CompressFormat.PNG, 100, saida);
-                                    saida.flush();
-                                    saida.close();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }else{ // task is not Successful
-
-//                        final String uriPath = PrincipalActivity.usuario.getUrlPhotoProfile(); // url from profile usuario
-//
-//
-//                        if(!uriPath.equals("")){ // not null
-//                            // faz download
-//                            Picasso.get().load(uriPath).into(imagePerfil);
-//                        }
-                    }
-                }
-            });
+            iPresenter.getProfilePick(arquivo); // busca a imagem no firebase
         }
     }
 
@@ -332,12 +269,10 @@ public class UsuarioActivity extends AppCompatActivity {
                 imagePerfil.setImageURI(imagemSelecionada); // seta imagem no ImageView
 
                 try { // salva localmente na memoria do APP
-                    File arquivo = new File(getBaseContext().getFilesDir(), "profile");
 
                     FileOutputStream saida = new FileOutputStream(arquivo);
 
                     Bitmap imagem = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imagemSelecionada);
-
 
                     imagem.compress(Bitmap.CompressFormat.PNG, 100, saida);
 
@@ -347,38 +282,72 @@ public class UsuarioActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                // chama função do FIRABASE PARA SALVAR FOTO
 
-                final StorageReference storage = References.storageProfile;
-
-                progressBar.setVisibility(View.VISIBLE);
-                progressBar.setProgress(0);
-
-                storage.putFile(imagemSelecionada) // salva no Storage do usuario
-                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task1) {
-                                progressBar.setVisibility(View.INVISIBLE);
-
-//                                storage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                    @Override
-//                                    public void onSuccess(Uri uri) {
-//                                        PrincipalActivity.usuario.setUrlPhotoProfile(uri.toString());
-//                                        References.db.collection("profile").document("user").set(usuario); // salavr URL no banco de dados
-//                                    }
-//                                });
-
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double porcentagem = (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                                Log.e("Porc", porcentagem + "");
-                                progressBar.setProgress((int) porcentagem);
-                            }
-                        });
+                iPresenter.updateProfilePick(imagemSelecionada); // salva no firebase
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onGetProfilePicSucess(@NotNull String url) {
+        if (arquivo.exists()) {
+
+            Uri uri = Uri.fromFile(arquivo);
+
+            try {
+                Bitmap imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imagePerfil.setImageBitmap(imagem);
+
+                FileOutputStream saida = new FileOutputStream(arquivo);
+
+                if (imagem != null) { //
+                    imagem.compress(Bitmap.CompressFormat.PNG, 100, saida);
+                    saida.flush();
+                    saida.close();
+                }
+            } catch (IOException e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(@NotNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpdateUserSuccess(@NotNull Usuario user) {
+        Toast.makeText(this, "Atualizado com Sucesso", Toast.LENGTH_SHORT).show();
+        CompleteUserSingleton.Companion.getInstance().setUsuario(user); // atualizar o usuario localmente
+    }
+
+    @Override
+    public void onRemoveUserSucess(@NotNull Usuario user) {
+        Toast.makeText(this, "Usuario removido com Sucesso", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpdateProfilePicSuccess(@NotNull String url) {
+        CompleteUserSingleton.Companion.getInstance().avatarURL = url; // salva a url do avatar
+        iPresenter.update(CompleteUserSingleton.Companion.getInstance()); // adiciona no banco de dados atualizacao do user com avatar
+    }
+
+    @Override
+    public void onRemoveProfilePicSucess(@NotNull String url) {
+        Toast.makeText(this, "Avatar removido com Sucesso", Toast.LENGTH_SHORT).show();
+    }
+
 }

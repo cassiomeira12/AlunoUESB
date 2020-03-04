@@ -48,7 +48,6 @@ class SplashActivity : AppCompatActivity(), IUser.View {
             finish()
         } else {
 
-            println("DADOOOOOS")
             println("Curso: " + user.curso)
             println("Matricula: " + user.matricula)
             println("Semestre list: " + user.semestreList.toString())
