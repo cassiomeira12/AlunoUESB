@@ -1,29 +1,35 @@
 package com.navan.app.alunouesb.contract
 
-import android.app.Activity
-import com.navan.app.alunouesb.data.model.BaseUser
-import com.navan.app.alunouesb.data.model.Usuario
+import com.navan.app.alunouesb.data.model.Disciplina
+import com.navan.app.alunouesb.data.service.ICrudService
 
 interface IDisciplinaContract{
 
     interface View {
         fun showProgress()
         fun hideProgress()
-        fun onCreatedSuccess(user: Usuario)
+
+        fun onListSuccess(list: List<Disciplina>)
+        fun onCreatedSuccess(item: Disciplina)
+        fun onUpdateSuccess(item: Disciplina)
+        fun onRemovedSuccess(item: Disciplina)
+
         fun onFailure(message : String)
     }
 
-    interface Presenter {
+    interface Presenter : ICrudService<Disciplina> {
         fun onDestroy()
-        fun register(activity: Activity, user : Usuario)
     }
 
-    interface Service{
-        fun register(activity: Activity, user: Usuario)
+    interface Service : ICrudService<Disciplina> {
+
     }
 
     interface Listener {
-        fun onCreatedSuccess(user: Usuario)
+        fun onListSuccess(list: List<Disciplina>)
+        fun onCreatedSuccess(item: Disciplina)
+        fun onUpdateSuccess(item: Disciplina)
+        fun onRemovedSuccess(item: Disciplina)
         fun onFailure(message: String)
     }
 }

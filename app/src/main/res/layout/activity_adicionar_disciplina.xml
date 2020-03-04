@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,40 +8,54 @@
     android:padding="16dp"
     tools:context="com.navan.app.alunouesb.view.activity.AdicionarDisciplinaActivity">
 
-    <EditText
-        android:id="@+id/text_disciplina_nome"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textCapSentences"
-        android:hint="Nome da Disciplina"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/text_disciplina_abreviatura"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textCapSentences"
-        android:hint="Abreviatura"/>
+        <EditText
+            android:id="@+id/text_disciplina_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Nome da Disciplina"
+            android:inputType="textCapSentences" />
 
-    <EditText
-        android:id="@+id/text_disciplina_professor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textCapSentences"
-        android:hint="Professor" />
+        <EditText
+            android:id="@+id/text_disciplina_abreviatura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Abreviatura"
+            android:inputType="textCapSentences" />
 
-    <EditText
-        android:id="@+id/text_disciplina_email_professor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="Email Professor" />
+        <EditText
+            android:id="@+id/text_disciplina_professor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Professor"
+            android:inputType="textCapSentences" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/text_disciplina_email_professor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Email Professor"
+            android:inputType="textEmailAddress" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

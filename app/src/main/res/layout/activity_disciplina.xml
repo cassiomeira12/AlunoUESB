@@ -374,4 +374,12 @@
         android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@color/colorPrimary" />
 
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
+
 </FrameLayout>

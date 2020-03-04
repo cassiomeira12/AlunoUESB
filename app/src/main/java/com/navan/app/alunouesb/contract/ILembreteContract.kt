@@ -1,9 +1,6 @@
 package com.navan.app.alunouesb.contract
 
-import android.app.Activity
-import com.navan.app.alunouesb.data.model.BaseUser
 import com.navan.app.alunouesb.data.model.Lembrete
-import com.navan.app.alunouesb.data.model.Usuario
 import com.navan.app.alunouesb.data.service.ICrudService
 
 interface ILembreteContract{

@@ -42,7 +42,9 @@ public class LembretesActivity extends AppCompatActivity implements DialogExclui
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lembretes);
         setTitle("Meus Lembretes");
+
         progressBar = findViewById(R.id.progressBar);
+
         iPresenter = new LembretePresenter(this);
         configAdapter();
     }
@@ -103,6 +105,8 @@ public class LembretesActivity extends AppCompatActivity implements DialogExclui
                 dialog.setOnExcluir(this);
                 dialog.show(getSupportFragmentManager(), "Deseja excluir o lembrete?");
                 break;
+            default:
+                finish(); // volta para tela anterior
         }
         return super.onOptionsItemSelected(item);
     }

@@ -13,10 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.navan.app.alunouesb.R;
+import com.navan.app.alunouesb.contract.IDisciplinaContract;
 import com.navan.app.alunouesb.data.db.References;
+import com.navan.app.alunouesb.presenter.disciplina.DisciplinaPresenter;
 import com.navan.app.alunouesb.view.dialog.DialogAdicionarHorario;
 import com.navan.app.alunouesb.view.dialog.DialogAdicionarHorario.ViewHolder;
 import com.navan.app.alunouesb.view.dialog.DialogExcluir;
@@ -25,16 +29,17 @@ import com.navan.app.alunouesb.data.model.Horario;
 import com.navan.app.alunouesb.data.model.Professor;
 import com.navan.app.alunouesb.data.model.Semestre;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DisciplinaActivity extends AppCompatActivity implements DialogExcluir.OnExcluir, DialogAdicionarHorario.OnClickDialog {
+public class DisciplinaActivity extends AppCompatActivity implements DialogExcluir.OnExcluir, DialogAdicionarHorario.OnClickDialog, IDisciplinaContract.View {
 
-    private Semestre semestre =  PrincipalActivity.semestre;
-
-    // lista com todas as disciplinas do usuario
-    ArrayList<Disciplina> disciplinas = (ArrayList<Disciplina>) semestre.getDisciplinaList();
+    private ProgressBar progressBar;
+    private IDisciplinaContract.Presenter iPresenter;
 
     private Disciplina disciplina;
     private ArrayList<Horario> horarioList;
@@ -59,6 +64,10 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
 
     private int indiceExcluir;
 
+    Button negativoNumberPicker;
+    Button positivoNumberPicker;
+
+
     private TextView valueNumberPicker;
 
     private boolean permitirEdicao = true;
@@ -71,6 +80,9 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disciplina);
         setTitle("Disciplina");
+
+        progressBar = findViewById(R.id.progressbar);
+        iPresenter = new DisciplinaPresenter(this);
 
         //link das Views
         nome = findViewById(R.id.text_disciplina_nome);
@@ -85,23 +97,18 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         listHorarios = findViewById(R.id.list_horarios);
         valueNumberPicker = findViewById(R.id.number_picker_value);
         //Number Picker
-        Button negativoNumberPicker = findViewById(R.id.number_picker_negative);
-        Button positivoNumberPicker = findViewById(R.id.number_picker_positive);
+        negativoNumberPicker = findViewById(R.id.number_picker_negative);
+        positivoNumberPicker = findViewById(R.id.number_picker_positive);
         emotion = findViewById(R.id.emotion);
 
         //pegar disciplina
-        int idDisciplina = (int) getIntent().getSerializableExtra("idDisciplina");
-        disciplina = semestre.getDisciplinaList().get(idDisciplina);
+        disciplina = (Disciplina) getIntent().getSerializableExtra("disciplina");
 
-        // cria uma lista com as disciplinas do usuario
-        disciplinas = (ArrayList<Disciplina>) semestre.getDisciplinaList();
+        habilitarEdicao();
+        showData();
+    }
 
-        for (Disciplina disc : disciplinas) {
-            if(disc.getNome().equals(disciplina.getNome())){// verifica qual disciplina na lista do usuario possui o mesmo nome da disciplina que foi pega na intent
-                this.disciplina = disc; // coloca a disciplina na variavel disciplina local para facilitar a edicao
-            }
-        }
-
+    public void showData(){
         professor = disciplina.getProfessor();
         horarioList = disciplina.getHorarioList();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,horarioList);
@@ -112,7 +119,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         abreviatura.setText(disciplina.getAbreviacao());
         nomeProfessor.setText(professor.getNome());
         emailProfessor.setText(professor.getEmail());
-
 
         // colocar a quantidade de faltas no TextView
         valueNumberPicker.setText(String.valueOf(disciplina.getFaltas()));
@@ -178,7 +184,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
             }
         });
 
-        habilitarEdicao();
     }
 
     @Override
@@ -238,21 +243,21 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         //notas
         // se nota da primeira unidade for diferente de vazio
         if (!unidade1.getText().toString().isEmpty()) {
-            disciplina.setUnidade1(Float.valueOf(unidade1.getText().toString()));// salva o valor no Objeto que sera enviado ao bd
+            disciplina.setUnidade1(Float.parseFloat(unidade1.getText().toString()));// salva o valor no Objeto que sera enviado ao bd
         }else{
             unidade1.setText("");
             disciplina.setUnidade1(0);
         }
 
         if (!unidade2.getText().toString().isEmpty()) {
-            disciplina.setUnidade2(Float.valueOf(unidade2.getText().toString()));
+            disciplina.setUnidade2(Float.parseFloat(unidade2.getText().toString()));
         }else{
             unidade2.setText("");
             disciplina.setUnidade2(0);
         }
 
         if (!unidade3.getText().toString().isEmpty()) {
-            disciplina.setUnidade3(Float.valueOf(unidade3.getText().toString()));
+            disciplina.setUnidade3(Float.parseFloat(unidade3.getText().toString()));
         }else{
             unidade3.setText("");
             disciplina.setUnidade3(0);
@@ -280,7 +285,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
                 if(notaFinal.getText().toString().isEmpty()){ // se vazio, nota final recebe zero
                     mNotaFinal = 0;
                 }else{ // se nao vazio, nota final recebe o valor que esta no TextEdit
-                    mNotaFinal = Float.valueOf(notaFinal.getText().toString());
+                    mNotaFinal = Float.parseFloat(notaFinal.getText().toString());
                 }
 
                 double aux1 = media * 0.7;
@@ -294,7 +299,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         }
 
         if (!notaFinal.getText().toString().isEmpty()) {
-            disciplina.setNotaFinal(Float.valueOf(notaFinal.getText().toString()));
+            disciplina.setNotaFinal(Float.parseFloat(notaFinal.getText().toString()));
         }
 
         //mudar Icon de emocao
@@ -304,9 +309,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
             emotion.setImageResource(R.drawable.feliz);
         }
 
-        //alterar o valor das faltas no banco de dados
-        salvarBancoDeDados();
-
+        iPresenter.update(disciplina);
     }
 
     public void chamarTelaAdicionarHorario(View view) {
@@ -331,7 +334,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         disciplina.adicionarHorario(turno, intDia, intHorario);
         carregaHorarios();
 
-        salvarBancoDeDados();
+        iPresenter.update(disciplina);
 
     }
 
@@ -359,15 +362,14 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
 
         switch (excluir){
             case "disciplina":
-                disciplinas.remove(disciplina);
+                iPresenter.remove(disciplina);
                 finish();
                 break;
             case "horario":
                 adapter.remove(adapter.getItem(indiceExcluir));
+                iPresenter.update(disciplina);
                 break;
         }
-
-        salvarBancoDeDados();
     }
 
     private void habilitarEdicao() {
@@ -400,9 +402,7 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
 
         disciplina.setFaltas(faltas);
 
-        //alterar o valor das faltas no banco de dados
-        salvarBancoDeDados();
-
+        iPresenter.update(disciplina);
     }
 
     private void carregaHorarios() {
@@ -411,12 +411,6 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         listHorarios.setAdapter(adapter);
     }
 
-    private void salvarBancoDeDados() {
-        //alterar o valor das faltas no banco de dados
-
-        String semestreSelecionado =  PrincipalActivity.semestre.getSemestre();
-        References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
-    }
 
     private int convertDia(String dia) {
         int resultado = 0;
@@ -466,4 +460,43 @@ public class DisciplinaActivity extends AppCompatActivity implements DialogExclu
         return resultado;
     }
 
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+
+    }
+
+    @Override
+    public void onListSuccess(@NotNull List<? extends Disciplina> list) {
+
+    }
+
+    @Override
+    public void onCreatedSuccess(@NotNull Disciplina item) {
+
+    }
+
+    @Override
+    public void onUpdateSuccess(@NotNull Disciplina item) {
+        Toast.makeText(this, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
+        habilitarEdicao();
+    }
+
+    @Override
+    public void onRemovedSuccess(@NotNull Disciplina item) {
+        Toast.makeText(this, "Removido com sucesso", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void onFailure(@NotNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+    }
 }

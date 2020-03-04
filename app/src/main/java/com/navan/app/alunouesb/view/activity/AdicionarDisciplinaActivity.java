@@ -6,29 +6,44 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.navan.app.alunouesb.R;
+import com.navan.app.alunouesb.contract.IDisciplinaContract;
 import com.navan.app.alunouesb.data.db.References;
 import com.navan.app.alunouesb.data.model.Disciplina;
 import com.navan.app.alunouesb.data.model.Professor;
+import com.navan.app.alunouesb.presenter.disciplina.DisciplinaPresenter;
 
-public class AdicionarDisciplinaActivity extends AppCompatActivity {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+public class AdicionarDisciplinaActivity extends AppCompatActivity implements IDisciplinaContract.View {
+
+    private ProgressBar progressBar;
 
     private EditText nome;
     private EditText abreviatura;
     private EditText nomeProfessor;
     private EditText emailProfessor;
+    private IDisciplinaContract.Presenter iPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adicionar_disciplina);
 
+        progressBar = findViewById(R.id.progressbar);
+
         nome = findViewById(R.id.text_disciplina_nome);
         abreviatura = findViewById(R.id.text_disciplina_abreviatura);
         nomeProfessor = findViewById(R.id.text_disciplina_professor);
         emailProfessor = findViewById(R.id.text_disciplina_email_professor);
+
+        iPresenter = new DisciplinaPresenter(this);
 
     }
 
@@ -68,22 +83,45 @@ public class AdicionarDisciplinaActivity extends AppCompatActivity {
             Professor professorTemp = new Professor(nomeProfessor, emailProfessor);
             Disciplina disciplina = new Disciplina(nome, abreviatura, professorTemp);
 
-            PrincipalActivity.semestre.adicionarDisciplina(disciplina);
-
-            // criar Thread para adicionar ao Firebase
-            //Motivo: Internet pode estar lenta e demorar para inserir no firebase, demorando para sair da tela tb
-            Handler handler = new Handler();
-            Runnable thread = new Runnable() {
-                @Override
-                public void run() {
-                    String semestreSelecionado = PrincipalActivity.semestre.getSemestre();
-                    References.db.collection("/semestres").document(semestreSelecionado).set(PrincipalActivity.semestre);
-                }
-            };
-            handler.post(thread);
-            finish();
-
+            iPresenter.add(disciplina);
 
         }
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+
+    }
+
+    @Override
+    public void onListSuccess(@NotNull List<? extends Disciplina> list) {
+
+    }
+
+    @Override
+    public void onCreatedSuccess(@NotNull Disciplina item) {
+        finish();
+
+    }
+
+    @Override
+    public void onUpdateSuccess(@NotNull Disciplina item) {
+
+    }
+
+    @Override
+    public void onRemovedSuccess(@NotNull Disciplina item) {
+
+    }
+
+    @Override
+    public void onFailure(@NotNull String message) {
+
     }
 }
