@@ -68,7 +68,7 @@ public class LembretesActivity extends AppCompatActivity implements DialogExclui
         recyclerLembretes = findViewById(R.id.recycler_view_lembretes);
 
         adapterLembrete = new AdapterLembretes2(listItens, getApplicationContext(), this);
-        RecyclerView.LayoutManager layout = new LinearLayoutManager(this, LinearLayout.VERTICAL, false);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         DividerItemDecoration divider = new DividerItemDecoration(this, LinearLayout.VERTICAL);
         recyclerLembretes.addItemDecoration(divider);
         recyclerLembretes.setLayoutManager(layout);

@@ -12,13 +12,16 @@ class FirebaseLembreteService(var listener : ILembreteContract.Listener) : ILemb
 
     override fun add(item: Lembrete) {
         val db = FirebaseFirestore.getInstance()
-        val userID = CompleteUserSingleton.instance.uID
+        val user = CompleteUserSingleton.instance
+        val semestreSelecionado = user.getSemestre(user.idSemestre) // semestre em uso
         val lembreteID = db.collection("users").document().id
 
         item.id = lembreteID
 
         db.collection("users")
-                .document(userID)
+                .document(user.uID)
+                .collection("semestres")
+                .document(semestreSelecionado)
                 .collection("lembretes")
                 .document(lembreteID)
                 .set(item)
@@ -32,11 +35,14 @@ class FirebaseLembreteService(var listener : ILembreteContract.Listener) : ILemb
 
     override fun remove(item: Lembrete) {
         val db = FirebaseFirestore.getInstance()
-        val userID = CompleteUserSingleton.instance.uID
+        val user = CompleteUserSingleton.instance
+        val semestreSelecionado = user.getSemestre(user.idSemestre) // semestre em uso
         val lembreteID = item.id
 
         db.collection("users")
-                .document(userID)
+                .document(user.uID)
+                .collection("semestres")
+                .document(semestreSelecionado)
                 .collection("lembretes")
                 .document(lembreteID)
                 .delete()
@@ -50,11 +56,14 @@ class FirebaseLembreteService(var listener : ILembreteContract.Listener) : ILemb
 
     override fun update(item: Lembrete) {
         val db = FirebaseFirestore.getInstance()
-        val userID = CompleteUserSingleton.instance.uID
+        val user = CompleteUserSingleton.instance
+        val semestreSelecionado = user.getSemestre(user.idSemestre) // semestre em uso
         val lembreteID = item.id
 
         db.collection("users")
-                .document(userID)
+                .document(user.uID)
+                .collection("semestres")
+                .document(semestreSelecionado)
                 .collection("lembretes")
                 .document(lembreteID)
                 .set(item)
@@ -68,10 +77,13 @@ class FirebaseLembreteService(var listener : ILembreteContract.Listener) : ILemb
 
     override fun list() {
         val db = FirebaseFirestore.getInstance()
-        val userID = CompleteUserSingleton.instance.uID
+        val user = CompleteUserSingleton.instance
+        val semestreSelecionado = user.getSemestre(user.idSemestre) // semestre em uso
 
         db.collection("users")
-                .document(userID)
+                .document(user.uID)
+                .collection("semestres")
+                .document(semestreSelecionado)
                 .collection("lembretes")
                 .get()
                 .addOnCompleteListener { task ->
