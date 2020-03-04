@@ -17,10 +17,10 @@
             android:id="@+id/imagemPerfil"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@drawable/vitor"
+            android:src="@drawable/aluno_uesb"
 
             app:civ_border_color="@color/colorPrimary"
-            app:civ_border_width="1dp"/>
+            app:civ_border_width="1dp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imagemEditar"
